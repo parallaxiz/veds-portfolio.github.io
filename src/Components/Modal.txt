@@ -1,0 +1,32 @@
+import { useEffect, useState } from "react";
+
+export default function Modal() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [section, setSection] = useState("");
+
+  useEffect(() => {
+    const handler = (e) => {
+      setSection(e.detail);
+      setIsOpen(true);
+    };
+    window.addEventListener("openModal", handler);
+    return () => window.removeEventListener("openModal", handler);
+  }, []);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center">
+      <div className="bg-white rounded-xl p-6 w-96 text-center">
+        <h2 className="text-xl font-bold mb-4">{section.toUpperCase()}</h2>
+        <p>This is where {section} info goes.</p>
+        <button
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+          onClick={() => setIsOpen(false)}
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  );
+}
