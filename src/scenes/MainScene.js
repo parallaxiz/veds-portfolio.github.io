@@ -1,6 +1,6 @@
 import ContactPopup from "C:/Users/vedm1/ved_project/src/ui/ContactPopup.js";
 import BedPopup from "C:/Users/vedm1/ved_project/src/ui/BedPopup.js";
-import ProjectPopup from "C:/Users/vedm1/ved_project/src/ui/ProjectPopup.js"; 
+import ProjectPopup from "C:/Users/vedm1/ved_project/src/ui/ProjectsPopup.js"; 
 import Phaser from "phaser";
 
 export default class MainScene extends Phaser.Scene {
