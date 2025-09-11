@@ -38,7 +38,6 @@ export default class BedPopup {
           <div class="page-2" id="page-2">
         
             <div id="bed-text-2">
-            test
             design, which has not only allowed me to express myself creatively but has also proven to be a 
             valuable skill in my college work and personal projects. At the same time, my interest in coding 
             opened up a whole new world for me. I see coding as more than just writing lines of instructions for
