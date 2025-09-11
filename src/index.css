@@ -301,16 +301,18 @@ canvas {
   background: #f03a3a;
   color: white;
 }
-/*projeccts styling*/
-.project-popup {
+/* ProjectsPopup styling */
+.projects-popup {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 700px;
   height: 500px;
+  background-image: url("/assets/projects_bg.png"); /* pixel art background */
   background-size: cover;
   background-position: center;
+  image-rendering: pixelated; /* makes pixel art crisp */
   border-radius: 15px;
   box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.5);
   display: none;
@@ -323,7 +325,8 @@ canvas {
   z-index: 1000;
 }
 
-.popup-close {
+/* Close button inside ProjectsPopup */
+.projects-popup .popup-close {
   position: absolute;
   top: 15px;
   right: 20px;
@@ -338,22 +341,24 @@ canvas {
   transition: background 0.2s;
 }
 
-.popup-close:hover {
+.projects-popup .popup-close:hover {
   background: rgba(255, 0, 0, 0.8);
 }
 
-.popup-content {
+/* Content area inside ProjectsPopup */
+.projects-popup .popup-content {
   margin-top: 60px;
   text-align: center;
   max-width: 600px;
 }
 
-.popup-content h2 {
+.projects-popup .popup-content h2 {
   font-size: 28px;
   margin-bottom: 15px;
 }
 
-.popup-content p {
+.projects-popup .popup-content p {
   font-size: 18px;
   line-height: 1.5;
 }
+
