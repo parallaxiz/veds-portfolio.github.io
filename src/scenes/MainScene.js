@@ -1,5 +1,6 @@
 import ContactPopup from "C:/Users/vedm1/ved_project/src/ui/ContactPopup.js";
 import BedPopup from "C:/Users/vedm1/ved_project/src/ui/BedPopup.js";
+import ProjectPopup from "C:/Users/vedm1/ved_project/src/ui/ProjectPopup.js"; // ✅ Added
 import Phaser from "phaser";
 
 export default class MainScene extends Phaser.Scene {
@@ -16,8 +17,7 @@ export default class MainScene extends Phaser.Scene {
         this.textures.get("startBtn").setFilter(Phaser.Textures.FilterMode.NEAREST);
         this.textures.get("startBtnHover").setFilter(Phaser.Textures.FilterMode.NEAREST);
 
-        const overlay = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.7)
-            .setDepth(100);
+        const overlay = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.7).setDepth(100);
 
         this.textures.get("ved_portfolio").setFilter(Phaser.Textures.FilterMode.NEAREST);
         const title = this.add.image(width / 2, height / 2 - 100, "ved_portfolio")
@@ -45,7 +45,6 @@ export default class MainScene extends Phaser.Scene {
         startButton.on("pointerout", () => startButton.setTexture("startBtn"));
         startButton.on("pointerdown", () => {
             startButton.disableInteractive();
-
             this.tweens.add({
                 targets: [overlay, title, startButton],
                 alpha: 0,
@@ -80,11 +79,10 @@ export default class MainScene extends Phaser.Scene {
             isStatic: true
         });
         this.roomCollider.setBody(shapes.background);
-        this.roomCollider.setStatic(true);
-        this.roomCollider.setVisible(false);
+        this.roomCollider.setStatic(true).setVisible(false);
 
-        const colliderScaleX = (width / this.roomCollider.width);
-        const colliderScaleY = (height / this.roomCollider.height);
+        const colliderScaleX = width / this.roomCollider.width;
+        const colliderScaleY = height / this.roomCollider.height;
         this.roomCollider.setScale(colliderScaleX, colliderScaleY);
         this.roomCollider.setPosition(width / 2 + ROOM_OFFSET_X, height / 2 + ROOM_OFFSET_Y);
 
@@ -97,15 +95,11 @@ export default class MainScene extends Phaser.Scene {
         this.player = this.matter.add.sprite(centerX - 50, centerY + 180, "player", 0);
         this.player.setDepth(2).setScale(7);
         this.textures.get("player").setFilter(Phaser.Textures.FilterMode.NEAREST);
-        this.player.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
-        this.player.setOrigin(0.5, 0.5);
-        this.player.setBody({
+        this.player.setOrigin(0.5).setBody({
             type: "rectangle",
             width: this.player.width * 4,
             height: this.player.height * 4.3
         });
-
-        this.player.setOnCollide(() => console.log("Collided with something"));
         this.player.setFixedRotation();
 
         this.keys = this.input.keyboard.addKeys({
@@ -139,18 +133,17 @@ export default class MainScene extends Phaser.Scene {
         });
 
         // -------------------------------
-        // POPUPS (CLEANED)
+        // POPUPS
         // -------------------------------
         this.contactPopup = new ContactPopup(this);
         this.bedPopup = new BedPopup(this);
+        this.projectsPopup = new ProjectsPopup(this); // ✅ Added
 
         // -------------------------------
         // OBJECTS
         // -------------------------------
         const createObject = (name, x, y, offsetX, offsetY) => {
-            const obj = this.add.sprite(x, y, name)
-                .setOrigin(0.5)
-                .setScale(scale);
+            const obj = this.add.sprite(x, y, name).setOrigin(0.5).setScale(scale);
             obj.setPosition(obj.x + offsetX, obj.y + offsetY);
             this.textures.get(name).setFilter(Phaser.Textures.FilterMode.NEAREST);
             return obj;
@@ -181,6 +174,7 @@ export default class MainScene extends Phaser.Scene {
         laptop_s.setVisible(false);
         projects.setVisible(false);
         this.objects_l = { laptop, laptop_s, projects };
+        laptop_s.setInteractive({ useHandCursor: true }).on("pointerdown", () => this.projectsPopup.show()); // ✅ Added
 
         // Bookshelf + Skills
         const bookshelf = createObject("bookshelf", 600, 400, 514, -75);
@@ -192,18 +186,15 @@ export default class MainScene extends Phaser.Scene {
     }
 
     update() {
-          this.bedPopup.update();
-          this.contactPopup.update();
+        this.bedPopup.update();
+        this.contactPopup.update();
+        this.projectsPopup.update(); // ✅ Added
+
         // Stop player when popup is open
-        if (this.contactPopup.open || this.bedPopup.open) {
+        if (this.contactPopup.open || this.bedPopup.open || this.projectsPopup.open) {
             this.player.setVelocity(0);
             this.player.anims.stop();
             return;
-        }
-          if (this.bedPopup.open || this.contactPopup.open) {
-          this.player.setVelocity(0);
-          this.player.anims.stop();
-          return;
         }
 
         // -------------------------------
@@ -279,23 +270,19 @@ export default class MainScene extends Phaser.Scene {
         // -------------------------------
         if (Phaser.Input.Keyboard.JustDown(this.keys.interactKey)) {
 
-            // If any popup is already open → trigger its close button
-            if (this.contactPopup.open) {
-                this.contactPopup.triggerClose();
-                return;
-            }
-            if (this.bedPopup.open) {
-                this.bedPopup.triggerClose();
-                return;
-            }
+            // Close existing popups
+            if (this.contactPopup.open) this.contactPopup.triggerClose();
+            if (this.bedPopup.open) this.bedPopup.triggerClose();
+            if (this.projectsPopup.open) this.projectsPopup.triggerClose();
 
-            // Otherwise, open a popup if an object is highlighted
+            // Open popup for highlighted object
             if (this.objects_c.cabinet_s.visible) {
                 this.contactPopup.show();
             } else if (this.objects_b.bed_s.visible) {
                 this.bedPopup.show();
+            } else if (this.objects_l.laptop_s.visible) {
+                this.projectsPopup.show();
             }
-        }   
-
+        }
     }
 }

@@ -301,3 +301,59 @@ canvas {
   background: #f03a3a;
   color: white;
 }
+/*projeccts styling*/
+.project-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px;
+  height: 500px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 15px;
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.5);
+  display: none;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px;
+  color: white;
+  font-family: "edit-undo", sans-serif;
+  z-index: 1000;
+}
+
+.popup-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background 0.2s;
+}
+
+.popup-close:hover {
+  background: rgba(255, 0, 0, 0.8);
+}
+
+.popup-content {
+  margin-top: 60px;
+  text-align: center;
+  max-width: 600px;
+}
+
+.popup-content h2 {
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+.popup-content p {
+  font-size: 18px;
+  line-height: 1.5;
+}

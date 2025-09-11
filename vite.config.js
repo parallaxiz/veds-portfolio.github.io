@@ -6,7 +6,5 @@ export default defineConfig({
   server: {
     port: 5173,
   },
-   base: process.env.NODE_ENV === 'production'
-    ? '/veds-portfolio.github.io/'  // ✅ Use this on GitHub Pages
-    : '/', 
+  base: '/veds-portfolio.github.io/',
 });
