@@ -5,7 +5,7 @@ export default class ProjectsPopup {
 
     // Create HTML popup container
     this.container = document.createElement("div");
-    this.container.classList.add("project-popup");
+    this.container.classList.add("projects-popup");
 
     // Add background image
     this.container.style.backgroundImage = `url('assets/projects_bg.png')`;
