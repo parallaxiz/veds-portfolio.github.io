@@ -3,34 +3,41 @@ export default class ProjectsPopup {
     this.scene = scene;
     this.open = false;
 
-    // Create HTML popup container
-    this.container = document.createElement("div");
-    this.container.classList.add("projects-popup");
+    // Check if popup already exists
+    this.container = document.getElementById("projects-popup");
+    if (!this.container) {
+      // Create container
+      this.container = document.createElement("div");
+      this.container.id = "projects-popup";
+      this.container.classList.add("projects-popup");
 
-    // Add background image
-    this.container.style.backgroundImage = `url('assets/projects_bg.png')`;
+      // Create content
+      this.content = document.createElement("div");
+      this.content.classList.add("popup-content");
+      this.content.innerHTML = `
+        <img src="assets/projects_bg.png" class="popup-bg" alt="Popup Background" />
+        <h2>My Projects</h2>
+        <p>Here you can showcase your portfolio projects.</p>
+        <button id="close-projects-popup" class="close-btn">X</button>
+      `;
 
-    // Add close button
-    this.closeBtn = document.createElement("button");
-    this.closeBtn.innerText = "X";
-    this.closeBtn.classList.add("popup-close");
-    this.container.appendChild(this.closeBtn);
+      this.container.appendChild(this.content);
+      document.body.appendChild(this.container);
+    }
 
-    // Add content area
-    this.content = document.createElement("div");
-    this.content.classList.add("popup-content");
-    this.content.innerHTML = `
-      <h2>My Projects</h2>
-      <p>Here you can showcase your portfolio projects.</p>
-    `;
-    this.container.appendChild(this.content);
+    // Close button
+    this.closeBtn = this.container.querySelector("#close-projects-popup");
+    if (this.closeBtn) {
+      this.closeBtn.addEventListener("click", () => this.hide());
+    }
 
-    // Append to body but keep hidden
-    document.body.appendChild(this.container);
+    // Click outside content to close
+    this.container.addEventListener("click", (e) => {
+      if (e.target === this.container) this.hide();
+    });
+
+    // Start hidden
     this.hide();
-
-    // Close button event
-    this.closeBtn.addEventListener("click", () => this.hide());
   }
 
   show() {
