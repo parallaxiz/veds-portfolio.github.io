@@ -25,6 +25,9 @@ export default class PreloadScene extends Phaser.Scene {
         this.load.image("bookshelf", basePath + "bookshelf.png");
         this.load.image("bookshelf_s", basePath + "bookshelf_s.png");
 
+        //rules
+        this.load.image("rules", basePath + "rules.png")
+
         // Text popups
         this.load.image("about_me", basePath + "about_me.png");
         this.load.image("projects", basePath + "projects.png");

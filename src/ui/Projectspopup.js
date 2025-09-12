@@ -11,13 +11,11 @@ export default class ProjectsPopup {
       this.container.id = "projects-popup";
       this.container.classList.add("projects-popup");
 
-      // Create content
+      // Create content wrapper
       this.content = document.createElement("div");
       this.content.classList.add("popup-content");
       this.content.innerHTML = `
-        <img src="assets/projects_bg.png" class="popup-bg" alt="Popup Background" />
-        <h2>My Projects</h2>
-        <p>Here you can showcase your portfolio projects.</p>
+        <div id="projects-text" class="projects-text"></div>
         <button id="close-projects-popup" class="close-btn">X</button>
       `;
 
@@ -35,6 +33,7 @@ export default class ProjectsPopup {
     this.container.addEventListener("click", (e) => {
       if (e.target === this.container) this.hide();
     });
+    this.eKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
     // Start hidden
     this.hide();
@@ -55,6 +54,8 @@ export default class ProjectsPopup {
   }
 
   update() {
-    // Reserved for animations or dynamic updates
+       if (this.open && Phaser.Input.Keyboard.JustDown(this.eKey)) {
+      this.hide(); // directly hide popup and unlock player
+    }
   }
 }

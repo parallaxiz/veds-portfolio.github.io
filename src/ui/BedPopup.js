@@ -1,3 +1,126 @@
+//constructor(scene) {
+//export default class BedPopup {
+//
+//    this.scene = scene;
+//    this.open = false;
+//    this.container = document.getElementById("bed-popup");
+//    // Create popup container if it doesn't exist
+//    this.container = document.createElement("div");
+//    if (!this.container) {
+//
+//      this.container.id = "bed-popup";
+//      this.container.classList.add("bed-popup");      this.container.innerHTML = `
+//
+//      <img src="assets/about_me_bg.png" class="popup-bg" alt="Popup Background" />
+//        <div class="popup-content">
+//
+//          <h1>About Me</h1>
+//          <div class="page-1">
+//          <!-- Page 1 -->
+//          Hi, my name is Ved, and I am currently pursuing my degree at Vishwakarma Institute of Technology, 
+//            <div>
+//              things, but I’ve always had a natural ability to pick up new concepts quickly and adapt them to 
+//              with an expected graduation year of 2028. I've never considered myself great at reading or memorizing 
+//              </div>
+//              suit my needs, interests, and ideas.
+//
+//          </div>          <!-- Page 2 -->
+//
+//          <div>
+//          <div class="page-2">
+//            I’m able to invest myself into it wholeheartedly. I enjoy exploring, experimenting, and learning by doing. 
+//              Throughout my life, I’ve noticed that whenever something truly aligns with my ideals or sparks my curiosity, 
+//              </div>
+//              This approach has shaped the way I grow. This is where my passion for art and coding comes into play.
+//
+//          </div>          <!-- Page 3 -->
+//
+//          <div>
+//          <div class="page-3">
+//            naturally evolved into digital art and UI/UX design, which has not only allowed me to express myself 
+//              I’ve always had a keen eye for detail and a deep love for sketching and drawing. Over time, this passion 
+//              </div>
+//              creatively but has also proven to be a valuable skill in my college work and personal projects.
+//
+//          </div>
+//          <div class="page-4">
+//          <!-- Page 4 -->
+//          At the same time, my interest in coding opened up a whole new world for me. I see coding as more than just 
+//            <div>
+//              When I merged my love for art and coding, it felt like the perfect harmony of my passions, and that gave 
+//              writing instructions — it’s an outlet for creativity, a way to translate my thoughts and ideas into reality. 
+//              </div>
+//              birth to this project — a reflection of my creativity, skills, and journey so far.
+//
+//          </div>
+//          <div class="popup-buttons">
+//          <!-- Navigation Buttons -->
+//          <button class="next-btn">Next →</button>
+//            <button class="back-btn hidden">← Back</button>
+//
+//          </div>
+//          </div>
+//          <button class="close-btn">X</button>
+//
+//      `;
+//
+//      document.body.appendChild(this.container);
+//    }    // Cache pages
+//
+//    this.container.querySelector(".page-1"),
+//    this.pages12 = [
+//    ];
+//      this.container.querySelector(".page-2"),
+//    this.container.querySelector(".page-3"),
+//    this.pages34 = [
+//
+//      this.container.querySelector(".page-4"),
+//    ];
+//    this.nextBtn = this.container.querySelector(".next-btn");
+//    // Cache buttons
+//
+//    this.backBtn = this.container.querySelector(".back-btn");
+//    this.closeBtn = this.container.querySelector(".close-btn");
+//    this.nextBtn.addEventListener("click", () => this.showPages34());
+//    // Event listeners
+//
+//    this.backBtn.addEventListener("click", () => this.showPages12());
+//    this.closeBtn.addEventListener("click", () => this.hide());
+//    this.container.addEventListener("click", (e) => {
+//    // Click outside closes popup
+//    });
+//      if (e.target === this.container) this.hide();
+//
+//  }
+//  this.pages34.forEach((p) => p.classList.remove("active"));
+//  showPages12() {
+//    this.backBtn.classList.add("hidden");
+//    this.pages12.forEach((p) => p.classList.add("active"));
+//
+//    this.nextBtn.classList.remove("hidden");
+//  }
+//  this.pages12.forEach((p) => p.classList.remove("active"));
+//  showPages34() {
+//    this.nextBtn.classList.add("hidden");
+//    this.pages34.forEach((p) => p.classList.add("active"));
+//
+//    this.backBtn.classList.remove("hidden");
+//  }  show() {
+//
+//    this.open = true;
+//    this.container.style.display = "flex";
+//
+//    this.showPages12(); // reset to page 1 & 2
+//  }
+//  this.container.style.display = "none";
+//  hide() {
+//
+//    this.open = false;
+//  }
+//  // reserved for Phaser E-key close
+//  update() {
+//  }
+//  }
 export default class BedPopup {
   constructor(scene) {
     this.scene = scene;
@@ -65,7 +188,7 @@ export default class BedPopup {
       `;
       document.body.appendChild(this.container);
     }
-    // Cache buttons
+    // Cache buttons  
     this.closeBtn = this.container.querySelector("#close-bed-popup");
     this.nextBtn = this.container.querySelector("#next-page");
     this.prevBtn = this.container.querySelector("#prev-page");
@@ -75,9 +198,9 @@ export default class BedPopup {
     this.page2 = this.container.querySelector("#page-2");
 
     // Close button click
-    if (this.closeBtn) {
-      this.closeBtn.addEventListener("click", () => this.hide());
-    }
+      if (this.closeBtn) {
+        this.closeBtn.addEventListener("click", () => this.hide());
+      }
 
     // Next button → show page 2
     if (this.nextBtn) {
@@ -135,3 +258,4 @@ export default class BedPopup {
     this.scene.contactMenuOpen = false;
   }
 }
+

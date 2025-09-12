@@ -14,6 +14,7 @@ export default class MainScene extends Phaser.Scene {
         // -------------------------------
         // START SCREEN
         // -------------------------------
+        this.inputLocked = true; // 🔒 lock movement initially
         this.textures.get("startBtn").setFilter(Phaser.Textures.FilterMode.NEAREST);
         this.textures.get("startBtnHover").setFilter(Phaser.Textures.FilterMode.NEAREST);
 
@@ -24,6 +25,56 @@ export default class MainScene extends Phaser.Scene {
             .setOrigin(0.5)
             .setDepth(101)
             .setScale(10);
+        this.textures.get("rules").setFilter(Phaser.Textures.FilterMode.NEAREST);
+        // Add top-left "Rules" button
+        this.textures.get("rules").setFilter(Phaser.Textures.FilterMode.NEAREST);
+        const rulesButton = this.add.text(20, 20, "Rules", {
+            fontFamily: "edit-undo",
+            fontSize: "48px",
+            color: "#ffffff",
+            backgroundColor: "#3e3b66",
+            padding: { x: 15, y: 10 }
+        })
+            .setOrigin(0, 0)
+            .setInteractive({ useHandCursor: true })
+            .setDepth(102);
+        
+        // Create hidden overlay for rules popup
+        const rulesOverlay = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.8)
+            .setDepth(200)
+            .setVisible(false);
+        
+        const rulesPopup = this.add.image(width / 2, height / 2, "rules")
+            .setOrigin(0.5)
+            .setDepth(201)
+            .setScale(8)
+            .setVisible(false);
+        
+        const closeButton = this.add.text(width - 80, 40, "X", {
+            fontFamily: "edit-undo",
+            fontSize: "60px",
+            color: "#ffffff",
+            backgroundColor: "#f03a3a",
+            padding: { x: 20, y: 10 }
+        })
+            .setOrigin(0.5)
+            .setInteractive({ useHandCursor: true })
+            .setDepth(202)
+            .setVisible(false);
+        
+        // Show rules popup when button clicked
+        rulesButton.on("pointerdown", () => {
+            rulesOverlay.setVisible(true);
+            rulesPopup.setVisible(true);
+            closeButton.setVisible(true);
+        });
+        
+        // Hide rules popup when close button clicked
+        closeButton.on("pointerdown", () => {
+            rulesOverlay.setVisible(false);
+            rulesPopup.setVisible(false);
+            closeButton.setVisible(false);
+        });
 
         // Title breathing animation
         this.tweens.add({
@@ -46,7 +97,7 @@ export default class MainScene extends Phaser.Scene {
         startButton.on("pointerdown", () => {
             startButton.disableInteractive();
             this.tweens.add({
-                targets: [overlay, title, startButton],
+                targets: [overlay, title, startButton,rulesButton],
                 alpha: 0,
                 duration: 600,
                 ease: "Power2",
@@ -54,6 +105,8 @@ export default class MainScene extends Phaser.Scene {
                     overlay.destroy();
                     title.destroy();
                     startButton.destroy();
+                    rulesButton.destroy();      
+                    this.inputLocked = false; // 🔓 unlock movement when start is clicked          
                 }
             });
         });
@@ -137,8 +190,7 @@ export default class MainScene extends Phaser.Scene {
         // -------------------------------
         this.contactPopup = new ContactPopup(this);
         this.bedPopup = new BedPopup(this);
-        this.projectsPopup = new ProjectsPopup(this); // ✅ Added
-
+        this.projectsPopup = new ProjectsPopup(this); 
         // -------------------------------
         // OBJECTS
         // -------------------------------
@@ -200,6 +252,7 @@ export default class MainScene extends Phaser.Scene {
         // -------------------------------
         // PLAYER MOVEMENT + DEPTH
         // -------------------------------
+        if (this.inputLocked) return;
         this.player.setDepth(this.player.y / 140);
 
         const speed = 10;
