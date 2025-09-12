@@ -1,6 +1,7 @@
 import ContactPopup from "C:/Users/vedm1/ved_project/src/ui/ContactPopup.js";
 import BedPopup from "C:/Users/vedm1/ved_project/src/ui/BedPopup.js";
 import ProjectsPopup from "C:/Users/vedm1/ved_project/src/ui/ProjectsPopup.js"; 
+import SkillsPopup from "C:/Users/vedm1/ved_project/src/ui/SkillsPopup.js"; 
 import Phaser from "phaser";
 
 export default class MainScene extends Phaser.Scene {
@@ -191,6 +192,9 @@ export default class MainScene extends Phaser.Scene {
         this.contactPopup = new ContactPopup(this);
         this.bedPopup = new BedPopup(this);
         this.projectsPopup = new ProjectsPopup(this); 
+        this.skillsPopup = new SkillsPopup(this); // ✅ Added
+
+
         // -------------------------------
         // OBJECTS
         // -------------------------------
@@ -241,13 +245,16 @@ export default class MainScene extends Phaser.Scene {
         this.bedPopup.update();
         this.contactPopup.update();
         this.projectsPopup.update(); // ✅ Added
+        this.skillsPopup.update(); // ✅ Added
+
 
         // Stop player when popup is open
-        if (this.contactPopup.open || this.bedPopup.open || this.projectsPopup.open) {
+       if (this.contactPopup.open || this.bedPopup.open || this.projectsPopup.open || this.skillsPopup.open) {
             this.player.setVelocity(0);
             this.player.anims.stop();
             return;
         }
+        
 
         // -------------------------------
         // PLAYER MOVEMENT + DEPTH
@@ -327,7 +334,8 @@ export default class MainScene extends Phaser.Scene {
             if (this.contactPopup.open) this.contactPopup.triggerClose();
             if (this.bedPopup.open) this.bedPopup.triggerClose();
             if (this.projectsPopup.open) this.projectsPopup.triggerClose();
-
+            if (this.skillsPopup.open) this.skillsPopup.triggerClose(); // ✅ Added
+                    
             // Open popup for highlighted object
             if (this.objects_c.cabinet_s.visible) {
                 this.contactPopup.show();
@@ -335,7 +343,9 @@ export default class MainScene extends Phaser.Scene {
                 this.bedPopup.show();
             } else if (this.objects_l.laptop_s.visible) {
                 this.projectsPopup.show();
-            }
+            } else if (this.objects_bs.bookshelf_s.visible) {
+                this.skillsPopup.show(); // ✅ Added
+            }  
         }
     }
 }
