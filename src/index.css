@@ -24,7 +24,7 @@ canvas {
 }
 
 /* ============================ */
-/* Popup Overlay (Common)       */
+/* Popup Overlay (Common)     */
 /* ============================ */
 .popup {
   position: fixed;
@@ -45,104 +45,79 @@ canvas {
 }
 
 /* ============================ */
-/* Popup Content Box (Common)   */
+/* Popup Content Box (Common)  */
 /* ============================ */
+/* This is a common base style for all popups */
 .popup-content {
   position: relative;
-  background: #fcecd1;
-  border: 0px solid #3e3b66;
-  border-radius: 15px;
-  padding: 25px;
-  width:1000px;
-  max-width: 80%;
   text-align: center;
   color: #3e3b66;
   user-select: text; /* Allow text selection */
+  overflow: hidden;
+  z-index: 1;
 }
+
 /* Heading */
 .popup-content h1 {
-  padding-top: 10px ;
-  padding-left: 150px ;
-  text-align: left;  /* Align text to the left */
   font-size: 70px;
   margin-bottom: 15px;
 }
 
 /* ============================ */
-/* BedPopup Specific Styling     */
+/* BedPopup Specific Styling    */
 /* ============================ */
-/* Paragraph */
-.page-1 {
-  padding-top: 3px;
-  display: flex;
-  flex-direction: row;
-  gap: 137px;
-  font-size: 20px;
-  line-height: 2.11;
-}
-.popup-content #bed-text {
-  flex: 0 0 390px; /* First column fixed at 350px, adjust as needed */
-  text-align: left;
-  padding-left: 98px;
-  margin-bottom: 20px;
-  user-select: text;
-}
-
-.popup-content #bed-text-1 {
-  flex: 0 0 380px; /* First column fixed at 350px, adjust as needed */
-  text-align: left;
-  margin-bottom: 20px;
-  user-select: text;
-}
-.page-2 {
-  padding-top: 3px;
-  display: flex;
-  flex-direction: row;
-  gap: 137px;
-  font-size: 20px;
-  line-height: 2.11;
-}
-.popup-content #bed-text-2 {
-  flex: 0 0 390px; /* First column fixed at 350px, adjust as needed */
-  text-align: left;
-  padding-left: 98px;
-  margin-bottom: 20px;
-  user-select: text;
-}
-
-.popup-content #bed-text-3 {
-  flex: 0 0 380px; /* First column fixed at 350px, adjust as needed */
-  text-align: left;
-  margin-bottom: 20px;
-  user-select: text;
-}
-/* BedPopup Background */
+/* These styles are applied only to the BedPopup, using the ID selector */
 #bed-popup .popup-content {
-  position: absolute;
-  background: transparent; /* keep background transparent so PNG is visible */
-  padding: 25px;
+  background: transparent;
   width: 1100px;
   height: 700px;
+  padding: 25px;
   max-width: 100%;
-  border-radius: 15px;
-  text-align: center;
-  color: #3e3b66;
-  user-select: text;
-  overflow: hidden; /* ensure bg image stays inside popup */
-  z-index: 1;
 }
 
-/* PNG Background */
+#bed-popup h1 {
+  padding-top: 10px;
+  padding-left: 150px;
+  text-align: left;
+}
+
+#bed-popup .page-1,
+#bed-popup .page-2 {
+  padding-top: 3px;
+  display: flex;
+  flex-direction: row;
+  gap: 137px;
+  font-size: 20px;
+  line-height: 2.11;
+}
+
+#bed-popup .popup-content #bed-text,
+#bed-popup .popup-content #bed-text-2 {
+  flex: 0 0 390px;
+  text-align: left;
+  padding-left: 98px;
+  margin-bottom: 20px;
+  user-select: text;
+}
+
+#bed-popup .popup-content #bed-text-1,
+#bed-popup .popup-content #bed-text-3 {
+  flex: 0 0 380px;
+  text-align: left;
+  margin-bottom: 20px;
+  user-select: text;
+}
+
 #bed-popup .popup-bg {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* cover entire popup without distortion */
-  z-index: -1; /* behind content */
+  object-fit: cover;
+  z-index: -1;
   border-radius: 15px;
-  image-rendering: pixelated; /* make it crisp */
+  image-rendering: pixelated;
 }
 
 /* Heading and Paragraph stay on top */
@@ -152,7 +127,8 @@ canvas {
   position: relative;
   z-index: 2;
 }
-/* Navigation buttons in top-right corner */
+
+/* Navigation buttons */
 #bed-popup .popup-nav {
   position: absolute;
   top: 30px;
@@ -180,9 +156,6 @@ canvas {
   background-color: #2a2750;
 }
 
-#bed-popup .popup-nav button:hover {
-  background-color: #2a2750;
-}
 /* BedPopup Close Button */
 #bed-popup .close-btn {
   position: absolute;
@@ -206,15 +179,16 @@ canvas {
 }
 
 /* ============================ */
-/* Contact Popup Styling         */
+/* Contact Popup Styling        */
 /* ============================ */
+/* These styles are applied only to the ContactPopup, using the ID selector */
 #contact-popup {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0); /* Transparent overlay */
+  background: rgba(0, 0, 0, 0);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -225,41 +199,36 @@ canvas {
   display: none;
 }
 
-/* Contact Popup Content */
 #contact-popup .popup-content {
   position: absolute;
   width: 420px;
   padding: 30px;
   background: transparent;
-  text-align: center;
-  border-radius: 15px;
 }
 
-/* PNG Background for Contact */
 #contact-popup .popup-bg {
   position: absolute;
   top: -40px;
   left: -45px;
-  width: 120%;
-  height: 120%;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  object-fit: contain;
   z-index: -1;
-  border-radius: 15px;
   image-rendering: pixelated;
 }
 
-/* Title */
 #contact-popup h1 {
   text-align: left;
   font-size: 32px;
   color: #3e3b66;
   margin-bottom: 20px;
-  padding-left: 120px;     /* Remove any left padding */
-  margin-left: 0;      /* Remove any left margin */
-  width: auto;    
-
+  padding-left: 120px;
+  margin-left: 0;
+  width: auto;
 }
 
-/* Links / Buttons */
 #contact-popup .popup-link {
   display: block;
   width: 75%;
@@ -278,7 +247,6 @@ canvas {
   color: white;
 }
 
-/* Contact Close Button */
 #contact-popup .close-btn {
   position: absolute;
   margin-top: 15px;
@@ -301,6 +269,7 @@ canvas {
   background: #f03a3a;
   color: white;
 }
+
 /* ============================ */
 /* Projects Popup Styling       */
 /* ============================ */
@@ -309,32 +278,24 @@ canvas {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 1000px;   /* increased width */
-  height: 650px;   /* increased height */
-
-  /* Background */
+  width: 1000px;
+  height: 650px;
   background-image: url("/assets/projects_bg.png");
-  background-size: 100% 100%;  
+  background-size: 100% 100%;
   background-position: center;
   image-rendering: pixelated;
-
-  /* Border */
-  border: 6px solid #3e3b66;   /* golden yellow border */
-  box-shadow: 0 0 20px rgba(62, 49, 50, 0.7); /* glowing effect */
-
-  display: none; 
+  border: 6px solid #3e3b66;
+  box-shadow: 0 0 20px rgba(62, 49, 50, 0.7);
+  display: none;
   font-family: "edit-undo", sans-serif;
   color: white;
   z-index: 1000;
-
-  display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   padding: 0;
   overflow: hidden;
 }
 
-/* Content box (transparent) */
 .projects-popup .popup-content {
   position: relative;
   width: 100%;
@@ -342,12 +303,9 @@ canvas {
   padding: 20px;
   text-align: left;
   box-sizing: border-box;
-
-  /* transparent layer so background is visible */
   background: transparent;
 }
 
-/* Close button */
 .projects-popup .close-btn {
   position: absolute;
   top: 29px;
@@ -366,60 +324,55 @@ canvas {
 .projects-popup .close-btn:hover {
   background: rgba(255, 0, 0, 0.8);
 }
+
 /* ============================ */
-/* Popup Content Box (Common)   */
+/* SkillsPopup Specific Styling   */
 /* ============================ */
 #skills-popup .popup-content {
-  position: relative;
-  background: #fcecd1;
-  border: 0px solid #3e3b66;
-  border-radius: 15px;
+  /* EDITED: This rule was duplicated. I removed the duplicate and kept this one. */
+  background: transparent;
   padding: 25px;
-  width: 1000px;
-  max-width: 80%;
-  text-align: center;
-  color: #3e3b66;
-  user-select: text; /* Allow text selection */
+  width: 1100px; /* Consolidate width and height here */
+  height: 700px; /* Consolidate width and height here */
+  max-width: 100%;
 }
 
-/* Heading */
-#skills-popup .popup-content h1 {
+#skills-popup h1 {
+  /* EDITED: Moved h1 specific styles here for clarity */
   padding-top: 10px;
   padding-left: 150px;
   text-align: left;
-  font-size: 70px;
-  margin-bottom: 15px;
 }
 
-/* ============================ */
-/* SkillsPopup Specific Styling  */
-/* ============================ */
-/* Paragraph */
 #skills-popup .page-1 {
+  /* EDITED: Changed gap from 137px to 20px to better space the columns */
   padding-top: 3px;
   display: flex;
   flex-direction: row;
-  gap: 137px;
+  gap: 20px;
   font-size: 20px;
   line-height: 2.11;
 }
 
-#skills-popup .popup-content .skills-text {
-  flex: 0 0 200px;
+#skills-popup .popup-content .skill-text {
+  /* EDITED: Adjusted flex-basis to fit the left column */
+  flex: 0 0 450px;
   text-align: left;
-  padding-left: 98px;
-  margin-bottom: 20px;
+  margin-left: 100px;
+  margin-bottom: 200px;
   user-select: text;
 }
 
-#skills-popup .popup-content .skills-text-1 {
-  flex: 0 0 200px;
+#skills-popup .popup-content .skill-text-1 {
+  /* EDITED: Adjusted flex-basis to fit the right column */
+  flex: 0 0 450px;
   text-align: left;
   margin-bottom: 20px;
   user-select: text;
 }
 
 #skills-popup .page-2 {
+  /* EDITED: This rule was duplicated. Kept this one. */
   padding-top: 3px;
   display: flex;
   flex-direction: row;
@@ -428,39 +381,25 @@ canvas {
   line-height: 2.11;
 }
 
-#skills-popup .popup-content .skills-text-2 {
-  flex: 0 0 390px;
+#skills-popup .popup-content .skill-text-2 {
+  /* EDITED: Adjusted flex-basis to fit the left column */
+  flex: 0 0 450px;
   text-align: left;
   padding-left: 98px;
   margin-bottom: 20px;
   user-select: text;
 }
 
-#skills-popup .popup-content .skills-text-3 {
-  flex: 0 0 380px;
+#skills-popup .popup-content .skill-text-3 {
+  /* EDITED: Adjusted flex-basis to fit the right column */
+  flex: 0 0 450px;
   text-align: left;
   margin-bottom: 20px;
   user-select: text;
 }
 
-/* SkillsPopup Background */
-#skills-popup .popup-content {
-  position: absolute;
-  background: transparent;
-  padding: 25px;
-  width: 1100px;
-  height: 700px;
-  max-width: 100%;
-  border-radius: 15px;
-  text-align: center;
-  color: #3e3b66;
-  user-select: text;
-  overflow: hidden;
-  z-index: 1;
-}
-
-/* PNG Background */
 #skills-popup .popup-bg {
+  /* EDITED: This rule was duplicated. Kept this one. */
   position: absolute;
   top: 0;
   left: 0;
@@ -472,16 +411,16 @@ canvas {
   image-rendering: pixelated;
 }
 
-/* Heading and Paragraph stay on top */
 #skills-popup h1,
 #skills-popup p,
 #skills-popup button {
+  /* EDITED: This rule was duplicated. Kept this one. */
   position: relative;
   z-index: 2;
 }
 
-/* Navigation buttons in top-right corner */
 #skills-popup .popup-nav {
+  /* EDITED: This rule was duplicated. Kept this one. */
   position: absolute;
   top: 30px;
   right: 40px;
@@ -491,6 +430,7 @@ canvas {
 }
 
 #skills-popup .popup-nav button {
+  /* EDITED: This rule was duplicated. Kept this one. */
   padding: 8px 18px;
   right: 100px;
   top: 50px;
@@ -505,17 +445,18 @@ canvas {
 }
 
 #skills-popup .popup-nav button:hover {
+  /* EDITED: This rule was duplicated. Kept this one. */
   background-color: #2a2750;
 }
 
-/* SkillsPopup Close Button */
 #skills-popup .close-btn {
+  /* EDITED: Adjusted bottom value to better position the button */
   position: absolute;
   padding-left: 30px;
   padding-right: 28px;
   padding-top: 20px;
   padding-bottom: 20px;
-  bottom: 592px;
+  bottom: 633px;
   right: 1010px;
   font-size: 50px;
   background: transparent;
@@ -527,5 +468,6 @@ canvas {
 }
 
 #skills-popup .close-btn:hover {
+  /* EDITED: This rule was duplicated. Kept this one. */
   background-color: #f03a3a;
 }
