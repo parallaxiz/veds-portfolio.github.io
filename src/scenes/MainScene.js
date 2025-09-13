@@ -198,47 +198,50 @@ export default class MainScene extends Phaser.Scene {
         // -------------------------------
         // OBJECTS
         // -------------------------------
-        const createObject = (name, x, y, offsetX, offsetY) => {
-            const obj = this.add.sprite(x, y, name).setOrigin(0.5).setScale(scale);
-            obj.setPosition(obj.x + offsetX, obj.y + offsetY);
-            this.textures.get(name).setFilter(Phaser.Textures.FilterMode.NEAREST);
-            return obj;
+        // Helper function that respects background scaling
+        const createObject = (key, baseX, baseY, offsetX, offsetY) => {
+          return this.add.sprite(
+            bg.x + offsetX * scale, 
+            bg.y + offsetY * scale, 
+            key
+          ).setOrigin(0.5);
         };
-
+        
         // Bed + About Me
-        const bed = createObject("bed", 600, 400, 66, -28);
-        const bed_s = createObject("bed_s", 600, 400, 66, -28);
-        const about_me = createObject("about_me", 600, 400, 63, -221);
+        const bed = createObject("bed", bg.x, bg.y, 66, -28);
+        const bed_s = createObject("bed_s", bg.x, bg.y, 66, -28);
+        const about_me = createObject("about_me", bg.x, bg.y, 63, -221);
         bed_s.setVisible(false);
         about_me.setVisible(false);
         this.objects_b = { bed, bed_s, about_me };
         bed_s.setInteractive({ useHandCursor: true }).on("pointerdown", () => this.bedPopup.show());
-
+        
         // Cabinet + Contact Info
-        const cabinet = createObject("cabinet", 600, 400, 286, 29);
-        const cabinet_s = createObject("cabinet_s", 600, 400, 286, 29);
-        const contact_info = createObject("contact_info", 600, 400, 267, -103);
+        const cabinet = createObject("cabinet", bg.x, bg.y, 286, 29);
+        const cabinet_s = createObject("cabinet_s", bg.x, bg.y, 286, 29);
+        const contact_info = createObject("contact_info", bg.x, bg.y, 267, -103);
         cabinet_s.setVisible(false);
         contact_info.setVisible(false);
         this.objects_c = { cabinet, cabinet_s, contact_info };
         cabinet_s.setInteractive({ useHandCursor: true }).on("pointerdown", () => this.contactPopup.show());
-
+        
         // Laptop + Projects
-        const laptop = createObject("laptop", 600, 400, -172, 61).setDepth(3);
-        const laptop_s = createObject("laptop_s", 600, 400, -172, 61).setDepth(3);
-        const projects = createObject("projects", 600, 400, -166, -47);
+        const laptop = createObject("laptop", bg.x, bg.y, -172, 61).setDepth(3);
+        const laptop_s = createObject("laptop_s", bg.x, bg.y, -172, 61).setDepth(3);
+        const projects = createObject("projects", bg.x, bg.y, -166, -47);
         laptop_s.setVisible(false);
         projects.setVisible(false);
         this.objects_l = { laptop, laptop_s, projects };
-        laptop_s.setInteractive({ useHandCursor: true }).on("pointerdown", () => this.projectsPopup.show()); // ✅ Added
-
+        laptop_s.setInteractive({ useHandCursor: true }).on("pointerdown", () => this.projectsPopup.show());
+        
         // Bookshelf + Skills
-        const bookshelf = createObject("bookshelf", 600, 400, 514, -75);
-        const bookshelf_s = createObject("bookshelf_s", 600, 400, 514, -75);
-        const skills = createObject("skills", 600, 400, 329, -155);
+        const bookshelf = createObject("bookshelf", bg.x, bg.y, 514, -75);
+        const bookshelf_s = createObject("bookshelf_s", bg.x, bg.y, 514, -75);
+        const skills = createObject("skills", bg.x, bg.y, 329, -155);
         bookshelf_s.setVisible(false);
         skills.setVisible(false);
         this.objects_bs = { bookshelf, bookshelf_s, skills };
+        
     }
 
     update() {
