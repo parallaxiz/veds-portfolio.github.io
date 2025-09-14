@@ -17,7 +17,9 @@ const GameConfig = {
     },
     scale: {
         mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        //width: 1920, // Set to your original development width
+        //height: 1200 // Set to your original development height
     },
     
     scene: [PreloadScene, MainScene]
