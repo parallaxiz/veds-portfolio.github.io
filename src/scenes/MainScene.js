@@ -19,17 +19,17 @@ export default class MainScene extends Phaser.Scene {
         this.textures.get("startBtn").setFilter(Phaser.Textures.FilterMode.NEAREST);
         this.textures.get("startBtnHover").setFilter(Phaser.Textures.FilterMode.NEAREST);
 
-        const overlay = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.7).setDepth(100);
+        this.overlay = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.7).setDepth(100);
 
         this.textures.get("ved_portfolio").setFilter(Phaser.Textures.FilterMode.NEAREST);
-        const title = this.add.image(width / 2, height / 2 - 100, "ved_portfolio")
+        this.title = this.add.image(width / 2, height / 2 - 100, "ved_portfolio")
             .setOrigin(0.5)
             .setDepth(101)
             .setScale(10);
         this.textures.get("rules").setFilter(Phaser.Textures.FilterMode.NEAREST);
         // Add top-left "Rules" button
         this.textures.get("rules").setFilter(Phaser.Textures.FilterMode.NEAREST);
-        const rulesButton = this.add.text(20, 20, "Rules", {
+        this.rulesButton = this.add.text(20, 20, "Rules", {
             fontFamily: "edit-undo",
             fontSize: "48px",
             color: "#ffffff",
@@ -41,17 +41,17 @@ export default class MainScene extends Phaser.Scene {
             .setDepth(102);
         
         // Create hidden overlay for rules popup
-        const rulesOverlay = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.8)
+        this.rulesOverlay = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.8)
             .setDepth(200)
             .setVisible(false);
         
-        const rulesPopup = this.add.image(width / 2, height / 2, "rules")
+        this.rulesPopup = this.add.image(width / 2, height / 2, "rules")
             .setOrigin(0.5)
             .setDepth(201)
             .setScale(8)
             .setVisible(false);
         
-        const closeButton = this.add.text(width - 80, 40, "X", {
+        this.closeButton = this.add.text(width - 80, 40, "X", {
             fontFamily: "edit-undo",
             fontSize: "60px",
             color: "#ffffff",
@@ -64,22 +64,22 @@ export default class MainScene extends Phaser.Scene {
             .setVisible(false);
         
         // Show rules popup when button clicked
-        rulesButton.on("pointerdown", () => {
-            rulesOverlay.setVisible(true);
-            rulesPopup.setVisible(true);
-            closeButton.setVisible(true);
+        this.rulesButton.on("pointerdown", () => {
+            this.rulesOverlay.setVisible(true);
+            this.rulesPopup.setVisible(true);
+            this.closeButton.setVisible(true);
         });
         
         // Hide rules popup when close button clicked
-        closeButton.on("pointerdown", () => {
-            rulesOverlay.setVisible(false);
-            rulesPopup.setVisible(false);
-            closeButton.setVisible(false);
+        this.closeButton.on("pointerdown", () => {
+            this.rulesOverlay.setVisible(false);
+            this.rulesPopup.setVisible(false);
+            this.closeButton.setVisible(false);
         });
 
         // Title breathing animation
         this.tweens.add({
-            targets: title,
+            targets: this.title,
             scale: 9,
             duration: 1000,
             yoyo: true,
@@ -87,26 +87,26 @@ export default class MainScene extends Phaser.Scene {
             ease: "Sine.easeInOut"
         });
 
-        const startButton = this.add.image(width / 2, height / 2 + 100, "startBtn")
+        this.startButton = this.add.image(width / 2, height / 2 + 100, "startBtn")
             .setOrigin(0.5)
             .setInteractive({ useHandCursor: true })
             .setDepth(101)
             .setScale(10);
 
-        startButton.on("pointerover", () => startButton.setTexture("startBtnHover"));
-        startButton.on("pointerout", () => startButton.setTexture("startBtn"));
-        startButton.on("pointerdown", () => {
-            startButton.disableInteractive();
+        this.startButton.on("pointerover", () => this.startButton.setTexture("startBtnHover"));
+        this.startButton.on("pointerout", () => this.startButton.setTexture("startBtn"));
+        this.startButton.on("pointerdown", () => {
+            this.startButton.disableInteractive();
             this.tweens.add({
-                targets: [overlay, title, startButton,rulesButton],
+                targets: [this.overlay, this.title, this.startButton, this.rulesButton],
                 alpha: 0,
                 duration: 600,
                 ease: "Power2",
                 onComplete: () => {
-                    overlay.destroy();
-                    title.destroy();
-                    startButton.destroy();
-                    rulesButton.destroy();      
+                    this.overlay.destroy();
+                    this.title.destroy();
+                    this.startButton.destroy();
+                    this.rulesButton.destroy();      
                     this.inputLocked = false; // 🔓 unlock movement when start is clicked          
                 }
             });
@@ -118,14 +118,17 @@ export default class MainScene extends Phaser.Scene {
         const ROOM_OFFSET_X = 0;
         const ROOM_OFFSET_Y = -30;
 
-        const bg = this.add.image(width / 2, height / 2, "background").setOrigin(0.5);
-        const scaleX = width / bg.width;
-        const scaleY = height / bg.height;
+        this.bg = this.add.image(width / 2, height / 2, "background").setOrigin(0.5);
+        const scaleX = width / this.bg.width;
+        const scaleY = height / this.bg.height;
         const scale = Math.max(scaleX, scaleY);
-        bg.setScale(scale);
-        bg.setScrollFactor(0);
-        bg.setPipeline("TextureTintPipeline");
+        this.bg.setScale(scale);
+        this.bg.setScrollFactor(0);
+        this.bg.setPipeline("TextureTintPipeline");
         this.textures.get("background").setFilter(Phaser.Textures.FilterMode.NEAREST);
+
+        // Store initial scale for resizing
+        this.initialScale = scale;
 
         const shapes = this.cache.json.get("roomShape");
         this.roomCollider = this.matter.add.sprite(width / 2, height / 2, "background", null, {
@@ -155,6 +158,12 @@ export default class MainScene extends Phaser.Scene {
             height: this.player.height * 4.3
         });
         this.player.setFixedRotation();
+
+        // Store original positions for resizing
+        this.player.originalX = 910;
+        this.player.originalY = 780;
+        this.player.offsetX = 0;
+        this.player.offsetY = 0;
 
         this.keys = this.input.keyboard.addKeys({
             up: Phaser.Input.Keyboard.KeyCodes.W,
@@ -242,8 +251,8 @@ export default class MainScene extends Phaser.Scene {
 
 const createObject = (name, originalX, originalY, offsetX, offsetY, depth = 1) => {
     // Get the current display size of the scaled game
-    const displayWidth = this.scale.displaySize.width;
-    const displayHeight = this.scale.displaySize.height;
+    const displayWidth = this.scale.width;
+    const displayHeight = this.scale.height;
 
     // Get the original game dimensions for ratio calculation
     const originalScreenWidth = 1920;
@@ -258,40 +267,56 @@ const createObject = (name, originalX, originalY, offsetX, offsetY, depth = 1) =
     const obj = this.add.sprite(newX, newY, name).setOrigin(0.5).setScale(scale).setDepth(depth);
     obj.setPosition(obj.x + offsetX, obj.y + offsetY);
     this.textures.get(name).setFilter(Phaser.Textures.FilterMode.NEAREST);
+    // Store original positions for resizing
+    obj.originalX = originalX;
+    obj.originalY = originalY;
+    obj.offsetX = offsetX;
+    obj.offsetY = offsetY;
     return obj;
 }
 
 // All object creation calls remain the same as the function now handles the scaling
-const bed = createObject("bed", 600, 400, 66+120, -28+135);
-const bed_s = createObject("bed_s", 600, 400, 66+114, -28+135, 2);
+const bed = createObject("bed", 600, 400, 66+140, -28+147);
+const bed_s = createObject("bed_s", 600, 400, 66+133, -28+147, 2);
 const about_me = createObject("about_me", 600, 400, 63+120, -221+135);
 bed_s.setVisible(false);
 about_me.setVisible(false);
 this.objects_b = { bed, bed_s, about_me };
 bed_s.setInteractive({ useHandCursor: true }).on("pointerdown", () => this.bedPopup.show())
 
-const cabinet = createObject("cabinet", 600, 400, 286+120, 29+135);
-const cabinet_s = createObject("cabinet_s", 600, 400, 286+120, 29+135, 2);
+const cabinet = createObject("cabinet", 600, 400, 286+165, 29+156);
+const cabinet_s = createObject("cabinet_s", 600, 400, 286+165, 29+156, 2);
 const contact_info = createObject("contact_info", 600, 400, 267+120, -103+135);
 cabinet_s.setVisible(false);
 contact_info.setVisible(false);
 this.objects_c = { cabinet, cabinet_s, contact_info };
 cabinet_s.setInteractive({ useHandCursor: true }).on("pointerdown", () => this.contactPopup.show())
 
-const laptop = createObject("laptop", 600, 400, -172+120, 61+135, 2);
-const laptop_s = createObject("laptop_s", 600, 400, -172+120, 61+135, 2);
+const laptop = createObject("laptop", 600, 400, -172+114, 61+157, 2);
+const laptop_s = createObject("laptop_s", 600, 400, -172+114, 61+157, 2);
 const projects = createObject("projects", 600, 400, -166+120, -47+135);
 laptop_s.setVisible(false);
 projects.setVisible(false);
 this.objects_l = { laptop, laptop_s, projects };
 laptop_s.setInteractive({ useHandCursor: true }).on("pointerdown", () => this.projectsPopup.show());
 
-const bookshelf = createObject("bookshelf", 600, 400, 514+120, -75+135);
-const bookshelf_s = createObject("bookshelf_s", 600, 400, 514+120, -75+135, 2);
-const skills = createObject("skills", 600, 400, 329+120, -155+135);
+const bookshelf = createObject("bookshelf", 600, 400, 514+191, -75+143);
+const bookshelf_s = createObject("bookshelf_s", 600, 400, 514+191, -75+143, 2);
+const skills = createObject("skills", 600, 400, 329+170, -155+135);
 bookshelf_s.setVisible(false);
 skills.setVisible(false);
 this.objects_bs = { bookshelf, bookshelf_s, skills }
+
+// Store all objects for resizing
+this.allObjects = [
+    bed, bed_s, about_me,
+    cabinet, cabinet_s, contact_info,
+    laptop, laptop_s, projects,
+    bookshelf, bookshelf_s, skills
+];
+
+// Add resize event listener
+this.scale.on('resize', this.resize, this);
  }
 
     update() {
@@ -400,5 +425,75 @@ this.objects_bs = { bookshelf, bookshelf_s, skills }
                 this.skillsPopup.show(); // ✅ Added
             }  
         }
+    }
+
+    resize(gameSize) {
+        const { width, height } = gameSize;
+
+        // Reposition and rescale background
+        const bgSourceWidth = this.textures.get("background").getSourceImage().width;
+        const bgSourceHeight = this.textures.get("background").getSourceImage().height;
+        const scaleX = width / bgSourceWidth;
+        const scaleY = height / bgSourceHeight;
+        const bgScale = Math.max(scaleX, scaleY);
+        this.bg.setScale(bgScale);
+        this.bg.setPosition(width / 2, height / 2);
+
+        // Reposition and rescale room collider
+        const colliderSourceWidth = this.roomCollider.width / this.roomCollider.scaleX; // assuming original scale is 1
+        const colliderSourceHeight = this.roomCollider.height / this.roomCollider.scaleY;
+        const colliderScaleX = width / colliderSourceWidth;
+        const colliderScaleY = height / colliderSourceHeight;
+        this.roomCollider.setScale(colliderScaleX, colliderScaleY);
+        this.roomCollider.setPosition(width / 2 + ROOM_OFFSET_X, height / 2 + ROOM_OFFSET_Y);
+
+        // Reposition start screen elements if they exist
+        if (this.overlay) {
+            this.overlay.setPosition(width / 2, height / 2);
+            this.overlay.setSize(width, height);
+        }
+        if (this.title) {
+            this.title.setPosition(width / 2, height / 2 - 100);
+        }
+        if (this.startButton) {
+            this.startButton.setPosition(width / 2, height / 2 + 100);
+        }
+        if (this.rulesButton) {
+            this.rulesButton.setPosition(20, 20);
+        }
+        if (this.rulesOverlay) {
+            this.rulesOverlay.setPosition(width / 2, height / 2);
+            this.rulesOverlay.setSize(width, height);
+        }
+        if (this.rulesPopup) {
+            this.rulesPopup.setPosition(width / 2, height / 2);
+        }
+        if (this.closeButton) {
+            this.closeButton.setPosition(width - 80, 40);
+        }
+
+        // Reposition player
+        const playerNewX = (this.player.originalX / 1920) * width + this.player.offsetX;
+        const playerNewY = (this.player.originalY / 1200) * height + this.player.offsetY;
+        this.player.setPosition(playerNewX, playerNewY);
+        this.player.setScale(7 * (bgScale / this.initialScale));
+        // Update physics body to match new scale
+        this.player.setBody({
+            type: "rectangle",
+            width: this.player.width * 4,
+            height: this.player.height * 4.3
+        });
+
+        // Reposition and rescale all objects
+        const originalScreenWidth = 1920;
+        const originalScreenHeight = 1200;
+        this.allObjects.forEach(obj => {
+            const newX = (obj.originalX / originalScreenWidth) * width;
+            const newY = (obj.originalY / originalScreenHeight) * height;
+            obj.setPosition(newX + obj.offsetX, newY + obj.offsetY);
+            obj.setScale(bgScale);
+        });
+
+        // Also reposition popups if needed, but they might handle their own positioning
     }
 }
