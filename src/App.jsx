@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Game from "./Game";
+import Game from "./game";
 
 export default function App() {
   useEffect(() => {
