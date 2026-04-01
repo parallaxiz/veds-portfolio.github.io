@@ -7,6 +7,6 @@ export default defineConfig({
     port: 5173,
   },
   base: process.env.NODE_ENV === 'production'
-    ? '/veds-portfolio.github.io/' // For GitHub Pages
+    ? '/' // For Vercel deployment
     : '/',
 });
