@@ -1,7 +1,7 @@
-import ContactPopup from "C:/Users/vedm1/ved_project/src/ui/ContactPopup.js";
-import BedPopup from "C:/Users/vedm1/ved_project/src/ui/BedPopup.js";
-import ProjectsPopup from "C:/Users/vedm1/ved_project/src/ui/ProjectsPopup.js"; 
-import SkillsPopup from "C:/Users/vedm1/ved_project/src/ui/SkillsPopup.js"; 
+import ContactPopup from "../ui/ContactPopup.js";
+import BedPopup from "../ui/BedPopup.js";
+import ProjectsPopup from "../ui/ProjectsPopup.js"; 
+import SkillsPopup from "../ui/SkillsPopup.js"; 
 import Phaser from "phaser";
 
 export default class MainScene extends Phaser.Scene {
@@ -551,6 +551,7 @@ this.scale.on('resize', this.resize, this);
             this.recruitersButton.setPosition(width / 2 - 200, height / 2 + 100);
         }
         if (this.peopleButton) {
+            
             this.peopleButton.setPosition(width / 2 + 200, height / 2 + 100);
         }
         if (this.rulesButton) {
