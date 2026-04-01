@@ -38,7 +38,8 @@ export default class MainScene extends Phaser.Scene {
         })
             .setOrigin(0, 0)
             .setInteractive({ useHandCursor: true })
-            .setDepth(102);
+            .setDepth(102)
+            .setVisible(false); // Initially hidden
         
         // Create hidden overlay for rules popup
         this.rulesOverlay = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.8)
@@ -70,11 +71,45 @@ export default class MainScene extends Phaser.Scene {
             this.closeButton.setVisible(true);
         });
         
-        // Hide rules popup when close button clicked
         this.closeButton.on("pointerdown", () => {
             this.rulesOverlay.setVisible(false);
             this.rulesPopup.setVisible(false);
             this.closeButton.setVisible(false);
+        });
+
+        // Add back button (initially hidden)
+        this.backButton = this.add.text(width - 100, 20, "Back", {
+            fontFamily: "edit-undo",
+            fontSize: "48px",
+            color: "#ffffff",
+            backgroundColor: "#3e3b66",
+            padding: { x: 15, y: 10 }
+        })
+            .setOrigin(1, 0)
+            .setInteractive({ useHandCursor: true })
+            .setDepth(102)
+            .setVisible(false);
+
+        this.backButton.on("pointerdown", () => {
+            // Make elements visible before fading in
+            this.overlay.setVisible(true);
+            this.title.setVisible(true);
+            this.buttonsGroup.setVisible(true);
+            // Re-enable button interactivity
+            this.peopleButton.getAt(0).setInteractive(); // The background rectangle
+            this.recruitersButton.getAt(0).setInteractive();
+            // Fade in start screen
+            this.tweens.add({
+                targets: [this.overlay, this.title, this.buttonsGroup],
+                alpha: 1,
+                duration: 600,
+                ease: 'Power2',
+                onComplete: () => {
+                    this.inputLocked = true;
+                    this.backButton.setVisible(false);
+                    this.rulesButton.setVisible(false);
+                }
+            });
         });
 
         // Title breathing animation
@@ -87,30 +122,87 @@ export default class MainScene extends Phaser.Scene {
             ease: "Sine.easeInOut"
         });
 
-        this.startButton = this.add.image(width / 2, height / 2 + 100, "startBtn")
-            .setOrigin(0.5)
-            .setInteractive({ useHandCursor: true })
-            .setDepth(101)
-            .setScale(10);
+            // --- Centered, larger, square buttons with icons ---
+            const buttonWidth = 340;
+            const buttonHeight = 140; // Made taller for more square look
+            const buttonFontSize = '44px';
+            const buttonPadding = { x: 30, y: 24 };
+            const buttonSpacing = 40;
 
-        this.startButton.on("pointerover", () => this.startButton.setTexture("startBtnHover"));
-        this.startButton.on("pointerout", () => this.startButton.setTexture("startBtn"));
-        this.startButton.on("pointerdown", () => {
-            this.startButton.disableInteractive();
-            this.tweens.add({
-                targets: [this.overlay, this.title, this.startButton, this.rulesButton],
-                alpha: 0,
-                duration: 600,
-                ease: "Power2",
-                onComplete: () => {
-                    this.overlay.destroy();
-                    this.title.destroy();
-                    this.startButton.destroy();
-                    this.rulesButton.destroy();      
-                    this.inputLocked = false; // 🔓 unlock movement when start is clicked          
-                }
-            });
-        });
+            // Recruiters button
+            const recruitersBg = this.add.rectangle(0, 0, buttonWidth, buttonHeight, 0x3e3b66, 1)
+                .setOrigin(0.5)
+                .setStrokeStyle(6, 0xffffff);
+            const recruitersIcon = this.add.text(0, -buttonHeight * 0.18, '💼', {
+                fontSize: '48px',
+                fontFamily: 'edit-undo',
+                color: '#fff',
+                align: 'center',
+            }).setOrigin(0.5);
+            const recruitersText = this.add.text(0, buttonHeight * 0.18, 'RECRUITERS', {
+                fontFamily: 'edit-undo',
+                fontSize: buttonFontSize,
+                color: '#ffffff',
+                align: 'center',
+            }).setOrigin(0.5);
+            this.recruitersButton = this.add.container(0, 0, [recruitersBg, recruitersIcon, recruitersText]);
+            this.recruitersButton.setSize(buttonWidth, buttonHeight);
+            recruitersBg.setInteractive()
+                .on('pointerover', () => recruitersBg.setFillStyle(0x5e5b96))
+                .on('pointerout', () => recruitersBg.setFillStyle(0x3e3b66))
+                .on('pointerdown', () => {
+                    window.location.href = 'recruiters.html';
+                });
+
+            // People Just Looking Around button
+            const peopleBg = this.add.rectangle(0, 0, buttonWidth + 80, buttonHeight, 0x3e3b66, 1)
+                .setOrigin(0.5)
+                .setStrokeStyle(6, 0xffffff);
+            const peopleIcon = this.add.text(0, -buttonHeight * 0.18, '👀', {
+                fontSize: '48px',
+                fontFamily: 'edit-undo',
+                color: '#fff',
+                align: 'center',
+            }).setOrigin(0.5);
+            const peopleText = this.add.text(0, buttonHeight * 0.18, 'PEOPLE JUST\nLOOKING AROUND', {
+                fontFamily: 'edit-undo',
+                fontSize: buttonFontSize,
+                color: '#ffffff',
+                align: 'center',
+            }).setOrigin(0.5);
+            this.peopleButton = this.add.container(0, 0, [peopleBg, peopleIcon, peopleText]);
+            this.peopleButton.setSize(buttonWidth + 80, buttonHeight);
+            peopleBg.setInteractive()
+                .on('pointerover', () => peopleBg.setFillStyle(0x5e5b96))
+                .on('pointerout', () => peopleBg.setFillStyle(0x3e3b66))
+                .on('pointerdown', () => {
+                    this.peopleButton.disableInteractive();
+                    this.recruitersButton.disableInteractive();
+                    this.tweens.add({
+                        targets: [this.overlay, this.title, this.buttonsGroup],
+                        alpha: 0,
+                        duration: 600,
+                        ease: 'Power2',
+                        onComplete: () => {
+                            this.overlay.setVisible(false);
+                            this.title.setVisible(false);
+                            this.buttonsGroup.setVisible(false);
+                            this.inputLocked = false;
+                            this.backButton.setVisible(true);
+                            this.rulesButton.setVisible(true);
+                        }
+                    });
+                });
+
+            // Center the buttons as a group
+            const totalButtonWidth = buttonWidth + 80 + buttonSpacing;
+            this.recruitersButton.x = -((buttonWidth + 80) / 2 + buttonSpacing / 2);
+            this.peopleButton.x = ((buttonWidth + 80) / 2 + buttonSpacing / 2);
+            this.recruitersButton.y = 0;
+            this.peopleButton.y = 0;
+            // Add both buttons to a container
+            this.buttonsGroup = this.add.container(width / 2, height / 2 + 120, [this.recruitersButton, this.peopleButton]);
+            this.buttonsGroup.setDepth(101);
 
         // -------------------------------
         // BACKGROUND + COLLIDER
@@ -455,11 +547,20 @@ this.scale.on('resize', this.resize, this);
         if (this.title) {
             this.title.setPosition(width / 2, height / 2 - 100);
         }
-        if (this.startButton) {
-            this.startButton.setPosition(width / 2, height / 2 + 100);
+        if (this.recruitersButton) {
+            this.recruitersButton.setPosition(width / 2 - 200, height / 2 + 100);
+        }
+        if (this.peopleButton) {
+            this.peopleButton.setPosition(width / 2 + 200, height / 2 + 100);
         }
         if (this.rulesButton) {
             this.rulesButton.setPosition(20, 20);
+        }
+        if (this.buttonsGroup) {
+            this.buttonsGroup.setPosition(width / 2, height / 2 + 120);
+        }
+        if (this.backButton) {
+            this.backButton.setPosition(width - 100, 20);
         }
         if (this.rulesOverlay) {
             this.rulesOverlay.setPosition(width / 2, height / 2);

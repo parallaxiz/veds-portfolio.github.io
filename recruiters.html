@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ved's Portfolio — Recruiter View</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:   #1a1a2e;
+      --deep:   #16213e;
+      --panel:  #0f2a44;
+      --teal:   #3dbdbd;
+      --teal2:  #56e0d8;
+      --stripe1:#2a3a6e;
+      --stripe2:#1e2d5a;
+      --warm:   #c8a96e;
+      --text:   #d8eaf4;
+      --dim:    #7aa8c4;
+      --white:  #f0f8ff;
+      --accent: #ff9f5a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--navy);
+      color: var(--text);
+      font-family: 'VT323', monospace;
+      font-size: 20px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Scanline overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px, transparent 3px,
+        rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Striped bg like the bedroom wallpaper */
+    .bg-stripes {
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--stripe1) 0px, var(--stripe1) 40px,
+        var(--stripe2) 40px, var(--stripe2) 80px
+      );
+      opacity: 0.18;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: 56px 20px 36px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-tag {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      color: var(--teal);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      animation: blink 1.2s step-end infinite;
+    }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(20px, 5vw, 36px);
+      color: var(--white);
+      line-height: 1.5;
+      text-shadow:
+        4px 4px 0 var(--teal),
+        8px 8px 0 rgba(61,189,189,0.25);
+      margin-bottom: 14px;
+      animation: slideDown 0.6s ease both;
+    }
+
+    .subtitle {
+      font-size: 22px;
+      color: var(--dim);
+      animation: slideDown 0.6s 0.1s ease both;
+    }
+
+    @keyframes slideDown {
+      from { opacity:0; transform:translateY(-18px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .sprite-row {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin: 22px 0 0;
+      font-size: 28px;
+      animation: slideDown 0.6s 0.2s ease both;
+    }
+    .sprite-row span:hover { display:inline-block; animation: bounce 0.4s ease; }
+    @keyframes bounce {
+      0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)}
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--deep);
+      border-bottom: 4px solid var(--teal);
+      border-top: 4px solid var(--teal);
+      padding: 10px 0;
+      margin-bottom: 40px;
+      text-align: center;
+      box-shadow: 0 4px 0 rgba(61,189,189,0.25);
+    }
+    nav a {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: var(--teal);
+      text-decoration: none;
+      margin: 0 16px;
+      letter-spacing: 0.1em;
+      transition: color 0.15s;
+    }
+    nav a:hover { color: var(--accent); }
+    nav a::before { content: '▶ '; }
+
+    /* ── Sections ── */
+    section {
+      margin-bottom: 48px;
+      background: var(--panel);
+      border: 4px solid var(--teal);
+      box-shadow:
+        0 0 0 4px var(--deep),
+        0 0 0 8px var(--teal),
+        10px 10px 0 8px rgba(0,0,0,0.45);
+      animation: fadeUp 0.5s ease both;
+      position: relative;
+    }
+    section:nth-child(1){ animation-delay:0.1s; }
+    section:nth-child(2){ animation-delay:0.2s; }
+    section:nth-child(3){ animation-delay:0.3s; }
+    section:nth-child(4){ animation-delay:0.4s; }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(18px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .section-header {
+      background: var(--teal);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-header h2 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px;
+      color: var(--navy);
+      letter-spacing: 0.05em;
+    }
+    .section-icon { font-size: 18px; }
+
+    .section-body { padding: 24px 28px; }
+
+    p { margin-bottom: 14px; color: var(--text); }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── Stat bars ── */
+    .stat-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .stat-bar-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 6px;
+      color: var(--dim);
+      width: 90px;
+      flex-shrink: 0;
+    }
+    .stat-bar {
+      flex: 1;
+      height: 12px;
+      background: var(--deep);
+      border: 2px solid var(--teal);
+      overflow: hidden;
+    }
+    .stat-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal), var(--teal2));
+      transition: width 1s ease;
+    }
+    .stat-val {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 6px;
+      color: var(--teal2);
+      width: 36px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* ── Skills grid ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+    .skill-card {
+      background: var(--deep);
+      border: 3px solid var(--stripe1);
+      padding: 14px 16px;
+      transition: border-color 0.2s, transform 0.15s, box-shadow 0.15s;
+    }
+    .skill-card:hover {
+      border-color: var(--teal);
+      transform: translate(-2px,-2px);
+      box-shadow: 4px 4px 0 var(--teal);
+    }
+    .skill-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 6px;
+      color: var(--teal2);
+      margin-bottom: 8px;
+    }
+    .skill-items { font-size: 18px; color: var(--text); line-height: 1.9; }
+
+    /* ── Projects ── */
+    .project-card {
+      background: var(--deep);
+      border: 3px solid var(--stripe1);
+      padding: 20px 22px;
+      margin-bottom: 16px;
+      transition: border-color 0.2s, transform 0.15s, box-shadow 0.15s;
+    }
+    .project-card:last-child { margin-bottom: 0; }
+    .project-card:hover {
+      border-color: var(--accent);
+      transform: translate(-3px,-3px);
+      box-shadow: 6px 6px 0 var(--accent);
+    }
+    .project-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .project-desc { font-size: 19px; color: var(--dim); margin-bottom: 12px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 6px;
+      background: var(--panel);
+      border: 2px solid var(--teal);
+      color: var(--teal);
+      padding: 4px 8px;
+    }
+
+    /* ── Contact ── */
+    .contact-list { display: flex; flex-direction: column; gap: 14px; }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--deep);
+      border: 3px solid var(--stripe1);
+      padding: 14px 18px;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.2s, transform 0.15s, box-shadow 0.15s;
+    }
+    .contact-item:hover {
+      border-color: var(--teal2);
+      transform: translate(-2px,-2px);
+      box-shadow: 4px 4px 0 var(--teal2);
+      color: var(--teal2);
+    }
+    .contact-icon { font-size: 24px; }
+    .contact-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 6px;
+      color: var(--dim);
+      margin-bottom: 4px;
+    }
+    .contact-value { font-size: 20px; }
+
+    /* ── Back button ── */
+    .back-btn {
+      display: block;
+      margin: 48px auto 0;
+      width: fit-content;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      background: var(--teal);
+      color: var(--navy);
+      padding: 14px 28px;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 4px 4px 0 var(--navy), 8px 8px 0 var(--teal2);
+      letter-spacing: 0.08em;
+    }
+    .back-btn:hover {
+      transform: translate(-2px,-2px);
+      box-shadow: 6px 6px 0 var(--navy), 12px 12px 0 var(--teal2);
+    }
+    .back-btn::before { content: '◀ '; }
+
+    footer {
+      text-align: center;
+      padding: 32px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: var(--stripe1);
+      letter-spacing: 0.1em;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 16px; }
+      nav a { margin: 0 8px; font-size: 6px; }
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-stripes"></div>
+
+<header>
+  <div class="header-tag">▶ PLAYER_ONE.EXE LOADED</div>
+  <h1>VED'S PORTFOLIO</h1>
+  <p class="subtitle">// RECRUITER VIEW — PRESS START</p>
+  <div class="sprite-row">
+    <span>🎮</span><span>💻</span><span>🎨</span><span>⚡</span><span>🚀</span>
+  </div>
+</header>
+
+<nav>
+  <a href="#about">ABOUT</a>
+  <a href="#skills">SKILLS</a>
+  <a href="#projects">PROJECTS</a>
+  <a href="#contact">CONTACT</a>
+</nav>
+
+<div class="wrapper">
+
+  <section id="about">
+    <div class="section-header">
+      <span class="section-icon">👾</span>
+      <h2>ABOUT ME</h2>
+    </div>
+    <div class="section-body">
+      <p>Hi — I'm Ved, studying at Vishwakarma Institute of Technology (graduating 2028). I don't memorize; I build. When something genuinely sparks my curiosity, I go all in.</p>
+      <p>I've always had a sharp eye for design — started with sketching, evolved into digital art and UI/UX. When that met coding, it clicked. I see code the way I see art: a medium for solving problems and making ideas real.</p>
+      <p>My sweet spot is the intersection of engineering and creativity — building things that work <em>and</em> feel great to use.</p>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="section-header">
+      <span class="section-icon">⚔️</span>
+      <h2>SKILLS &amp; STATS</h2>
+    </div>
+    <div class="section-body">
+      <div style="margin-bottom:28px;">
+        <div class="stat-bar-wrap">
+          <div class="stat-bar-label">PYTHON</div>
+          <div class="stat-bar"><div class="stat-fill" style="width:90%"></div></div>
+          <div class="stat-val">90</div>
+        </div>
+        <div class="stat-bar-wrap">
+          <div class="stat-bar-label">JAVASCRIPT</div>
+          <div class="stat-bar"><div class="stat-fill" style="width:82%"></div></div>
+          <div class="stat-val">82</div>
+        </div>
+        <div class="stat-bar-wrap">
+          <div class="stat-bar-label">UI / UX</div>
+          <div class="stat-bar"><div class="stat-fill" style="width:85%"></div></div>
+          <div class="stat-val">85</div>
+        </div>
+        <div class="stat-bar-wrap">
+          <div class="stat-bar-label">REACT</div>
+          <div class="stat-bar"><div class="stat-fill" style="width:78%"></div></div>
+          <div class="stat-val">78</div>
+        </div>
+        <div class="stat-bar-wrap">
+          <div class="stat-bar-label">AI / ML</div>
+          <div class="stat-bar"><div class="stat-fill" style="width:80%"></div></div>
+          <div class="stat-val">80</div>
+        </div>
+      </div>
+
+      <div class="skills-grid">
+        <div class="skill-card">
+          <div class="skill-label">LANGUAGES</div>
+          <div class="skill-items">Python<br>JavaScript<br>Java</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-label">WEB</div>
+          <div class="skill-items">React<br>Node.js<br>HTML / CSS</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-label">AI / DATA</div>
+          <div class="skill-items">Streamlit<br>n8n<br>LLM APIs</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-label">DESIGN</div>
+          <div class="skill-items">Figma<br>Digital Art<br>UI / UX</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-label">GAME DEV</div>
+          <div class="skill-items">Phaser.js<br>Pixel Art<br>Isometric</div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-label">TOOLS</div>
+          <div class="skill-items">Git<br>VS Code<br>DaVinci Resolve</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="section-header">
+      <span class="section-icon">📦</span>
+      <h2>PROJECTS</h2>
+    </div>
+    <div class="section-body">
+
+      <div class="project-card">
+        <div class="project-title">CODEXA</div>
+        <div class="project-desc">AI-powered coding education platform with Monaco editor, Streamlit frontend, n8n automation workflows, and DeepSeek models. Built under Oxlo.ai.</div>
+        <div class="tag-row">
+          <span class="tag">PYTHON</span>
+          <span class="tag">STREAMLIT</span>
+          <span class="tag">N8N</span>
+          <span class="tag">AI / LLM</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-title">DATA DICTIONARY AGENT</div>
+        <div class="project-desc">AI agent built for VIT Code Apex 2.0 hackathon. Autonomously analyzes the Kaggle Olist e-commerce dataset and generates structured data documentation.</div>
+        <div class="tag-row">
+          <span class="tag">AI AGENT</span>
+          <span class="tag">PYTHON</span>
+          <span class="tag">HACKATHON</span>
+          <span class="tag">DATA ENG</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-title">DNA SEQUENCE ANALYZER</div>
+        <div class="project-desc">Implements 4 string-search algorithms (Naive, Suffix Array, Suffix Tree, KMP/DAWG) on DNA sequences, with Plotly performance visualizations.</div>
+        <div class="tag-row">
+          <span class="tag">PYTHON</span>
+          <span class="tag">ALGORITHMS</span>
+          <span class="tag">PLOTLY</span>
+          <span class="tag">STREAMLIT</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-title">PORTFOLIO GAME</div>
+        <div class="project-desc">An interactive isometric pixel-art bedroom built in Phaser.js — this portfolio itself, as a playable game. You're inside it right now.</div>
+        <div class="tag-row">
+          <span class="tag">PHASER.JS</span>
+          <span class="tag">PIXEL ART</span>
+          <span class="tag">ISOMETRIC</span>
+          <span class="tag">GAME DEV</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="section-header">
+      <span class="section-icon">📡</span>
+      <h2>CONTACT</h2>
+    </div>
+    <div class="section-body">
+      <div class="contact-list">
+        <a href="mailto:ved@example.com" class="contact-item">
+          <span class="contact-icon">✉️</span>
+          <div>
+            <div class="contact-label">EMAIL</div>
+            <div class="contact-value">ved@example.com</div>
+          </div>
+        </a>
+        <a href="https://linkedin.com/in/ved" class="contact-item" target="_blank">
+          <span class="contact-icon">💼</span>
+          <div>
+            <div class="contact-label">LINKEDIN</div>
+            <div class="contact-value">linkedin.com/in/ved</div>
+          </div>
+        </a>
+        <a href="https://github.com/ved" class="contact-item" target="_blank">
+          <span class="contact-icon">🐙</span>
+          <div>
+            <div class="contact-label">GITHUB</div>
+            <div class="contact-value">github.com/ved</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <a href="index.html" class="back-btn">BACK TO GAME</a>
+
+</div>
+
+<footer>© 2026 VED — SAVE STATE LOADED — ALL RIGHTS RESERVED</footer>
+
+</body>
+</html>
