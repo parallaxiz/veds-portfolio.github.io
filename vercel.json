@@ -1,12 +1,7 @@
 {
-  "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/recruiters",
-      "destination": "/recruiters.html"
-    },
-    {
-      "source": "/(.*)",
+      "source": "/",
       "destination": "/index.html"
     }
   ]
