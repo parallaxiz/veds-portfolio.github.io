@@ -151,7 +151,7 @@ export default class MainScene extends Phaser.Scene {
                 .on('pointerover', () => recruitersBg.setFillStyle(0x5e5b96))
                 .on('pointerout', () => recruitersBg.setFillStyle(0x3e3b66))
                 .on('pointerdown', () => {
-                    window.location.href = 'recruiters.html';
+                    window.location.href = '/recruiters';
                 });
 
             // People Just Looking Around button
