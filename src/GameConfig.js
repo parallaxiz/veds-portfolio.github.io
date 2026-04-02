@@ -11,7 +11,7 @@ const GameConfig = {
     physics: {
         default: "matter",
         matter: {
-            debug: true,       // See polygons / collisions
+            debug: false,       // See polygons / collisions
             gravity: { y: 0 }  // Disable gravity if top-down
         }
     },
