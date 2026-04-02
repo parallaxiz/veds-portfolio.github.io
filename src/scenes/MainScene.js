@@ -207,8 +207,8 @@ export default class MainScene extends Phaser.Scene {
         // -------------------------------
         // BACKGROUND + COLLIDER
         // -------------------------------
-        const ROOM_OFFSET_X = 0;
-        const ROOM_OFFSET_Y = -30;
+        const ROOM_OFFSET_X = 40;
+        const ROOM_OFFSET_Y = -70;
 
         this.bg = this.add.image(width / 2, height / 2, "background").setOrigin(0.5);
         const scaleX = width / this.bg.width;
@@ -232,7 +232,7 @@ export default class MainScene extends Phaser.Scene {
 
         const colliderScaleX = width / this.roomCollider.width;
         const colliderScaleY = height / this.roomCollider.height;
-        this.roomCollider.setScale(colliderScaleX, colliderScaleY);
+        this.roomCollider.setScale(colliderScaleX+1, colliderScaleY+1);
         this.roomCollider.setPosition(width / 2 + ROOM_OFFSET_X, height / 2 + ROOM_OFFSET_Y);
 
         // -------------------------------
@@ -240,16 +240,27 @@ export default class MainScene extends Phaser.Scene {
         // -------------------------------
         const centerX = this.cameras.main.centerX;
         const centerY = this.cameras.main.centerY;
+        const PLAYER_VISUAL_OFFSET_Y = 50; // Shift sprite down by 50 pixels, keep hitbox in place
 
-        this.player = this.matter.add.sprite(centerX - 50, centerY + 180, "player", 0);
-        this.player.setDepth(2).setScale(7);
+        this.player = this.matter.add.sprite(centerX - 50, centerY + 180 + PLAYER_VISUAL_OFFSET_Y, "player", 0);
+        this.player.setDepth(2).setScale(10);
         this.textures.get("player").setFilter(Phaser.Textures.FilterMode.NEAREST);
-        this.player.setOrigin(0.5).setBody({
+        this.player.setOrigin(1).setBody({
             type: "rectangle",
             width: this.player.width * 4,
-            height: this.player.height * 4.3
+            height: this.player.height * 7,
+            offset: { x: 0, y: 300 }
         });
         this.player.setFixedRotation();
+
+        // Store original positions for resizing
+        this.player.originalX = centerX - 50;
+        this.player.originalY = centerY + 180;
+        this.player.offsetX = 0;
+        this.player.offsetY = 0;
+
+        // Enable debug rendering to show physics bodies (including player hitbox)
+        this.matter.world.createDebugGraphic();
 
         // Store original positions for resizing
         this.player.originalX = 910;
@@ -368,33 +379,33 @@ const createObject = (name, originalX, originalY, offsetX, offsetY, depth = 1) =
 }
 
 // All object creation calls remain the same as the function now handles the scaling
-const bed = createObject("bed", 600, 400, 66+140, -28+147);
-const bed_s = createObject("bed_s", 600, 400, 66+133, -28+147, 2);
-const about_me = createObject("about_me", 600, 400, 63+120, -221+135);
+const bed = createObject("bed", 600, 592, 205, -28);
+const bed_s = createObject("bed_s", 600, 592, 197, -28, 2);
+const about_me = createObject("about_me", 600, 400, 63, -221);
 bed_s.setVisible(false);
 about_me.setVisible(false);
 this.objects_b = { bed, bed_s, about_me };
 bed_s.setInteractive({ useHandCursor: true }).on("pointerdown", () => this.bedPopup.show())
 
-const cabinet = createObject("cabinet", 600, 400, 286+165, 29+156);
-const cabinet_s = createObject("cabinet_s", 600, 400, 286+165, 29+156, 2);
-const contact_info = createObject("contact_info", 600, 400, 267+120, -103+135);
+const cabinet = createObject("cabinet", 600, 400, 538, 252);
+const cabinet_s = createObject("cabinet_s", 600, 400, 538, 252, 2);
+const contact_info = createObject("contact_info", 600, 400, 267, -103);
 cabinet_s.setVisible(false);
 contact_info.setVisible(false);
 this.objects_c = { cabinet, cabinet_s, contact_info };
 cabinet_s.setInteractive({ useHandCursor: true }).on("pointerdown", () => this.contactPopup.show())
 
-const laptop = createObject("laptop", 600, 400, -172+114, 61+157, 2);
-const laptop_s = createObject("laptop_s", 600, 400, -172+114, 61+157, 2);
-const projects = createObject("projects", 600, 400, -166+120, -47+135);
+const laptop = createObject("laptop", 600, 400, -156, 299, 2);
+const laptop_s = createObject("laptop_s", 600, 400, -156, 299, 2);
+const projects = createObject("projects", 600, 400, -166, -47);
 laptop_s.setVisible(false);
 projects.setVisible(false);
 this.objects_l = { laptop, laptop_s, projects };
 laptop_s.setInteractive({ useHandCursor: true }).on("pointerdown", () => this.projectsPopup.show());
 
-const bookshelf = createObject("bookshelf", 600, 400, 514+191, -75+143);
-const bookshelf_s = createObject("bookshelf_s", 600, 400, 514+191, -75+143, 2);
-const skills = createObject("skills", 600, 400, 329+170, -155+135);
+const bookshelf = createObject("bookshelf", 600, 400, 887, 92);
+const bookshelf_s = createObject("bookshelf_s", 600, 400, 887, 92, 2);
+const skills = createObject("skills", 600, 400, 329, -155);
 bookshelf_s.setVisible(false);
 skills.setVisible(false);
 this.objects_bs = { bookshelf, bookshelf_s, skills }
@@ -479,7 +490,8 @@ this.scale.on('resize', this.resize, this);
 
         objectGroups.forEach(({ key, normal, selected }) => {
             const distance = Phaser.Math.Distance.Between(this.player.x, this.player.y, normal.x, normal.y);
-            if (distance < 120 && distance < minDistance) {
+            const detectionRadius = key === "bookshelf" ? 200 : 120; // Larger radius for bookshelf
+            if (distance < detectionRadius && distance < minDistance) {
                 minDistance = distance;
                 activeObject = key;
             }
@@ -575,8 +587,9 @@ this.scale.on('resize', this.resize, this);
         }
 
         // Reposition player
+        const PLAYER_VISUAL_OFFSET_Y = 50;
         const playerNewX = (this.player.originalX / 1920) * width + this.player.offsetX;
-        const playerNewY = (this.player.originalY / 1200) * height + this.player.offsetY;
+        const playerNewY = (this.player.originalY / 1200) * height + this.player.offsetY + PLAYER_VISUAL_OFFSET_Y;
         this.player.setPosition(playerNewX, playerNewY);
         this.player.setScale(7 * (bgScale / this.initialScale));
         // Update physics body to match new scale
