@@ -69,10 +69,14 @@ export default class MainScene extends Phaser.Scene {
         this.matter.world.createDebugGraphic();
 
         this.keys = this.input.keyboard.addKeys({
-            up: Phaser.Input.Keyboard.KeyCodes.W,
-            down: Phaser.Input.Keyboard.KeyCodes.S,
-            left: Phaser.Input.Keyboard.KeyCodes.A,
-            right: Phaser.Input.Keyboard.KeyCodes.D,
+            w: Phaser.Input.Keyboard.KeyCodes.W,
+            s: Phaser.Input.Keyboard.KeyCodes.S,
+            a: Phaser.Input.Keyboard.KeyCodes.A,
+            d: Phaser.Input.Keyboard.KeyCodes.D,
+            up: Phaser.Input.Keyboard.KeyCodes.UP,
+            down: Phaser.Input.Keyboard.KeyCodes.DOWN,
+            left: Phaser.Input.Keyboard.KeyCodes.LEFT,
+            right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
             interactKey: Phaser.Input.Keyboard.KeyCodes.E
         });
 
@@ -177,7 +181,7 @@ export default class MainScene extends Phaser.Scene {
         this.bubbles = {
             bed: createBubble(bed.x, bed.y - 30 * scale),
             cabinet: createBubble(cabinet.x, cabinet.y - 20 * scale),
-            laptop: createBubble(laptop.x, laptop.y - 25 * scale),
+            laptop: createBubble(laptop.x, laptop.y - 22 * scale),
             bookshelf: createBubble(bookshelf.x, bookshelf.y - 30 * scale)
         };
 
@@ -247,13 +251,13 @@ export default class MainScene extends Phaser.Scene {
         this.player.setDepth(this.player.y / 140);
 
         const speed = 10;
-        const { up, down, left, right } = this.keys;
+        const { w, s, a, d, up, down, left, right } = this.keys;
         const player = this.player;
 
-        const walkUp = up.isDown || this.mobileInput.up;
-        const walkDown = down.isDown || this.mobileInput.down;
-        const walkLeft = left.isDown || this.mobileInput.left;
-        const walkRight = right.isDown || this.mobileInput.right;
+        const walkUp = w.isDown || up.isDown || this.mobileInput.up;
+        const walkDown = s.isDown || down.isDown || this.mobileInput.down;
+        const walkLeft = a.isDown || left.isDown || this.mobileInput.left;
+        const walkRight = d.isDown || right.isDown || this.mobileInput.right;
 
         player.setVelocity(0);
         if (walkUp && walkLeft) {
