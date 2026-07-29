@@ -381,7 +381,7 @@ const PROJECTS = [
     title: "Oxlo AI Tutor",
     desc: "Developed a responsive AI-driven tutoring platform using Flask and Google Gemini Pro for real-time educational assistance. Integrated a dynamic Markdown chat interface with lab environment custom modules.",
     tags: ["PYTHON", "FLASK", "GEMINI PRO", "GENAI"],
-    link: "https://github.com/parallaxiz",
+    link: "https://github.com/parallaxiz/oxlo.ai-tutor",
   },
   {
     id: "flagforge",
