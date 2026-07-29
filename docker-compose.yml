@@ -1,0 +1,9 @@
+services:
+  portfolio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ved-portfolio
+    ports:
+      - "8080:80"
+    restart: always
