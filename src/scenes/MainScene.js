@@ -65,10 +65,10 @@ export default class MainScene extends Phaser.Scene {
         const bgBounds = this.bg.getBounds();
         this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
         this.cameras.main.setBounds(bgBounds.x, bgBounds.y, bgBounds.width, bgBounds.height);
-        
+
         const updateZoom = () => {
             const isMobileScreen = window.innerWidth < 768 || this.sys.game.device.input.touch;
-            this.cameras.main.setZoom(isMobileScreen ? 1.3 : 1.15);
+            this.cameras.main.setZoom(isMobileScreen ? 0.85 : 1.0);
         };
         updateZoom();
 
