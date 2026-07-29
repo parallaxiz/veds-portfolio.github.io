@@ -240,16 +240,16 @@ function TypewriterDialogue({ text, name, onTriggerInteract }) {
   return (
     <div 
       onClick={onTriggerInteract}
-      className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[94vw] max-w-[650px] bg-[#161426]/95 border-2 md:border-4 border-[#3e3b66] rounded-xl p-3 md:p-4 text-white z-[300] flex flex-col gap-1 select-none shadow-2xl hover:border-[#e2933f] transition duration-200 cursor-pointer touch-manipulation active:scale-[0.99]"
+      className="fixed top-14 md:top-auto md:bottom-6 left-1/2 -translate-x-1/2 w-[92vw] max-w-[650px] bg-[#161426]/95 border-2 md:border-4 border-[#3e3b66] rounded-xl p-3 md:p-4 text-white z-[350] flex flex-col gap-1 select-none shadow-2xl hover:border-[#e2933f] transition duration-200 cursor-pointer touch-manipulation active:scale-[0.99]"
       style={{ fontFamily: 'edit-undo' }}
     >
       <div className="text-[#e2933f] text-xs md:text-sm uppercase tracking-wider font-bold">
         &gt; {name}
       </div>
-      <div className="text-xs md:text-base leading-relaxed tracking-wider min-h-[40px] md:min-h-[48px]">
+      <div className="text-xs md:text-base leading-relaxed tracking-wider min-h-[36px] md:min-h-[48px]">
         {displayedText}
       </div>
-      <div className="text-right text-[8px] md:text-[9px] text-gray-400 animate-pulse uppercase mt-1">
+      <div className="text-right text-[8px] md:text-[9px] text-gray-400 animate-pulse uppercase mt-0.5">
         [ Tap or Press E to interact ]
       </div>
     </div>
@@ -572,40 +572,43 @@ export default function App() {
         <button
           onTouchStart={(e) => { e.preventDefault(); handleInteractButton(); }}
           onClick={handleInteractButton}
-          className={`fixed bottom-4 left-4 z-[300] md:hidden w-14 h-14 font-bold text-2xl rounded-full border-3 shadow-2xl flex items-center justify-center cursor-pointer touch-manipulation select-none transition-all duration-200 ${
+          className={`fixed bottom-4 left-4 z-[300] md:hidden w-16 h-16 rounded-2xl flex flex-col items-center justify-center cursor-pointer touch-manipulation select-none transition-all duration-200 shadow-2xl ${
             dialogue
-              ? "bg-[#e2933f] hover:bg-[#d17e2e] text-white border-yellow-300 shadow-[0_0_25px_rgba(226,147,63,0.9)] animate-pulse scale-105"
-              : "bg-[#3e3b66]/80 hover:bg-[#3e3b66] text-white/50 border-white/30"
+              ? "bg-gradient-to-b from-[#f5af42] to-[#d17e2e] text-white border-2 border-yellow-200 shadow-[0_0_25px_rgba(245,175,66,0.9)] animate-pulse scale-105"
+              : "bg-gradient-to-b from-[#2d2a4f]/90 to-[#161426]/90 text-white/50 border-2 border-[#5c5893]/60 shadow-lg active:scale-95"
           }`}
           style={{ fontFamily: "edit-undo" }}
           title="Interact"
         >
-          E
+          <span className="text-2xl font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">E</span>
+          <span className={`text-[8px] font-bold uppercase -mt-1 tracking-tighter ${dialogue ? "text-white" : "text-gray-400"}`}>
+            {dialogue ? "OPEN" : "ACT"}
+          </span>
         </button>
       )}
 
       {/* Mobile Virtual D-Pad Overlay */}
       {isStarted && !activeModal && showDpad && (
-        <div className="fixed bottom-3 right-3 flex flex-col items-center gap-1 z-[300] pointer-events-auto select-none md:hidden scale-90 sm:scale-100 origin-bottom-right">
+        <div className="fixed bottom-3 right-3 flex flex-col items-center gap-1 z-[300] pointer-events-auto select-none md:hidden scale-95 origin-bottom-right bg-[#161426]/60 p-2 rounded-2xl border border-[#3e3b66]/60 backdrop-blur-xs shadow-2xl">
           {/* Up */}
           <button
             onTouchStart={(e) => { e.preventDefault(); triggerMobileMove("up", true); }}
             onTouchEnd={(e) => { e.preventDefault(); triggerMobileMove("up", false); }}
             onMouseDown={() => triggerMobileMove("up", true)}
             onMouseUp={() => triggerMobileMove("up", false)}
-            className="w-12 h-12 bg-[#3e3b66]/90 hover:bg-[#2d2a4f]/90 active:bg-[#e2933f] border-2 border-white rounded-full flex items-center justify-center text-white text-xl font-bold font-sans shadow-lg cursor-pointer touch-manipulation active:scale-95"
+            className="w-12 h-12 bg-gradient-to-b from-[#3e3b66] to-[#242238] active:from-[#e2933f] active:to-[#d17e2e] border-2 border-[#5c5893] active:border-white rounded-xl flex items-center justify-center text-white text-lg font-bold shadow-md cursor-pointer touch-manipulation active:scale-95 transition-all"
           >
             ▲
           </button>
           
-          <div className="flex gap-4">
+          <div className="flex gap-2">
             {/* Left */}
             <button
               onTouchStart={(e) => { e.preventDefault(); triggerMobileMove("left", true); }}
               onTouchEnd={(e) => { e.preventDefault(); triggerMobileMove("left", false); }}
               onMouseDown={() => triggerMobileMove("left", true)}
               onMouseUp={() => triggerMobileMove("left", false)}
-              className="w-12 h-12 bg-[#3e3b66]/90 hover:bg-[#2d2a4f]/90 active:bg-[#e2933f] border-2 border-white rounded-full flex items-center justify-center text-white text-xl font-bold font-sans shadow-lg cursor-pointer touch-manipulation active:scale-95"
+              className="w-12 h-12 bg-gradient-to-b from-[#3e3b66] to-[#242238] active:from-[#e2933f] active:to-[#d17e2e] border-2 border-[#5c5893] active:border-white rounded-xl flex items-center justify-center text-white text-lg font-bold shadow-md cursor-pointer touch-manipulation active:scale-95 transition-all"
             >
               ◀
             </button>
@@ -615,7 +618,7 @@ export default function App() {
               onTouchEnd={(e) => { e.preventDefault(); triggerMobileMove("right", false); }}
               onMouseDown={() => triggerMobileMove("right", true)}
               onMouseUp={() => triggerMobileMove("right", false)}
-              className="w-12 h-12 bg-[#3e3b66]/90 hover:bg-[#2d2a4f]/90 active:bg-[#e2933f] border-2 border-white rounded-full flex items-center justify-center text-white text-xl font-bold font-sans shadow-lg cursor-pointer touch-manipulation active:scale-95"
+              className="w-12 h-12 bg-gradient-to-b from-[#3e3b66] to-[#242238] active:from-[#e2933f] active:to-[#d17e2e] border-2 border-[#5c5893] active:border-white rounded-xl flex items-center justify-center text-white text-lg font-bold shadow-md cursor-pointer touch-manipulation active:scale-95 transition-all"
             >
               ▶
             </button>
@@ -627,7 +630,7 @@ export default function App() {
             onTouchEnd={(e) => { e.preventDefault(); triggerMobileMove("down", false); }}
             onMouseDown={() => triggerMobileMove("down", true)}
             onMouseUp={() => triggerMobileMove("down", false)}
-            className="w-12 h-12 bg-[#3e3b66]/90 hover:bg-[#2d2a4f]/90 active:bg-[#e2933f] border-2 border-white rounded-full flex items-center justify-center text-white text-xl font-bold font-sans shadow-lg cursor-pointer touch-manipulation active:scale-95"
+            className="w-12 h-12 bg-gradient-to-b from-[#3e3b66] to-[#242238] active:from-[#e2933f] active:to-[#d17e2e] border-2 border-[#5c5893] active:border-white rounded-xl flex items-center justify-center text-white text-lg font-bold shadow-md cursor-pointer touch-manipulation active:scale-95 transition-all"
           >
             ▼
           </button>
