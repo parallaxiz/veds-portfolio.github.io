@@ -572,7 +572,11 @@ export default function App() {
         <button
           onTouchStart={(e) => { e.preventDefault(); handleInteractButton(); }}
           onClick={handleInteractButton}
-          className="fixed bottom-4 left-4 z-[300] md:hidden w-14 h-14 bg-[#e2933f] hover:bg-[#d17e2e] active:scale-90 text-white font-bold text-2xl rounded-full border-3 border-white shadow-2xl flex items-center justify-center cursor-pointer touch-manipulation select-none"
+          className={`fixed bottom-4 left-4 z-[300] md:hidden w-14 h-14 font-bold text-2xl rounded-full border-3 shadow-2xl flex items-center justify-center cursor-pointer touch-manipulation select-none transition-all duration-200 ${
+            dialogue
+              ? "bg-[#e2933f] hover:bg-[#d17e2e] text-white border-yellow-300 shadow-[0_0_25px_rgba(226,147,63,0.9)] animate-pulse scale-105"
+              : "bg-[#3e3b66]/80 hover:bg-[#3e3b66] text-white/50 border-white/30"
+          }`}
           style={{ fontFamily: "edit-undo" }}
           title="Interact"
         >
