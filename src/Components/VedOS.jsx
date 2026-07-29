@@ -372,7 +372,7 @@ const PROJECTS = [
     title: "\"The AI Council\" Startup Validator",
     desc: "Engineered a multi-agent orchestration pipeline using n8n to evaluate startup concepts through specialized AI personas. Architected a Next.js frontend with secure API routes and LLM chaining.",
     tags: ["NEXT.JS", "N8N", "GEMINI 1.5 FLASH", "AI"],
-    link: "https://github.com/parallaxiz",
+    link: "https://github.com/parallaxiz/dna",
   },
   {
     id: "oxlo",
