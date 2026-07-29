@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import VedOS from "./VedOS";
 
 // ==========================================
 // PC MINI-GAME: RETRO SNAKE
@@ -424,95 +425,9 @@ export default function Modal({ isOpen, type, onClose }) {
           </div>
         );
 
+      // 'projects' is handled outside by VedOS full-screen overlay
       case "projects":
-        const projectList = [
-          {
-            title: "Agent Maria: Multi-Agent System",
-            desc: "Engineered a multi-agent orchestration framework to automate complex workflows and enable independent AI personas to collaborate on task execution. Integrated LLMs for autonomous decision-making using structured output aggregation.",
-            tags: ["PYTHON", "LLMS", "AI ORCHESTRATION", "GENAI"],
-            link: "https://github.com/parallaxiz"
-          },
-          {
-            title: "SAT-MethaneNet: Emission Forecasting",
-            desc: "Engineered a physics-aware Residual U-Net model using skip connections and Weighted MSE loss to predict methane dispersion. Developed a spatial data fusion pipeline for Sentinel-5P and EMIT data.",
-            tags: ["PYTHON", "TENSORFLOW", "EARTH ENGINE", "DEEP LEARNING"],
-            link: "https://github.com/parallaxiz"
-          },
-          {
-            title: "\"The AI Council\" Startup Validator",
-            desc: "Engineered a multi-agent orchestration pipeline using n8n to evaluate startup concepts through specialized AI personas. Architected a Next.js frontend with secure API routes and LLM chaining.",
-            tags: ["NEXT.JS", "N8N", "GEMINI 1.5 FLASH", "AI"],
-            link: "https://github.com/parallaxiz"
-          },
-          {
-            title: "Oxlo AI Tutor",
-            desc: "Developed a responsive AI-driven tutoring platform using Flask and Google Gemini Pro for real-time educational assistance. Integrated a dynamic Markdown chat interface with lab environment custom modules.",
-            tags: ["PYTHON", "FLASK", "GEMINI PRO", "GENAI"],
-            link: "https://github.com/parallaxiz"
-          }
-        ];
-        return (
-          <div className="flex flex-col h-full justify-between">
-            {/* Tabs Header */}
-            <div className="flex border-b-4 border-[#3e3b66] pb-1 gap-2">
-              <button
-                onClick={() => handleTabChange("archive", "projects")}
-                className={`px-3 py-1 font-bold rounded-t-lg transition ${
-                  projectsTab === "archive"
-                    ? "bg-[#3e3b66] text-white"
-                    : "bg-[#fcf3e3] text-[#3e3b66] border border-[#3e3b66] hover:bg-[#3e3b66]/10 cursor-pointer"
-                }`}
-              >
-                💻 PROJECTS ARCHIVE
-              </button>
-              <button
-                onClick={() => handleTabChange("game", "projects")}
-                className={`px-3 py-1 font-bold rounded-t-lg transition ${
-                  projectsTab === "game"
-                    ? "bg-[#3e3b66] text-white"
-                    : "bg-[#fcf3e3] text-[#3e3b66] border border-[#3e3b66] hover:bg-[#3e3b66]/10 cursor-pointer"
-                }`}
-              >
-                🐍 ARCADE HACK
-              </button>
-            </div>
-
-            <div className="flex-grow my-4 overflow-y-auto px-2 max-h-[380px]">
-              {projectsTab === "archive" ? (
-                <div className="space-y-3">
-                  {projectList.map((project) => (
-                    <div 
-                      key={project.title} 
-                      className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-3 rounded text-left transition transform hover:-translate-y-1 hover:shadow-md"
-                    >
-                      <div className="flex justify-between items-start">
-                        <h3 className="font-bold text-base md:text-lg text-[#e2933f]">{project.title}</h3>
-                        <button
-                          onClick={() => window.open(project.link, "_blank")}
-                          className="text-xs bg-[#3e3b66] hover:bg-[#e2933f] text-white hover:text-black font-bold px-2 py-0.5 rounded transition border border-[#3e3b66] cursor-pointer"
-                        >
-                          GitHub &rarr;
-                        </button>
-                      </div>
-                      <p className="text-xs md:text-sm text-[#3e3b66] my-1 leading-normal">{project.desc}</p>
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        {project.tags.map((tag) => (
-                          <span key={tag} className="text-[9px] font-bold bg-[#3e3b66] text-white px-2 py-0.5 rounded">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="flex flex-col items-center py-2">
-                  <SnakeGame />
-                </div>
-              )}
-            </div>
-          </div>
-        );
+        return null;
 
       case "contact":
         const contacts = [
@@ -627,6 +542,11 @@ export default function Modal({ isOpen, type, onClose }) {
         return null;
     }
   };
+
+  // Full-screen VedOS for projects — rendered outside normal modal frame
+  if (type === "projects") {
+    return <VedOS onClose={onClose} />;
+  }
 
   return (
     <div 

@@ -130,30 +130,31 @@ export default class MainScene extends Phaser.Scene {
         // -------------------------------
         const createBubble = (x, y) => {
             const container = this.add.container(x, y).setDepth(20).setVisible(false).setAlpha(0);
-            
+
             const bg = this.add.graphics();
             bg.fillStyle(0xe2933f, 1);
             bg.lineStyle(3, 0x3e3b66, 1);
-            bg.fillRoundedRect(-16, -16, 32, 32, 6);
-            bg.strokeRoundedRect(-16, -16, 32, 32, 6);
-            
-            // Tail
+            // enlarged bubble
+            bg.fillRoundedRect(-24, -24, 48, 48, 8);
+            bg.strokeRoundedRect(-24, -24, 48, 48, 8);
+
+            // Tail (adjusted position)
             bg.beginPath();
-            bg.moveTo(-6, 16);
-            bg.lineTo(6, 16);
-            bg.lineTo(0, 22);
+            bg.moveTo(-6, 24);
+            bg.lineTo(6, 24);
+            bg.lineTo(0, 30);
             bg.closePath();
             bg.fillPath();
             bg.strokePath();
 
             const text = this.add.text(0, 0, "E", {
                 fontFamily: "'edit-undo', monospace",
-                fontSize: "16px",
+                fontSize: "24px",
                 color: "#ffffff"
             }).setOrigin(0.5);
 
             container.add([bg, text]);
-            
+
             this.tweens.add({
                 targets: container,
                 y: y - 10,
@@ -168,9 +169,9 @@ export default class MainScene extends Phaser.Scene {
 
         this.bubbles = {
             bed: createBubble(bed.x, bed.y - 35 * scale),
-            cabinet: createBubble(cabinet.x, cabinet.y - 50 * scale),
+            cabinet: createBubble(cabinet.x, cabinet.y - 30 * scale),
             laptop: createBubble(laptop.x, laptop.y - 25 * scale),
-            bookshelf: createBubble(bookshelf.x, bookshelf.y - 65 * scale)
+            bookshelf: createBubble(bookshelf.x, bookshelf.y - 45 * scale)
         };
 
         // -------------------------------
@@ -342,19 +343,19 @@ export default class MainScene extends Phaser.Scene {
                 let name = "";
                 if (activeObject === "bed") {
                     name = "Cozy Bed";
-                    text = "My bed. Awards for hackathons and coding achievements were celebrated right here. (Press E or Click to view About Me)";
+                    text = "   My bed. Awards for hackathons and coding achievements were celebrated right here. Press E to view About Me.";
                 } else if (activeObject === "cabinet") {
-                    name = "Wardrobe & Mail";
-                    text = "A double doors closet. Let's customize my clothes or view my inbox! (Press E or Click to open Cabinet)";
+                    name = "Side Table with Drawers";
+                    text = "   A side table with drawers holding useful items. Press E to examine the table.";
                 } else if (activeObject === "laptop") {
                     name = "Developer PC Rig";
-                    text = "Workstation rig. Where physics-aware AI pipelines and SAT-MethaneNet were compiled. (Press E or Click to view Projects / Snake)";
+                    text = "   Workstation rig where physics‑aware AI pipelines and SAT‑MethaneNet were compiled. Press E to view Projects or Snake.";
                 } else if (activeObject === "bookshelf") {
                     name = "Study Library";
-                    text = "A collection of AI research papers, WebDev documentations, and CS books. (Press E or Click to view Skills)";
+                    text = "   A collection of AI research papers, WebDev documentation, and CS books. Press E to view Skills.";
                 }
-                window.dispatchEvent(new CustomEvent("proximity-enter", { 
-                    detail: { text, name, object: activeObject } 
+                window.dispatchEvent(new CustomEvent("proximity-enter", {
+                    detail: { text, name, object: activeObject }
                 }));
             } else {
                 window.dispatchEvent(new CustomEvent("proximity-leave"));
@@ -373,7 +374,7 @@ export default class MainScene extends Phaser.Scene {
                 window.dispatchEvent(new CustomEvent("open-modal", { detail: "projects" }));
             } else if (this.objects_bs.bookshelf_s.visible) {
                 window.dispatchEvent(new CustomEvent("open-modal", { detail: "skills" }));
-            }  
+            }
         }
     }
 }
