@@ -1,480 +1,75 @@
-/* ============================ */
-/* General Reset & Canvas Setup */
-/* ============================ */
-html, body {
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'edit-undo';
+  src: url('/assets/edit-undo.ttf') format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'edit-undo';
+  src: url('/assets/edit-undo.ttf') format('truetype');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'edit-undo';
+  src: url('/assets/edit-undo.ttf') format('truetype');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'edit-undo';
+  src: url('/assets/edit-undo.ttf') format('truetype');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'edit-undo';
+  src: url('/assets/edit-undo.ttf') format('truetype');
+  font-weight: 700;
+}
+
+html, body, #root {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
   background-color: #3e3b66; /* Match Phaser background */
   overflow: hidden;
-  font-family: "edit-undo";
+  font-family: 'edit-undo', 'Courier New', Courier, monospace;
+  letter-spacing: 0.07em; /* Safe spacing to prevent letters merging */
+  font-synthesis: none; /* Disable synthetic bolding which ruins the pixel font */
 }
 
+/* Reset letter-spacing for standard readable sans-serif text */
+.font-sans, font-sans, p {
+  letter-spacing: normal;
+}
+
+/* Ensure pixelated rendering for game art */
 img, canvas {
-  image-rendering: pixelated; /* Avoid blurry images */
+  image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
 
 canvas {
   display: block;
-  margin: 0;
-  padding: 0;
-  background-color: #000;
+  margin: 0 auto;
 }
 
-/* ============================ */
-/* Popup Overlay (Common)     */
-/* ============================ */
-.popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999; /* Always above Phaser canvas */
+/* Customize scrollbars for clean retro feel in modals */
+::-webkit-scrollbar {
+  width: 8px;
 }
-
-/* Hide popup when inactive */
-.hidden {
-  display: none !important;
-}
-
-/* ============================ */
-/* Popup Content Box (Common)  */
-/* ============================ */
-/* This is a common base style for all popups */
-.popup-content {
-  position: relative;
-  text-align: center;
-  color: #3e3b66;
-  user-select: text; /* Allow text selection */
-  overflow: hidden;
-  z-index: 1;
-}
-
-/* Heading */
-.popup-content h1 {
-  font-size: 70px;
-  margin-bottom: 15px;
-}
-
-/* ============================ */
-/* BedPopup Specific Styling    */
-/* ============================ */
-/* These styles are applied only to the BedPopup, using the ID selector */
-#bed-popup .popup-content {
-  background: transparent;
-  width: 1100px;
-  height: 700px;
-  padding: 25px;
-  max-width: 100%;
-}
-
-#bed-popup h1 {
-  padding-top: 10px;
-  padding-left: 150px;
-  text-align: left;
-}
-
-#bed-popup .page-1,
-#bed-popup .page-2 {
-  padding-top: 3px;
-  display: flex;
-  flex-direction: row;
-  gap: 137px;
-  font-size: 20px;
-  line-height: 2.11;
-}
-
-#bed-popup .popup-content #bed-text,
-#bed-popup .popup-content #bed-text-2 {
-  flex: 0 0 390px;
-  text-align: left;
-  padding-left: 98px;
-  margin-bottom: 20px;
-  user-select: text;
-}
-
-#bed-popup .popup-content #bed-text-1,
-#bed-popup .popup-content #bed-text-3 {
-  flex: 0 0 380px;
-  text-align: left;
-  margin-bottom: 20px;
-  user-select: text;
-}
-
-#bed-popup .popup-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
-  border-radius: 15px;
-  image-rendering: pixelated;
-}
-
-/* Heading and Paragraph stay on top */
-#bed-popup h1,
-#bed-popup p,
-#bed-popup button {
-  position: relative;
-  z-index: 2;
-}
-
-/* Navigation buttons */
-#bed-popup .popup-nav {
-  position: absolute;
-  top: 30px;
-  right: 40px;
-  display: flex;
-  gap: 10px;
-  z-index: 5;
-}
-
-#bed-popup .popup-nav button {
-  padding: 8px 18px;
-  right: 100px;
-  top: 50px;
-  background: #3e3b66;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 30px;
-  font-family: "edit-undo";
-  transition: background-color 0.2s ease;
-}
-
-#bed-popup .popup-nav button:hover {
-  background-color: #2a2750;
-}
-
-/* BedPopup Close Button */
-#bed-popup .close-btn {
-  position: absolute;
-  padding-left: 30px;
-  padding-right: 28px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  bottom: 592px;
-  right: 1010px;
-  font-size: 50px;
-  background: transparent;
-  color: #3e3b66;
-  border: none;
-  cursor: pointer;
-  font-family: "edit-undo";
-  transition: background-color 0.2s ease;
-}
-
-#bed-popup .close-btn:hover {
-  background-color: #f03a3a;
-}
-
-/* ============================ */
-/* Contact Popup Styling        */
-/* ============================ */
-/* These styles are applied only to the ContactPopup, using the ID selector */
-#contact-popup {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-#contact-popup.hidden {
-  display: none;
-}
-
-/* style.css */
-
-#contact-popup .popup-content {
-  position: absolute;
-  width: 600px;  /* Increase from 420px to make it wider */
-  height: 500px; /* Add a height value to make it taller */
-  padding: 30px;
-  background: transparent;
-  display: flex; /* Helps center the text inside the larger box */
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-#contact-popup .popup-bg {
-  position: absolute;
-  top: -20px;
-  left: -45px;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  object-fit: contain;
-  z-index: -1;
-  image-rendering: pixelated;
-}
-
-#contact-popup h1 {
-  text-align: center;
-  font-size: 32px;
-  color: #3e3b66;
-  margin-bottom: 20px;
-  padding-left: 120px;
-  margin-left: 0;
-  width: auto;
-}
-
-#contact-popup .popup-link {
-  display: block;
-  width: 75%;
-  padding: 10px;
-  margin: 10px auto;
-  font-size: 30px;
-  color: #3e3b66;
+::-webkit-scrollbar-track {
   background: #fcecd1;
-  cursor: pointer;
-  transition: all ease-in-out;
-  text-decoration: none;
+  border-left: 2px solid #3e3b66;
 }
-
-#contact-popup .popup-link:hover {
+::-webkit-scrollbar-thumb {
   background: #3e3b66;
-  color: white;
+  border-radius: 4px;
 }
-
-#contact-popup .close-btn {
-  position: absolute;
-  margin-top: 15px;
-  padding-left: 25px;
-  padding-right: 23px;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  bottom: 280px;
-  left: 15px;
-  background: #fcecd1;
-  color: #3e3b66;
-  font-size: 34px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  font-family: "edit-undo";
-}
-
-#contact-popup .close-btn:hover {
-  background: #f03a3a;
-  color: white;
-}
-
-/* ============================ */
-/* Projects Popup Styling       */
-/* ============================ */
-.projects-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 1000px;
-  height: 650px;
-  background-image: url("/assets/projects_bg.png");
-  background-size: 100% 100%;
-  background-position: center;
-  image-rendering: pixelated;
-  border: 6px solid #3e3b66;
-  box-shadow: 0 0 20px rgba(62, 49, 50, 0.7);
-  display: none;
-  font-family: "edit-undo", sans-serif;
-  color: white;
-  z-index: 1000;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 0;
-  overflow: hidden;
-}
-
-.projects-popup .popup-content {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  padding: 20px;
-  text-align: left;
-  box-sizing: border-box;
-  background: transparent;
-}
-
-.projects-popup .close-btn {
-  position: absolute;
-  top: 29px;
-  right: 900px;
-  width: 40px;
-  height: 40px;
-  background: #3e3b66;
-  color: white;
-  font-family: "edit-undo", sans-serif;
-  font-size: 22px;
-  cursor: pointer;
-  border: none;
-  transition: background 0.2s;
-}
-
-.projects-popup .close-btn:hover {
-  background: rgba(255, 0, 0, 0.8);
-}
-
-/* ============================ */
-/* SkillsPopup Specific Styling   */
-/* ============================ */
-#skills-popup .popup-content {
-  /* EDITED: This rule was duplicated. I removed the duplicate and kept this one. */
-  background: transparent;
-  padding: 25px;
-  width: 1100px; /* Consolidate width and height here */
-  height: 700px; /* Consolidate width and height here */
-  max-width: 100%;
-}
-
-#skills-popup h1 {
-  /* EDITED: Moved h1 specific styles here for clarity */
-  padding-top: 10px;
-  padding-left: 150px;
-  text-align: left;
-}
-
-#skills-popup .page-1 {
-  /* EDITED: Changed gap from 137px to 20px to better space the columns */
-  padding-top: 3px;
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  font-size: 20px;
-  line-height: 2.11;
-}
-
-#skills-popup .popup-content .skill-text {
-  /* EDITED: Adjusted flex-basis to fit the left column */
-  flex: 0 0 450px;
-  text-align: left;
-  margin-left: 100px;
-  margin-bottom: 200px;
-  user-select: text;
-}
-
-#skills-popup .popup-content .skill-text-1 {
-  /* EDITED: Adjusted flex-basis to fit the right column */
-  flex: 0 0 450px;
-  text-align: left;
-  margin-bottom: 20px;
-  user-select: text;
-}
-
-#skills-popup .page-2 {
-  /* EDITED: This rule was duplicated. Kept this one. */
-  padding-top: 3px;
-  display: flex;
-  flex-direction: row;
-  gap: 137px;
-  font-size: 20px;
-  line-height: 2.11;
-}
-
-#skills-popup .popup-content .skill-text-2 {
-  /* EDITED: Adjusted flex-basis to fit the left column */
-  flex: 0 0 450px;
-  text-align: left;
-  padding-left: 98px;
-  margin-bottom: 20px;
-  user-select: text;
-}
-
-#skills-popup .popup-content .skill-text-3 {
-  /* EDITED: Adjusted flex-basis to fit the right column */
-  flex: 0 0 450px;
-  text-align: left;
-  margin-bottom: 20px;
-  user-select: text;
-}
-
-#skills-popup .popup-bg {
-  /* EDITED: This rule was duplicated. Kept this one. */
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
-  border-radius: 15px;
-  image-rendering: pixelated;
-}
-
-#skills-popup h1,
-#skills-popup p,
-#skills-popup button {
-  /* EDITED: This rule was duplicated. Kept this one. */
-  position: relative;
-  z-index: 2;
-}
-
-#skills-popup .popup-nav {
-  /* EDITED: This rule was duplicated. Kept this one. */
-  position: absolute;
-  top: 30px;
-  right: 40px;
-  display: flex;
-  gap: 10px;
-  z-index: 5;
-}
-
-#skills-popup .popup-nav button {
-  /* EDITED: This rule was duplicated. Kept this one. */
-  padding: 8px 18px;
-  right: 100px;
-  top: 50px;
-  background: #3e3b66;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 30px;
-  font-family: "edit-undo";
-  transition: background-color 0.2s ease;
-}
-
-#skills-popup .popup-nav button:hover {
-  /* EDITED: This rule was duplicated. Kept this one. */
-  background-color: #2a2750;
-}
-
-#skills-popup .close-btn {
-  /* EDITED: Adjusted bottom value to better position the button */
-  position: absolute;
-  padding-left: 30px;
-  padding-right: 28px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  bottom: 633px;
-  right: 1010px;
-  font-size: 50px;
-  background: transparent;
-  color: #3e3b66;
-  border: none;
-  cursor: pointer;
-  font-family: "edit-undo";
-  transition: background-color 0.2s ease;
-}
-
-#skills-popup .close-btn:hover {
-  /* EDITED: This rule was duplicated. Kept this one. */
-  background-color: #f03a3a;
+::-webkit-scrollbar-thumb:hover {
+  background: #e2933f;
 }

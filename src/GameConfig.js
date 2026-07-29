@@ -4,10 +4,12 @@ import PreloadScene from "./scenes/PreloadScene";
 import MainScene from "./scenes/MainScene";
 
 const GameConfig = {
-    type: Phaser.WEBGL, // or CANVAS
+    type: Phaser.WEBGL,
     width: 1920,
     height: 1200,
     backgroundColor: "#000000",
+    parent: "game-container",
+    pixelArt: true,
     physics: {
         default: "matter",
         matter: {

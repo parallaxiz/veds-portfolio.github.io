@@ -42,13 +42,8 @@ export default class PreloadScene extends Phaser.Scene {
         // Font
         this.load.font("edit-undo", basePath + "edit-undo.ttf");
 
-        // ✅ Loading bar
-        const { width, height } = this.scale;
-        const bgBar = this.add.rectangle(width / 2, height / 2, 400, 40, 0x222222);
-        const progressBar = this.add.rectangle(width / 2 - 200, height / 2, 0, 40, 0xffffff);
-
         this.load.on("progress", (value) => {
-            progressBar.width = 400 * value;
+            window.dispatchEvent(new CustomEvent("game-loading-progress", { detail: value }));
         });
 
         // Debug logs
@@ -57,7 +52,7 @@ export default class PreloadScene extends Phaser.Scene {
     }
 
     create() {
-        // Wait until all assets are ready
+        window.dispatchEvent(new CustomEvent("game-loading-complete"));
         this.scene.start("MainScene");
     }
 }
