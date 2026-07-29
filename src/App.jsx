@@ -397,9 +397,6 @@ export default function App() {
       {isLoading && (
         <div className="absolute inset-0 bg-[#161426] flex flex-col items-center justify-center z-[500] p-4 text-white">
           <div className="max-w-md w-full text-center space-y-6">
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-wider text-[#e2933f] animate-pulse">
-              VED'S PORTFOLIO
-            </h1>
             <p className="text-gray-400 font-bold text-sm tracking-widest uppercase">
               Loading Assets...
             </p>
