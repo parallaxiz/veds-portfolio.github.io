@@ -458,125 +458,131 @@ export default function VedOS({ onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-[1000] flex flex-col overflow-hidden select-none"
-      style={{
-        background: "radial-gradient(ellipse at 60% 30%, #1e1b3a 0%, #0d0c1a 70%)",
-        fontFamily: "'edit-undo', monospace",
-      }}
+      className="fixed inset-0 z-[1000] flex items-center justify-center p-4"
+      style={{ background: "rgba(0,0,0,0.75)", fontFamily: "'edit-undo', monospace" }}
+      onClick={onClose}
     >
-      {/* Pixel grid overlay */}
+      {/* Popup container */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.07]"
+        className="relative flex flex-col rounded-xl overflow-hidden border-4 border-[#3e3b66] shadow-2xl"
         style={{
-          backgroundImage: "linear-gradient(#3e3b66 1px, transparent 1px), linear-gradient(90deg, #3e3b66 1px, transparent 1px)",
-          backgroundSize: "28px 28px",
+          width: "min(960px, 96vw)",
+          height: "min(620px, 90vh)",
+          background: "radial-gradient(ellipse at 60% 30%, #1e1b3a 0%, #0d0c1a 70%)",
         }}
-      />
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Pixel grid overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.07]"
+          style={{
+            backgroundImage: "linear-gradient(#3e3b66 1px, transparent 1px), linear-gradient(90deg, #3e3b66 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+          }}
+        />
 
-      {/* Top bar */}
-      <div className="relative flex items-center justify-between px-4 py-1.5 bg-[#161426]/90 border-b border-[#3e3b66] z-10 shrink-0">
-        <div className="flex items-center gap-3">
-          <span className="text-[#e2933f] font-bold text-xs uppercase tracking-widest">💾 VedOS v1.0</span>
-          <span className="text-gray-600 text-[10px]">|</span>
-          <span className="text-gray-500 text-[10px] uppercase tracking-widest hidden sm:inline">Portfolio Desktop</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <PixelClock />
-          <button
-            onClick={onClose}
-            className="text-[10px] text-gray-400 hover:text-red-400 border border-[#3e3b66] hover:border-red-500 px-2 py-0.5 rounded transition cursor-pointer uppercase font-bold"
-          >
-            ✕ Exit
-          </button>
-        </div>
-      </div>
-
-      {/* Desktop area */}
-      <div className="relative flex-1 overflow-hidden">
-
-        {/* Desktop Icons — left column */}
-        <div className="absolute left-3 top-3 flex flex-col gap-1.5 z-10">
-          {DESKTOP_ICONS.map(icn => (
-            <DesktopIcon
-              key={icn.id}
-              icon={icn.icon}
-              label={icn.label}
-              selected={selectedIcon === icn.id}
-              onClick={() => { if (window.portfolioSFX) window.portfolioSFX.playClick(); setSelectedIcon(icn.id); }}
-              onOpen={() => { setSelectedIcon(icn.id); openWindow(icn.id); }}
-            />
-          ))}
-        </div>
-
-        {/* Empty state hint */}
-        {openWindows.length === 0 && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="text-center space-y-3 opacity-20">
-              <div className="text-6xl">💻</div>
-              <div className="text-gray-400 text-xs uppercase tracking-widest">Double-click an icon to launch</div>
-            </div>
+        {/* Top bar */}
+        <div className="relative flex items-center justify-between px-4 py-1.5 bg-[#161426]/90 border-b border-[#3e3b66] z-10 shrink-0">
+          <div className="flex items-center gap-3">
+            <span className="text-[#e2933f] font-bold text-xs uppercase tracking-widest">💾 VedOS v1.0</span>
+            <span className="text-gray-600 text-[10px]">|</span>
+            <span className="text-gray-500 text-[10px] uppercase tracking-widest hidden sm:inline">Portfolio Desktop</span>
           </div>
-        )}
-
-        {/* Windows */}
-        {windows.map(w => {
-          const meta = getWindowMeta(w.id);
-          if (!meta) return null;
-          return (
-            <WindowFrame
-              key={w.id}
-              id={w.id}
-              title={meta.title}
-              icon={meta.icon}
-              zIndex={w.zIndex}
-              isMinimized={w.minimized}
-              defaultPos={w.pos}
-              defaultSize={meta.size}
-              onClose={closeWindow}
-              onMinimize={minimizeWindow}
-              onFocus={focusWindow}
+          <div className="flex items-center gap-3">
+            <PixelClock />
+            <button
+              onClick={onClose}
+              className="text-[10px] text-gray-400 hover:text-red-400 border border-[#3e3b66] hover:border-red-500 px-2 py-0.5 rounded transition cursor-pointer uppercase font-bold"
             >
-              {meta.content}
-            </WindowFrame>
-          );
-        })}
-      </div>
+              ✕ Exit
+            </button>
+          </div>
+        </div>
 
-      {/* Taskbar */}
-      <div className="relative flex items-center gap-2 px-3 py-1.5 bg-[#161426]/95 border-t border-[#3e3b66] z-10 min-h-[42px] shrink-0">
-        {/* Start button */}
-        <button className="flex items-center gap-1.5 bg-[#3e3b66] hover:bg-[#4a4780] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded border border-[#5a569c] cursor-pointer transition shrink-0">
-          💾 Start
-        </button>
+        {/* Desktop area */}
+        <div className="relative flex-1 overflow-hidden">
 
-        <div className="w-px h-5 bg-[#3e3b66] mx-1 shrink-0" />
+          {/* Desktop Icons — left column */}
+          <div className="absolute left-3 top-3 flex flex-col gap-1.5 z-10">
+            {DESKTOP_ICONS.map(icn => (
+              <DesktopIcon
+                key={icn.id}
+                icon={icn.icon}
+                label={icn.label}
+                selected={selectedIcon === icn.id}
+                onClick={() => { if (window.portfolioSFX) window.portfolioSFX.playClick(); setSelectedIcon(icn.id); }}
+                onOpen={() => { setSelectedIcon(icn.id); openWindow(icn.id); }}
+              />
+            ))}
+          </div>
 
-        {/* Running window tabs */}
-        <div className="flex items-center gap-1.5 overflow-x-auto flex-1">
+          {/* Empty state hint */}
+          {openWindows.length === 0 && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="text-center space-y-3 opacity-20">
+                <div className="text-6xl">💻</div>
+                <div className="text-gray-400 text-xs uppercase tracking-widest">Double-click an icon to launch</div>
+              </div>
+            </div>
+          )}
+
+          {/* Windows */}
           {windows.map(w => {
             const meta = getWindowMeta(w.id);
             if (!meta) return null;
-            const shortTitle = meta.title.split(":")[0].replace(/"/g, "").trim();
             return (
-              <button
+              <WindowFrame
                 key={w.id}
-                onClick={() => { if (window.portfolioSFX) window.portfolioSFX.playClick(); openWindow(w.id); }}
-                className={`flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded border transition cursor-pointer shrink-0 ${
-                  !w.minimized
-                    ? "bg-[#e2933f]/20 border-[#e2933f] text-[#e2933f]"
-                    : "bg-[#1e1b3a] border-[#3e3b66] text-gray-400 hover:border-[#e2933f] hover:text-[#e2933f]"
-                }`}
+                id={w.id}
+                title={meta.title}
+                icon={meta.icon}
+                zIndex={w.zIndex}
+                isMinimized={w.minimized}
+                defaultPos={w.pos}
+                defaultSize={meta.size}
+                onClose={closeWindow}
+                onMinimize={minimizeWindow}
+                onFocus={focusWindow}
               >
-                <span>{meta.icon}</span>
-                <span className="hidden sm:inline max-w-[80px] truncate">{shortTitle}</span>
-              </button>
+                {meta.content}
+              </WindowFrame>
             );
           })}
         </div>
 
-        {/* Clock */}
-        <div className="ml-auto shrink-0 bg-[#0d0c1a] border border-[#3e3b66] px-2.5 py-1 rounded">
-          <PixelClock />
+        {/* Taskbar */}
+        <div className="relative flex items-center gap-2 px-3 py-1.5 bg-[#161426]/95 border-t border-[#3e3b66] z-10 min-h-[42px] shrink-0">
+          <button className="flex items-center gap-1.5 bg-[#3e3b66] hover:bg-[#4a4780] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded border border-[#5a569c] cursor-pointer transition shrink-0">
+            💾 Start
+          </button>
+
+          <div className="w-px h-5 bg-[#3e3b66] mx-1 shrink-0" />
+
+          <div className="flex items-center gap-1.5 overflow-x-auto flex-1">
+            {windows.map(w => {
+              const meta = getWindowMeta(w.id);
+              if (!meta) return null;
+              const shortTitle = meta.title.split(":")[0].replace(/"/g, "").trim();
+              return (
+                <button
+                  key={w.id}
+                  onClick={() => { if (window.portfolioSFX) window.portfolioSFX.playClick(); openWindow(w.id); }}
+                  className={`flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded border transition cursor-pointer shrink-0 ${
+                    !w.minimized
+                      ? "bg-[#e2933f]/20 border-[#e2933f] text-[#e2933f]"
+                      : "bg-[#1e1b3a] border-[#3e3b66] text-gray-400 hover:border-[#e2933f] hover:text-[#e2933f]"
+                  }`}
+                >
+                  <span>{meta.icon}</span>
+                  <span className="hidden sm:inline max-w-[80px] truncate">{shortTitle}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="ml-auto shrink-0 bg-[#0d0c1a] border border-[#3e3b66] px-2.5 py-1 rounded">
+            <PixelClock />
+          </div>
         </div>
       </div>
     </div>
