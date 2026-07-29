@@ -550,19 +550,19 @@ export default function Modal({ isOpen, type, onClose }) {
 
   return (
     <div 
-      className="fixed inset-0 bg-black/70 flex items-center justify-center z-[1000] p-4 transition-opacity duration-300"
+      className="fixed inset-0 bg-black/70 flex items-center justify-center z-[1000] p-3 sm:p-4 transition-opacity duration-300"
       onClick={onClose}
     >
       <div 
-        className="relative bg-[#fcecd1] border-4 border-[#3e3b66] rounded-xl p-5 md:p-6 w-full max-w-[650px] min-h-[480px] shadow-2xl text-center flex flex-col select-none"
+        className="relative bg-[#fcecd1] border-4 border-[#3e3b66] rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-[95vw] md:max-w-[650px] min-h-[380px] md:min-h-[480px] max-h-[90vh] overflow-y-auto shadow-2xl text-center flex flex-col select-none"
         style={{ fontFamily: 'edit-undo' }}
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute -top-4 -right-4 w-9 h-9 bg-red-500 hover:bg-red-600 text-white rounded-full border-2 border-[#3e3b66] font-bold text-lg flex items-center justify-center shadow-lg transition duration-200 cursor-pointer"
+          className="absolute -top-3 -right-3 md:-top-4 md:-right-4 w-10 h-10 md:w-9 md:h-9 bg-red-500 hover:bg-red-600 active:scale-95 text-white rounded-full border-2 border-[#3e3b66] font-bold text-xl md:text-lg flex items-center justify-center shadow-lg transition duration-200 cursor-pointer touch-manipulation z-50"
         >
-          X
+          ✕
         </button>
 
         <div className="flex-grow">

@@ -239,17 +239,18 @@ function TypewriterDialogue({ text, name, onTriggerInteract }) {
 
   return (
     <div 
-      className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-[650px] bg-[#161426]/95 border-4 border-[#3e3b66] rounded-xl p-4 text-white z-[300] flex flex-col gap-1 select-none shadow-2xl hover:border-[#e2933f] transition duration-200"
+      onClick={onTriggerInteract}
+      className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[94vw] max-w-[650px] bg-[#161426]/95 border-2 md:border-4 border-[#3e3b66] rounded-xl p-3 md:p-4 text-white z-[300] flex flex-col gap-1 select-none shadow-2xl hover:border-[#e2933f] transition duration-200 cursor-pointer touch-manipulation active:scale-[0.99]"
       style={{ fontFamily: 'edit-undo' }}
     >
-      <div className="text-[#e2933f] text-sm uppercase tracking-wider font-bold">
-        > {name}
+      <div className="text-[#e2933f] text-xs md:text-sm uppercase tracking-wider font-bold">
+        &gt; {name}
       </div>
-      <div className="text-sm md:text-base leading-relaxed tracking-wider min-h-[48px]">
+      <div className="text-xs md:text-base leading-relaxed tracking-wider min-h-[40px] md:min-h-[48px]">
         {displayedText}
       </div>
-      <div className="text-right text-[9px] text-gray-500 animate-pulse uppercase mt-1">
-        [ Press E to interact ]
+      <div className="text-right text-[8px] md:text-[9px] text-gray-400 animate-pulse uppercase mt-1">
+        [ Tap or Press E to interact ]
       </div>
     </div>
   );
@@ -287,6 +288,15 @@ export default function App() {
   const [isMuted, setIsMuted] = useState(true);
   const [dialogue, setDialogue] = useState(null);
   const [showDpad, setShowDpad] = useState(false);
+
+  useEffect(() => {
+    // Detect mobile touch devices
+    const isTouchDevice = 
+      ("ontouchstart" in window) || 
+      (navigator.maxTouchPoints > 0) || 
+      (window.innerWidth < 768);
+    setShowDpad(isTouchDevice);
+  }, []);
 
   useEffect(() => {
     // Listen to loading progress from Phaser

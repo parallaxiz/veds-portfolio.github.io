@@ -188,6 +188,7 @@ export default class MainScene extends Phaser.Scene {
         // -------------------------------
         // EVENT BUS FOR REACT COMMUNICATION
         // -------------------------------
+        this.isTouchDevice = this.sys.game.device.input.touch || ("ontouchstart" in window);
         this.mobileInput = { up: false, down: false, left: false, right: false };
 
         this.onStartGame = () => {

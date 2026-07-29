@@ -132,13 +132,22 @@ function SnakeGame() {
 }
 
 // ==========================================
-// WINDOW FRAME (draggable, minimizable)
+// WINDOW FRAME (draggable on desktop, drawer on mobile)
 // ==========================================
 function WindowFrame({ id, title, icon, children, onClose, onMinimize, onFocus, zIndex, isMinimized, defaultPos, defaultSize }) {
   const [pos, setPos] = useState(defaultPos || { x: 120, y: 60 });
   const dragRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const handleMouseDown = useCallback((e) => {
+    if (isMobile) return;
     onFocus(id);
     dragRef.current = { startX: e.clientX - pos.x, startY: e.clientY - pos.y };
 
@@ -156,44 +165,48 @@ function WindowFrame({ id, title, icon, children, onClose, onMinimize, onFocus, 
     };
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mouseup", onUp);
-  }, [id, pos, onFocus]);
+  }, [id, pos, onFocus, isMobile]);
 
   if (isMinimized) return null;
 
   return (
     <div
-      className="absolute flex flex-col rounded-lg overflow-hidden shadow-2xl border-2 border-[#4a4780]"
+      className={`flex flex-col rounded-lg overflow-hidden shadow-2xl border-2 border-[#4a4780] ${
+        isMobile
+          ? "fixed inset-x-2 top-10 bottom-12 z-[1000] w-auto max-w-full"
+          : "absolute w-[480px] max-w-[calc(100vw-40px)]"
+      }`}
       style={{
-        left: pos.x,
-        top: pos.y,
+        ...(isMobile ? {} : { left: pos.x, top: pos.y, width: defaultSize?.w || 480 }),
         zIndex,
-        width: defaultSize?.w || 480,
-        maxWidth: "calc(100vw - 40px)",
         fontFamily: "'edit-undo', monospace",
         background: "#1a1830",
       }}
       onMouseDown={() => onFocus(id)}
+      onTouchStart={() => onFocus(id)}
     >
       {/* Title Bar */}
       <div
-        className="flex items-center justify-between px-3 py-1.5 cursor-move select-none bg-[#3e3b66]"
+        className="flex items-center justify-between px-3 py-2 md:py-1.5 cursor-move select-none bg-[#3e3b66]"
         onMouseDown={handleMouseDown}
       >
         <div className="flex items-center gap-2 text-white text-xs font-bold">
           <span>{icon}</span>
-          <span className="uppercase tracking-widest truncate max-w-[240px]">{title}</span>
+          <span className="uppercase tracking-widest truncate max-w-[180px] sm:max-w-[240px]">{title}</span>
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2 md:gap-1.5">
           <button
             onMouseDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
             onClick={() => { if (window.portfolioSFX) window.portfolioSFX.playPopupClose(); onMinimize(id); }}
-            className="w-4 h-4 rounded-full bg-yellow-400 hover:bg-yellow-300 border border-yellow-600 flex items-center justify-center text-black text-[9px] font-black cursor-pointer transition"
+            className="w-7 h-7 md:w-4 md:h-4 rounded-full bg-yellow-400 hover:bg-yellow-300 border border-yellow-600 flex items-center justify-center text-black text-xs md:text-[9px] font-black cursor-pointer transition touch-manipulation active:scale-105"
             title="Minimize"
           >−</button>
           <button
             onMouseDown={(e) => e.stopPropagation()}
+            onTouchStart={(e) => e.stopPropagation()}
             onClick={() => { if (window.portfolioSFX) window.portfolioSFX.playPopupClose(); onClose(id); }}
-            className="w-4 h-4 rounded-full bg-red-500 hover:bg-red-400 border border-red-700 flex items-center justify-center text-white text-[9px] font-black cursor-pointer transition"
+            className="w-7 h-7 md:w-4 md:h-4 rounded-full bg-red-500 hover:bg-red-400 border border-red-700 flex items-center justify-center text-white text-xs md:text-[9px] font-black cursor-pointer transition touch-manipulation active:scale-105"
             title="Close"
           >✕</button>
         </div>
