@@ -363,7 +363,7 @@ const PROJECTS = [
     title: "SAT-MethaneNet: Emission Forecasting",
     desc: "Engineered a physics-aware Residual U-Net model using skip connections and Weighted MSE loss to predict methane dispersion. Developed a spatial data fusion pipeline for Sentinel-5P and EMIT satellite data.",
     tags: ["PYTHON", "TENSORFLOW", "EARTH ENGINE", "DEEP LEARNING"],
-    link: "https://github.com/parallaxiz",
+    link: "https://github.com/parallaxiz/methane",
   },
   {
     id: "ai-council",
