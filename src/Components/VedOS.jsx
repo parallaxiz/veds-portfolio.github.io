@@ -354,7 +354,7 @@ const PROJECTS = [
     title: "Agent Maria: Multi-Agent System",
     desc: "Engineered a multi-agent orchestration framework to automate complex workflows and enable independent AI personas to collaborate on task execution. Integrated LLMs for autonomous decision-making using structured output aggregation.",
     tags: ["PYTHON", "LLMs", "AI ORCHESTRATION", "GENAI"],
-    link: "https://github.com/parallaxiz",
+    link: "https://github.com/parallaxiz/agentmaria",
   },
   {
     id: "sat-methanenet",
@@ -511,8 +511,8 @@ export default function VedOS({ onClose }) {
         {/* Desktop area */}
         <div className="relative flex-1 overflow-hidden">
 
-          {/* Desktop Icons — left column */}
-          <div className="absolute left-3 top-3 flex flex-col gap-1.5 z-10">
+          {/* Desktop Icons — max 6 per column, wraps to next column */}
+          <div className="absolute left-3 top-3 flex flex-row gap-1.5 z-10" style={{ maxHeight: 'calc(100% - 12px)', flexWrap: 'wrap', alignContent: 'flex-start', flexDirection: 'column' }}>
             {DESKTOP_ICONS.map(icn => (
               <DesktopIcon
                 key={icn.id}
