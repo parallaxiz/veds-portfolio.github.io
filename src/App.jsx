@@ -398,6 +398,15 @@ export default function App() {
     window.dispatchEvent(new CustomEvent("open-modal", { detail: dialogue.object }));
   };
 
+  const handleInteractButton = () => {
+    if (window.portfolioSFX) window.portfolioSFX.playClick();
+    if (dialogue) {
+      handleDialogueInteraction();
+    } else {
+      window.dispatchEvent(new CustomEvent("mobile-interact"));
+    }
+  };
+
   const triggerMobileMove = (dir, active) => {
     window.dispatchEvent(new CustomEvent("mobile-move", { detail: { dir, active } }));
   };
@@ -537,32 +546,38 @@ export default function App() {
             &larr; Exit
           </button>
 
-          {/* Bottom-Left: System Guide & Music HUD */}
+          {/* System Guide & Music HUD — Top-Left on mobile, Bottom-Left on desktop */}
           <div 
-            className="fixed bottom-3 left-3 sm:bottom-6 sm:left-6 flex flex-col gap-1.5 sm:gap-2.5 bg-[#161426]/95 border-2 sm:border-4 border-[#3e3b66] p-2.5 sm:p-4 md:p-5 rounded-xl text-white text-[10px] sm:text-xs md:text-sm select-none pointer-events-auto shadow-2xl max-w-[150px] sm:max-w-none z-[150]"
+            className="fixed top-3 left-3 md:top-auto md:bottom-6 md:left-6 flex flex-col gap-1 sm:gap-2 bg-[#161426]/95 border-2 md:border-4 border-[#3e3b66] p-2 sm:p-4 rounded-xl text-white text-[9px] sm:text-xs md:text-sm select-none pointer-events-auto shadow-2xl max-w-[145px] sm:max-w-none z-[150]"
             style={{ fontFamily: "edit-undo" }}
           >
-            <div className="text-[#e2933f] text-xs sm:text-sm md:text-base font-bold uppercase mb-0.5">&gt; System Guide</div>
+            <div className="text-[#e2933f] text-[10px] sm:text-xs md:text-base font-bold uppercase mb-0.5">&gt; System Guide</div>
             <div className="hidden md:block">⌨️ WASD / Arrows to walk</div>
-            <div>💡 Approach & Press E to open</div>
+            <div className="md:hidden">💡 Walk near &amp; tap E</div>
+            <div className="hidden md:block">💡 Approach &amp; Press E to open</div>
             
             {/* Music Toggle */}
             <button
               onClick={toggleMute}
-              className="mt-1 flex items-center justify-center gap-1.5 bg-[#3e3b66] hover:bg-[#2d2a4f] active:translate-y-0.5 text-white border-2 border-white/40 font-bold py-1 px-2 sm:py-1.5 sm:px-3 rounded-lg transition cursor-pointer text-[9px] sm:text-xs uppercase touch-manipulation"
+              className="mt-0.5 flex items-center justify-center gap-1 bg-[#3e3b66] hover:bg-[#2d2a4f] active:translate-y-0.5 text-white border border-white/40 font-bold py-1 px-1.5 sm:py-1.5 sm:px-3 rounded-lg transition cursor-pointer text-[8px] sm:text-xs uppercase touch-manipulation"
             >
               {isMuted ? "🔇 Lofi Muted" : "🔊 Lofi Playing"}
             </button>
-
-            {/* Mobile Controls Toggle */}
-            <button
-              onClick={() => { portfolioSFX.playClick(); setShowDpad(!showDpad); }}
-              className="md:hidden flex items-center justify-center gap-1.5 bg-[#e2933f] hover:bg-[#d17e2e] active:translate-y-0.5 text-white border-2 border-white/40 font-bold py-1 px-2 sm:py-1.5 sm:px-3 rounded-lg transition cursor-pointer text-[9px] sm:text-xs uppercase touch-manipulation"
-            >
-              {showDpad ? "📱 Hide D-Pad" : "📱 Show D-Pad"}
-            </button>
           </div>
         </div>
+      )}
+
+      {/* Mobile Bottom-Left Interaction "E" Button */}
+      {isStarted && !activeModal && (
+        <button
+          onTouchStart={(e) => { e.preventDefault(); handleInteractButton(); }}
+          onClick={handleInteractButton}
+          className="fixed bottom-4 left-4 z-[300] md:hidden w-14 h-14 bg-[#e2933f] hover:bg-[#d17e2e] active:scale-90 text-white font-bold text-2xl rounded-full border-3 border-white shadow-2xl flex items-center justify-center cursor-pointer touch-manipulation select-none"
+          style={{ fontFamily: "edit-undo" }}
+          title="Interact"
+        >
+          E
+        </button>
       )}
 
       {/* Mobile Virtual D-Pad Overlay */}

@@ -5,8 +5,6 @@ import MainScene from "./scenes/MainScene";
 
 const GameConfig = {
     type: Phaser.WEBGL,
-    width: 1920,
-    height: 1080,
     backgroundColor: "#161426",
     parent: "game-container",
     pixelArt: true,
@@ -18,10 +16,8 @@ const GameConfig = {
         }
     },
     scale: {
-        mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH,
-        width: 1920,
-        height: 1080
+        mode: Phaser.Scale.RESIZE,
+        autoCenter: Phaser.Scale.CENTER_BOTH
     },
     scene: [PreloadScene, MainScene]
 };

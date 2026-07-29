@@ -15,29 +15,31 @@ export default class MainScene extends Phaser.Scene {
         // -------------------------------
         // BACKGROUND + COLLIDER
         // -------------------------------
+        const WORLD_WIDTH = 1920;
+        const WORLD_HEIGHT = 1080;
         const ROOM_OFFSET_X = 40;
         const ROOM_OFFSET_Y = -70;
 
-        this.bg = this.add.image(width / 2, height / 2, "background").setOrigin(0.5);
-        const scaleX = width / this.bg.width;
-        const scaleY = height / this.bg.height;
+        this.bg = this.add.image(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, "background").setOrigin(0.5);
+        const scaleX = WORLD_WIDTH / this.bg.width;
+        const scaleY = WORLD_HEIGHT / this.bg.height;
         const scale = Math.max(scaleX, scaleY);
         this.bg.setScale(scale);
         this.bg.setPipeline("TextureTintPipeline");
         this.textures.get("background").setFilter(Phaser.Textures.FilterMode.NEAREST);
 
         const shapes = this.cache.json.get("roomShape");
-        this.roomCollider = this.matter.add.sprite(width / 2, height / 2, "background", null, {
+        this.roomCollider = this.matter.add.sprite(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, "background", null, {
             shape: shapes["background"],
             isStatic: true
         });
         this.roomCollider.setBody(shapes.background);
         this.roomCollider.setStatic(true).setVisible(false);
 
-        const colliderScaleX = width / this.roomCollider.width;
-        const colliderScaleY = height / this.roomCollider.height;
+        const colliderScaleX = WORLD_WIDTH / this.roomCollider.width;
+        const colliderScaleY = WORLD_HEIGHT / this.roomCollider.height;
         this.roomCollider.setScale(colliderScaleX + 1, colliderScaleY + 1);
-        this.roomCollider.setPosition(width / 2 + ROOM_OFFSET_X, height / 2 + ROOM_OFFSET_Y);
+        this.roomCollider.setPosition(WORLD_WIDTH / 2 + ROOM_OFFSET_X, WORLD_HEIGHT / 2 + ROOM_OFFSET_Y);
 
 
 
@@ -64,13 +66,13 @@ export default class MainScene extends Phaser.Scene {
         this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
         this.cameras.main.setBounds(bgBounds.x, bgBounds.y, bgBounds.width, bgBounds.height);
         
-        const isMobileScreen = window.innerWidth < 768 || this.sys.game.device.input.touch;
-        this.cameras.main.setZoom(isMobileScreen ? 2.4 : 1.15);
+        const updateZoom = () => {
+            const isMobileScreen = window.innerWidth < 768 || this.sys.game.device.input.touch;
+            this.cameras.main.setZoom(isMobileScreen ? 1.8 : 1.15);
+        };
+        updateZoom();
 
-        this.scale.on("resize", (gameSize) => {
-            const isTouchMobile = gameSize.width < 768 || this.sys.game.device.input.touch;
-            this.cameras.main.setZoom(isTouchMobile ? 2.4 : 1.15);
-        });
+        this.scale.on("resize", updateZoom);
 
         // Enable debug rendering to show physics bodies (including player hitbox)
         this.matter.world.createDebugGraphic();
@@ -224,12 +226,24 @@ export default class MainScene extends Phaser.Scene {
             const { dir, active } = e.detail;
             this.mobileInput[dir] = active;
         };
+        this.onMobileInteract = () => {
+            if (this.objects_c.cabinet_s.visible) {
+                window.dispatchEvent(new CustomEvent("open-modal", { detail: "contact" }));
+            } else if (this.objects_b.bed_s.visible) {
+                window.dispatchEvent(new CustomEvent("open-modal", { detail: "about" }));
+            } else if (this.objects_l.laptop_s.visible) {
+                window.dispatchEvent(new CustomEvent("open-modal", { detail: "projects" }));
+            } else if (this.objects_bs.bookshelf_s.visible) {
+                window.dispatchEvent(new CustomEvent("open-modal", { detail: "skills" }));
+            }
+        };
 
         window.addEventListener("start-game", this.onStartGame);
         window.addEventListener("open-modal", this.onOpenModal);
         window.addEventListener("close-modal", this.onCloseModal);
         window.addEventListener("change-sprite-tint", this.onChangeSpriteTint);
         window.addEventListener("mobile-move", this.onMobileMove);
+        window.addEventListener("mobile-interact", this.onMobileInteract);
 
         // Cleanup events on scene shutdown
         this.events.once("shutdown", () => {
@@ -238,6 +252,7 @@ export default class MainScene extends Phaser.Scene {
             window.removeEventListener("close-modal", this.onCloseModal);
             window.removeEventListener("change-sprite-tint", this.onChangeSpriteTint);
             window.removeEventListener("mobile-move", this.onMobileMove);
+            window.removeEventListener("mobile-interact", this.onMobileInteract);
         });
     }
 
