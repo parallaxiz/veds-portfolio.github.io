@@ -63,7 +63,7 @@ export default class MainScene extends Phaser.Scene {
         const bgBounds = this.bg.getBounds();
         this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
         this.cameras.main.setBounds(bgBounds.x, bgBounds.y, bgBounds.width, bgBounds.height);
-        this.cameras.main.setZoom(1.35);
+        this.cameras.main.setZoom(1.15);
 
         // Enable debug rendering to show physics bodies (including player hitbox)
         this.matter.world.createDebugGraphic();
@@ -109,26 +109,26 @@ export default class MainScene extends Phaser.Scene {
         }
 
         // Bed
-        const bed = createObject("bed", 600, 592, 205, -28);
-        const bed_s = createObject("bed_s", 600, 592, 197, -28, 2);
+        const bed = createObject("bed", 600, 592, 221, -85);
+        const bed_s = createObject("bed_s", 600, 592, 213, -85, 2);
         bed_s.setVisible(false);
         this.objects_b = { bed, bed_s };
 
         // Cabinet
-        const cabinet = createObject("cabinet", 600, 400, 538, 252);
-        const cabinet_s = createObject("cabinet_s", 600, 400, 538, 252, 2);
+        const cabinet = createObject("cabinet", 600, 400, 520, 187);
+        const cabinet_s = createObject("cabinet_s", 600, 400, 520, 187, 2);
         cabinet_s.setVisible(false);
         this.objects_c = { cabinet, cabinet_s };
 
         // Laptop
-        const laptop = createObject("laptop", 600, 400, -156, 299, 2);
-        const laptop_s = createObject("laptop_s", 600, 400, -156, 299, 2);
+        const laptop = createObject("laptop", 600, 400, -104, 230, 2);
+        const laptop_s = createObject("laptop_s", 600, 400, -104, 230, 2);
         laptop_s.setVisible(false);
         this.objects_l = { laptop, laptop_s };
 
         // Bookshelf
-        const bookshelf = createObject("bookshelf", 600, 400, 887, 92);
-        const bookshelf_s = createObject("bookshelf_s", 600, 400, 887, 92, 2);
+        const bookshelf = createObject("bookshelf", 600, 350, 833, 92);
+        const bookshelf_s = createObject("bookshelf_s", 600, 350, 833, 92, 2);
         bookshelf_s.setVisible(false);
         this.objects_bs = { bookshelf, bookshelf_s };
 
@@ -175,7 +175,7 @@ export default class MainScene extends Phaser.Scene {
         };
 
         this.bubbles = {
-            bed: createBubble(bed.x, bed.y - 35 * scale),
+            bed: createBubble(bed.x, bed.y - 30 * scale),
             cabinet: createBubble(cabinet.x, cabinet.y - 20 * scale),
             laptop: createBubble(laptop.x, laptop.y - 25 * scale),
             bookshelf: createBubble(bookshelf.x, bookshelf.y - 30 * scale)
