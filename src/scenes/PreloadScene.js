@@ -8,7 +8,7 @@ export default class PreloadScene extends Phaser.Scene {
         const basePath = import.meta.env.BASE_URL + "assets/";
 
         // Background & player sprite
-        this.load.image("background", basePath + "background.jpeg");
+        this.load.image("background", basePath + "background.png");
         this.load.spritesheet("player", basePath + "16x32_Walk_Cycle-Sheet.png", {
             frameWidth: 16,
             frameHeight: 32,

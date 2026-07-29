@@ -1,8 +1,228 @@
 import React, { useState, useEffect } from "react";
 
+// ==========================================
+// PC MINI-GAME: RETRO SNAKE
+// ==========================================
+function SnakeGame() {
+  const [snake, setSnake] = useState([[7, 7]]);
+  const [food, setFood] = useState([3, 3]);
+  const [dir, setDir] = useState([0, -1]); // UP
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [score, setScore] = useState(0);
+  const [unlocked, setUnlocked] = useState(false);
+
+  const resetGame = () => {
+    setSnake([[7, 7]]);
+    setFood([Math.floor(Math.random() * 15), Math.floor(Math.random() * 15)]);
+    setDir([0, -1]);
+    setIsGameOver(false);
+    setScore(0);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (isGameOver) return;
+      
+      let newDir = null;
+      switch (e.key) {
+        case "w":
+        case "W":
+        case "ArrowUp":
+          if (dir[1] !== 1) newDir = [0, -1];
+          break;
+        case "s":
+        case "S":
+        case "ArrowDown":
+          if (dir[1] !== -1) newDir = [0, 1];
+          break;
+        case "a":
+        case "A":
+        case "ArrowLeft":
+          if (dir[0] !== 1) newDir = [-1, 0];
+          break;
+        case "d":
+        case "D":
+        case "ArrowRight":
+          if (dir[0] !== -1) newDir = [1, 0];
+          break;
+        default:
+          break;
+      }
+      if (newDir) {
+        e.preventDefault();
+        e.stopPropagation();
+        setDir(newDir);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => window.removeEventListener("keydown", handleKeyDown, true);
+  }, [dir, isGameOver]);
+
+  useEffect(() => {
+    if (isGameOver) return;
+
+    const moveSnake = () => {
+      const head = snake[0];
+      const nextHead = [head[0] + dir[0], head[1] + dir[1]];
+
+      // Border Collision
+      if (nextHead[0] < 0 || nextHead[0] >= 15 || nextHead[1] < 0 || nextHead[1] >= 15) {
+        setIsGameOver(true);
+        if (window.portfolioSFX) window.portfolioSFX.playHurt();
+        return;
+      }
+
+      // Self Collision
+      for (const seg of snake) {
+        if (seg[0] === nextHead[0] && seg[1] === nextHead[1]) {
+          setIsGameOver(true);
+          if (window.portfolioSFX) window.portfolioSFX.playHurt();
+          return;
+        }
+      }
+
+      const newSnake = [nextHead, ...snake];
+
+      // Food Eaten
+      if (nextHead[0] === food[0] && nextHead[1] === food[1]) {
+        if (window.portfolioSFX) window.portfolioSFX.playClick();
+        const nextScore = score + 1;
+        setScore(nextScore);
+        if (nextScore >= 5) {
+          setUnlocked(true);
+        }
+        
+        let newFood;
+        do {
+          newFood = [Math.floor(Math.random() * 15), Math.floor(Math.random() * 15)];
+        } while (snake.some(seg => seg[0] === newFood[0] && seg[1] === newFood[1]));
+        setFood(newFood);
+      } else {
+        newSnake.pop();
+      }
+
+      setSnake(newSnake);
+    };
+
+    const loop = setInterval(moveSnake, 150);
+    return () => clearInterval(loop);
+  }, [snake, dir, food, isGameOver, score]);
+
+  return (
+    <div className="flex flex-col items-center justify-center p-3 bg-[#161426] border-4 border-[#3e3b66] rounded-xl select-none max-w-full">
+      <div className="flex justify-between w-full text-[#e2933f] text-xs font-bold mb-2">
+        <span>SCORE: {score}</span>
+        <span>GOAL: 5 (FOR CERTIFICATE)</span>
+      </div>
+
+      <div 
+        className="relative grid bg-[#3e3b66] border-2 border-[#e2933f] w-[210px] h-[210px] md:w-[240px] md:h-[240px] max-w-full"
+        style={{ 
+          gridTemplateColumns: "repeat(15, minmax(0, 1fr))",
+          gap: "1px"
+        }}
+      >
+        {Array.from({ length: 15 * 15 }).map((_, i) => {
+          const x = i % 15;
+          const y = Math.floor(i / 15);
+          const isSnake = snake.some(seg => seg[0] === x && seg[1] === y);
+          const isHead = snake[0][0] === x && snake[0][1] === y;
+          const isFood = food[0] === x && food[1] === y;
+
+          return (
+            <div
+              key={i}
+              className={`w-full h-full transition-all duration-75 ${
+                isHead
+                  ? "bg-[#e2933f]"
+                  : isSnake
+                  ? "bg-amber-100"
+                  : isFood
+                  ? "bg-red-500 animate-pulse"
+                  : "bg-[#161426]"
+              }`}
+            />
+          );
+        })}
+
+        {isGameOver && (
+          <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-white gap-4">
+            <div className="text-xl font-bold text-red-500 tracking-widest uppercase">CONNECTION LOST</div>
+            <button
+              onClick={resetGame}
+              className="bg-[#e2933f] text-black font-bold py-1.5 px-5 border-2 border-white rounded shadow-md hover:bg-[#d17e2e] active:translate-y-0.5 transition text-xs uppercase cursor-pointer"
+            >
+              Reboot System
+            </button>
+          </div>
+        )}
+      </div>
+
+      {unlocked && (
+        <div className="mt-3 text-center bg-[#fcf3e3] border border-[#e2933f] p-2 rounded text-[#3e3b66] text-xs max-w-xs animate-bounce font-bold">
+          🏆 DECRYPTION UNLOCKED!
+          <div className="text-2xs text-[#e2933f] uppercase mt-0.5">Title: Legendary Arcade Wrangler</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ==========================================
+// WARDROBE OUTFIT COLOR SWAPPER
+// ==========================================
+function WardrobeSelector() {
+  const outfits = [
+    { name: "CLASSIC BLUE", color: "#ffffff", desc: "Original style, no tint" },
+    { name: "RETRO RED", color: "#f87171", desc: "Hot red hero colors" },
+    { name: "CYBER GREEN", color: "#a3e635", desc: "Terminal hacker green" },
+    { name: "MAGE PURPLE", color: "#c084fc", desc: "Mystical wizard shades" },
+    { name: "NEON PINK", color: "#f472b6", desc: "Vaporwave cyberpunk glow" },
+    { name: "GOLD ELITE", color: "#facc15", desc: "Golden performance gear" }
+  ];
+
+  const handleSelectOutfit = (outfit) => {
+    if (window.portfolioSFX) {
+      window.portfolioSFX.playClick();
+    }
+    window.dispatchEvent(new CustomEvent("change-sprite-tint", { detail: { color: outfit.color } }));
+  };
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[300px] overflow-y-auto p-1">
+      {outfits.map((o) => (
+        <button
+          key={o.name}
+          onClick={() => handleSelectOutfit(o)}
+          className="bg-[#fcf3e3] border-2 border-[#3e3b66] hover:border-[#e2933f] p-3 rounded-lg flex items-center gap-3 cursor-pointer text-left transition transform hover:-translate-y-0.5 active:translate-y-0 text-[#3e3b66] group"
+        >
+          <div 
+            className="w-8 h-8 rounded-md border border-[#3e3b66] shadow-sm flex items-center justify-center shrink-0"
+            style={{ 
+              backgroundColor: o.color === "#ffffff" ? "#88c0d0" : o.color
+            }}
+          >
+            👕
+          </div>
+          <div className="flex flex-col select-none">
+            <span className="font-bold text-xs group-hover:text-[#e2933f] transition uppercase">{o.name}</span>
+            <span className="text-[10px] text-gray-500 leading-tight">{o.desc}</span>
+          </div>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// ==========================================
+// CORE MODAL CONTAINER
+// ==========================================
 export default function Modal({ isOpen, type, onClose }) {
   const [aboutPage, setAboutPage] = useState(1);
   const [copiedText, setCopiedText] = useState("");
+  const [projectsTab, setProjectsTab] = useState("archive"); // 'archive' | 'game'
+  const [cabinetTab, setCabinetTab] = useState("contact"); // 'contact' | 'wardrobe'
 
   // Close on ESC key or "E" key press
   useEffect(() => {
@@ -10,15 +230,13 @@ export default function Modal({ isOpen, type, onClose }) {
 
     let handleKeyDown = null;
 
-    // Small delay to ensure the key press that opened the modal doesn't immediately close it
     const timer = setTimeout(() => {
       handleKeyDown = (e) => {
         if (e.key === "Escape" || e.key === "e" || e.key === "E") {
-          e.stopPropagation(); // Stop propagation in capture phase so Phaser doesn't catch and block it
+          e.stopPropagation();
           onClose();
         }
       };
-      // Use capture phase (third parameter true) to intercept the event before Phaser's listeners
       window.addEventListener("keydown", handleKeyDown, true);
     }, 150);
 
@@ -30,9 +248,11 @@ export default function Modal({ isOpen, type, onClose }) {
     };
   }, [isOpen, onClose]);
 
-  // Reset page when modal is opened/changed
+  // Reset tabs/pages when modal is opened/changed
   useEffect(() => {
     setAboutPage(1);
+    setProjectsTab("archive");
+    setCabinetTab("contact");
   }, [isOpen, type]);
 
   if (!isOpen) return null;
@@ -41,13 +261,22 @@ export default function Modal({ isOpen, type, onClose }) {
     try {
       await navigator.clipboard.writeText(text);
       setCopiedText(label);
+      if (window.portfolioSFX) window.portfolioSFX.playClick();
       setTimeout(() => setCopiedText(""), 1500);
     } catch (err) {
       console.error("Failed to copy:", err);
     }
   };
 
-  // Render Modal Content based on type
+  const handleTabChange = (tab, typeStr) => {
+    if (window.portfolioSFX) window.portfolioSFX.playClick();
+    if (typeStr === "projects") {
+      setProjectsTab(tab);
+    } else {
+      setCabinetTab(tab);
+    }
+  };
+
   const renderContent = () => {
     switch (type) {
       case "about":
@@ -125,9 +354,9 @@ export default function Modal({ isOpen, type, onClose }) {
             <div className="flex justify-between items-center border-t-4 border-[#3e3b66] pt-3">
               <button
                 disabled={aboutPage === 1}
-                onClick={() => setAboutPage((p) => p - 1)}
+                onClick={() => { if (window.portfolioSFX) window.portfolioSFX.playClick(); setAboutPage((p) => p - 1); }}
                 className={`px-4 py-2 bg-[#3e3b66] text-white rounded font-semibold transition ${
-                  aboutPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-[#2e2b54]"
+                  aboutPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-[#2e2b54] cursor-pointer"
                 }`}
               >
                 &larr; Back
@@ -135,9 +364,9 @@ export default function Modal({ isOpen, type, onClose }) {
               <span className="text-xl font-bold text-[#3e3b66]">{aboutPage} / 3</span>
               <button
                 disabled={aboutPage === 3}
-                onClick={() => setAboutPage((p) => p + 1)}
+                onClick={() => { if (window.portfolioSFX) window.portfolioSFX.playClick(); setAboutPage((p) => p + 1); }}
                 className={`px-4 py-2 bg-[#3e3b66] text-white rounded font-semibold transition ${
-                  aboutPage === 3 ? "opacity-50 cursor-not-allowed" : "hover:bg-[#2e2b54]"
+                  aboutPage === 3 ? "opacity-50 cursor-not-allowed" : "hover:bg-[#2e2b54] cursor-pointer"
                 }`}
               >
                 Next &rarr;
@@ -166,7 +395,6 @@ export default function Modal({ isOpen, type, onClose }) {
               SKILLS & STATS
             </h2>
             <div className="flex-grow my-4 overflow-y-auto px-2 space-y-4 max-h-[380px]">
-              {/* Stat bars */}
               <div className="space-y-2">
                 {stats.map((stat) => (
                   <div key={stat.name} className="flex items-center gap-3">
@@ -182,7 +410,6 @@ export default function Modal({ isOpen, type, onClose }) {
                 ))}
               </div>
               
-              {/* Grid of categories */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-3 border-t-2 border-[#3e3b66]/20">
                 {skillCategories.map((cat) => (
                   <div key={cat.title} className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-2 rounded text-left">
@@ -226,34 +453,63 @@ export default function Modal({ isOpen, type, onClose }) {
         ];
         return (
           <div className="flex flex-col h-full justify-between">
-            <h2 className="text-3xl md:text-4xl font-bold text-center border-b-4 border-[#3e3b66] pb-2 text-[#3e3b66]">
-              PROJECTS
-            </h2>
-            <div className="flex-grow my-4 overflow-y-auto px-2 space-y-3 max-h-[380px]">
-              {projectList.map((project) => (
-                <div 
-                  key={project.title} 
-                  className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-3 rounded text-left transition transform hover:-translate-y-1 hover:shadow-md"
-                >
-                  <div className="flex justify-between items-start">
-                    <h3 className="font-bold text-base md:text-lg text-[#e2933f]">{project.title}</h3>
-                    <button
-                      onClick={() => window.open(project.link, "_blank")}
-                      className="text-xs bg-[#3e3b66] hover:bg-[#e2933f] text-white hover:text-black font-bold px-2 py-0.5 rounded transition border border-[#3e3b66]"
+            {/* Tabs Header */}
+            <div className="flex border-b-4 border-[#3e3b66] pb-1 gap-2">
+              <button
+                onClick={() => handleTabChange("archive", "projects")}
+                className={`px-3 py-1 font-bold rounded-t-lg transition ${
+                  projectsTab === "archive"
+                    ? "bg-[#3e3b66] text-white"
+                    : "bg-[#fcf3e3] text-[#3e3b66] border border-[#3e3b66] hover:bg-[#3e3b66]/10 cursor-pointer"
+                }`}
+              >
+                💻 PROJECTS ARCHIVE
+              </button>
+              <button
+                onClick={() => handleTabChange("game", "projects")}
+                className={`px-3 py-1 font-bold rounded-t-lg transition ${
+                  projectsTab === "game"
+                    ? "bg-[#3e3b66] text-white"
+                    : "bg-[#fcf3e3] text-[#3e3b66] border border-[#3e3b66] hover:bg-[#3e3b66]/10 cursor-pointer"
+                }`}
+              >
+                🐍 ARCADE HACK
+              </button>
+            </div>
+
+            <div className="flex-grow my-4 overflow-y-auto px-2 max-h-[380px]">
+              {projectsTab === "archive" ? (
+                <div className="space-y-3">
+                  {projectList.map((project) => (
+                    <div 
+                      key={project.title} 
+                      className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-3 rounded text-left transition transform hover:-translate-y-1 hover:shadow-md"
                     >
-                      GitHub &rarr;
-                    </button>
-                  </div>
-                  <p className="text-xs md:text-sm text-[#3e3b66] my-1 leading-normal">{project.desc}</p>
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {project.tags.map((tag) => (
-                      <span key={tag} className="text-[9px] font-bold bg-[#3e3b66] text-white px-2 py-0.5 rounded">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                      <div className="flex justify-between items-start">
+                        <h3 className="font-bold text-base md:text-lg text-[#e2933f]">{project.title}</h3>
+                        <button
+                          onClick={() => window.open(project.link, "_blank")}
+                          className="text-xs bg-[#3e3b66] hover:bg-[#e2933f] text-white hover:text-black font-bold px-2 py-0.5 rounded transition border border-[#3e3b66] cursor-pointer"
+                        >
+                          GitHub &rarr;
+                        </button>
+                      </div>
+                      <p className="text-xs md:text-sm text-[#3e3b66] my-1 leading-normal">{project.desc}</p>
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {project.tags.map((tag) => (
+                          <span key={tag} className="text-[9px] font-bold bg-[#3e3b66] text-white px-2 py-0.5 rounded">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <div className="flex flex-col items-center py-2">
+                  <SnakeGame />
+                </div>
+              )}
             </div>
           </div>
         );
@@ -267,34 +523,64 @@ export default function Modal({ isOpen, type, onClose }) {
         ];
         return (
           <div className="flex flex-col h-full justify-between">
-            <h2 className="text-3xl md:text-4xl font-bold text-center border-b-4 border-[#3e3b66] pb-2 text-[#3e3b66]">
-              CONTACT
-            </h2>
-            <div className="flex-grow my-6 flex flex-col justify-center gap-4">
-              {contacts.map((c) => (
-                <div
-                  key={c.label}
-                  onClick={() => {
-                    if (c.action === "copy") {
-                      copyToClipboard(c.value, c.label);
-                    } else {
-                      window.open(c.link, "_blank");
-                    }
-                  }}
-                  className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-3 rounded flex items-center justify-between cursor-pointer transition transform hover:-translate-y-0.5 hover:bg-[#3e3b66] hover:text-white group text-[#3e3b66]"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">{c.icon}</span>
-                    <div className="text-left">
-                      <div className="text-sm md:text-base text-[#e2933f] group-hover:text-amber-200 font-bold uppercase">{c.label}</div>
-                      <div className="font-semibold text-base md:text-lg group-hover:text-white">{c.value}</div>
+            {/* Tabs Header */}
+            <div className="flex border-b-4 border-[#3e3b66] pb-1 gap-2">
+              <button
+                onClick={() => handleTabChange("contact", "cabinet")}
+                className={`px-3 py-1 font-bold rounded-t-lg transition ${
+                  cabinetTab === "contact"
+                    ? "bg-[#3e3b66] text-white"
+                    : "bg-[#fcf3e3] text-[#3e3b66] border border-[#3e3b66] hover:bg-[#3e3b66]/10 cursor-pointer"
+                }`}
+              >
+                📬 INBOX CONTACTS
+              </button>
+              <button
+                onClick={() => handleTabChange("wardrobe", "cabinet")}
+                className={`px-3 py-1 font-bold rounded-t-lg transition ${
+                  cabinetTab === "wardrobe"
+                    ? "bg-[#3e3b66] text-white"
+                    : "bg-[#fcf3e3] text-[#3e3b66] border border-[#3e3b66] hover:bg-[#3e3b66]/10 cursor-pointer"
+                }`}
+              >
+                👕 OUTFIT CUSTOMIZER
+              </button>
+            </div>
+
+            <div className="flex-grow my-4 px-2 max-h-[380px] overflow-y-auto">
+              {cabinetTab === "contact" ? (
+                <div className="flex flex-col gap-3 py-2">
+                  {contacts.map((c) => (
+                    <div
+                      key={c.label}
+                      onClick={() => {
+                        if (c.action === "copy") {
+                          copyToClipboard(c.value, c.label);
+                        } else {
+                          if (window.portfolioSFX) window.portfolioSFX.playClick();
+                          window.open(c.link, "_blank");
+                        }
+                      }}
+                      className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-3 rounded flex items-center justify-between cursor-pointer transition transform hover:-translate-y-0.5 hover:bg-[#3e3b66] hover:text-white group text-[#3e3b66]"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">{c.icon}</span>
+                        <div className="text-left select-none">
+                          <div className="text-xs md:text-sm text-[#e2933f] group-hover:text-amber-200 font-bold uppercase">{c.label}</div>
+                          <div className="font-semibold text-sm md:text-base group-hover:text-white">{c.value}</div>
+                        </div>
+                      </div>
+                      <span className="text-xs border-2 border-[#3e3b66] rounded px-2.5 py-1 bg-white text-[#3e3b66] group-hover:bg-[#e2933f] group-hover:text-white group-hover:border-white font-bold transition">
+                        {c.action === "copy" ? (copiedText === c.label ? "Copied!" : "Copy") : "Open"}
+                      </span>
                     </div>
-                  </div>
-                  <span className="text-sm border-2 border-[#3e3b66] rounded px-2.5 py-1 bg-white text-[#3e3b66] group-hover:bg-[#e2933f] group-hover:text-white group-hover:border-white font-bold transition">
-                    {c.action === "copy" ? (copiedText === c.label ? "Copied!" : "Copy") : "Open"}
-                  </span>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <div className="py-2">
+                  <WardrobeSelector />
+                </div>
+              )}
             </div>
           </div>
         );
@@ -352,15 +638,13 @@ export default function Modal({ isOpen, type, onClose }) {
         style={{ fontFamily: 'edit-undo' }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute -top-4 -right-4 w-9 h-9 bg-red-500 hover:bg-red-600 text-white rounded-full border-2 border-[#3e3b66] font-bold text-lg flex items-center justify-center shadow-lg transition duration-200"
+          className="absolute -top-4 -right-4 w-9 h-9 bg-red-500 hover:bg-red-600 text-white rounded-full border-2 border-[#3e3b66] font-bold text-lg flex items-center justify-center shadow-lg transition duration-200 cursor-pointer"
         >
           X
         </button>
 
-        {/* Modal content */}
         <div className="flex-grow">
           {renderContent()}
         </div>

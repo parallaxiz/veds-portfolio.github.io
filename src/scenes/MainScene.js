@@ -9,6 +9,8 @@ export default class MainScene extends Phaser.Scene {
         const { width, height } = this.scale; // Width: 1920, Height: 1200
 
         this.inputLocked = true; // Lock player input initially until game start overlay is clicked
+        this.lastActiveObject = null;
+        this.nextStepTime = 0;
 
         // -------------------------------
         // BACKGROUND + COLLIDER
@@ -37,6 +39,29 @@ export default class MainScene extends Phaser.Scene {
         const colliderScaleY = height / this.roomCollider.height;
         this.roomCollider.setScale(colliderScaleX + 1, colliderScaleY + 1);
         this.roomCollider.setPosition(width / 2 + ROOM_OFFSET_X, height / 2 + ROOM_OFFSET_Y);
+
+        // -------------------------------
+        // DYNAMIC ATMOSPHERE & LIGHT EFFECTS
+        // -------------------------------
+        // 1. Window Light Shaft (ADD Blendmode)
+        const lightShaft = this.add.polygon(0, 0, [
+            { x: 220 * scale, y: 150 * scale }, // Top left of window
+            { x: 380 * scale, y: 220 * scale }, // Top right of window
+            { x: 1000 * scale, y: 1100 * scale }, // Bottom right on floor
+            { x: 550 * scale, y: 1100 * scale }  // Bottom left on floor
+        ], 0xfff3a8, 0.12);
+        lightShaft.setOrigin(0, 0);
+        lightShaft.setBlendMode(Phaser.BlendModes.ADD);
+        lightShaft.setDepth(1.5);
+
+        this.tweens.add({
+            targets: lightShaft,
+            alpha: { from: 0.08, to: 0.18 },
+            duration: 4000,
+            yoyo: true,
+            repeat: -1,
+            ease: "Sine.easeInOut"
+        });
 
         // -------------------------------
         // PLAYER
@@ -121,6 +146,22 @@ export default class MainScene extends Phaser.Scene {
         projects.setVisible(false);
         this.objects_l = { laptop, laptop_s, projects };
 
+        // 2. Laptop screen flickering glow (ADD Blendmode)
+        const laptopGlow = this.add.ellipse(laptop.x, laptop.y - 12 * scale, 35 * scale, 18 * scale, 0x00ffff, 0.35);
+        laptopGlow.setBlendMode(Phaser.BlendModes.ADD);
+        laptopGlow.setDepth(laptop.depth + 0.05);
+
+        this.tweens.add({
+            targets: laptopGlow,
+            alpha: { from: 0.15, to: 0.5 },
+            scaleX: { from: 0.9, to: 1.1 },
+            scaleY: { from: 0.9, to: 1.1 },
+            duration: 120,
+            yoyo: true,
+            repeat: -1,
+            ease: "Bounce.easeInOut"
+        });
+
         // Bookshelf + Skills
         const bookshelf = createObject("bookshelf", 600, 400, 887, 92);
         const bookshelf_s = createObject("bookshelf_s", 600, 400, 887, 92, 2);
@@ -130,8 +171,58 @@ export default class MainScene extends Phaser.Scene {
         this.objects_bs = { bookshelf, bookshelf_s, skills };
 
         // -------------------------------
+        // PROXIMITY DIALOGUE BUBBLES ("E" Prompts)
+        // -------------------------------
+        const createBubble = (x, y) => {
+            const container = this.add.container(x, y).setDepth(20).setVisible(false).setAlpha(0);
+            
+            const bg = this.add.graphics();
+            bg.fillStyle(0xe2933f, 1);
+            bg.lineStyle(3, 0x3e3b66, 1);
+            bg.fillRoundedRect(-16, -16, 32, 32, 6);
+            bg.strokeRoundedRect(-16, -16, 32, 32, 6);
+            
+            // Tail
+            bg.beginPath();
+            bg.moveTo(-6, 16);
+            bg.lineTo(6, 16);
+            bg.lineTo(0, 22);
+            bg.closePath();
+            bg.fillPath();
+            bg.strokePath();
+
+            const text = this.add.text(0, 0, "E", {
+                fontFamily: "'edit-undo', monospace",
+                fontSize: "16px",
+                color: "#ffffff"
+            }).setOrigin(0.5);
+
+            container.add([bg, text]);
+            
+            this.tweens.add({
+                targets: container,
+                y: y - 10,
+                duration: 800,
+                yoyo: true,
+                repeat: -1,
+                ease: "Sine.easeInOut"
+            });
+
+            return container;
+        };
+
+        this.bubbles = {
+            bed: createBubble(bed.x, bed.y - 120 * scale),
+            cabinet: createBubble(cabinet.x, cabinet.y - 150 * scale),
+            laptop: createBubble(laptop.x, laptop.y - 65 * scale),
+            bookshelf: createBubble(bookshelf.x, bookshelf.y - 180 * scale)
+        };
+
+        // -------------------------------
         // EVENT BUS FOR REACT COMMUNICATION
         // -------------------------------
+        this.mobileInput = { up: false, down: false, left: false, right: false };
+
         this.onStartGame = () => {
             this.inputLocked = false;
         };
@@ -145,22 +236,38 @@ export default class MainScene extends Phaser.Scene {
         this.onCloseModal = () => {
             this.inputLocked = false;
         };
+        this.onChangeSpriteTint = (e) => {
+            const color = e.detail.color;
+            if (color === "#ffffff") {
+                this.player.clearTint();
+            } else {
+                const hex = color.replace("#", "0x");
+                this.player.setTint(parseInt(hex));
+            }
+        };
+        this.onMobileMove = (e) => {
+            const { dir, active } = e.detail;
+            this.mobileInput[dir] = active;
+        };
 
         window.addEventListener("start-game", this.onStartGame);
         window.addEventListener("open-modal", this.onOpenModal);
         window.addEventListener("close-modal", this.onCloseModal);
+        window.addEventListener("change-sprite-tint", this.onChangeSpriteTint);
+        window.addEventListener("mobile-move", this.onMobileMove);
 
         // Cleanup events on scene shutdown
         this.events.once("shutdown", () => {
             window.removeEventListener("start-game", this.onStartGame);
             window.removeEventListener("open-modal", this.onOpenModal);
             window.removeEventListener("close-modal", this.onCloseModal);
+            window.removeEventListener("change-sprite-tint", this.onChangeSpriteTint);
+            window.removeEventListener("mobile-move", this.onMobileMove);
         });
     }
 
     update() {
         if (this.inputLocked) {
-            // If popups/modals are active and they press the interact key (E), close the active modal
             if (Phaser.Input.Keyboard.JustDown(this.keys.interactKey)) {
                 window.dispatchEvent(new CustomEvent("close-modal"));
             }
@@ -180,33 +287,49 @@ export default class MainScene extends Phaser.Scene {
         const { up, down, left, right } = this.keys;
         const player = this.player;
 
+        const walkUp = up.isDown || this.mobileInput.up;
+        const walkDown = down.isDown || this.mobileInput.down;
+        const walkLeft = left.isDown || this.mobileInput.left;
+        const walkRight = right.isDown || this.mobileInput.right;
+
         player.setVelocity(0);
-        if (up.isDown && left.isDown) {
+        if (walkUp && walkLeft) {
             player.setVelocity(-speed * 0.7, -speed * 0.7);
             player.anims.play("walk-up-left", true);
-        } else if (up.isDown && right.isDown) {
+        } else if (walkUp && walkRight) {
             player.setVelocity(speed * 0.7, -speed * 0.7);
             player.anims.play("walk-up-right", true);
-        } else if (down.isDown && left.isDown) {
+        } else if (walkDown && walkLeft) {
             player.setVelocity(-speed * 0.7, speed * 0.7);
             player.anims.play("walk-down-left", true);
-        } else if (down.isDown && right.isDown) {
+        } else if (walkDown && walkRight) {
             player.setVelocity(speed * 0.7, speed * 0.7);
             player.anims.play("walk-down-right", true);
-        } else if (up.isDown) {
+        } else if (walkUp) {
             player.setVelocityY(-speed);
             player.anims.play("walk-up", true);
-        } else if (down.isDown) {
+        } else if (walkDown) {
             player.setVelocityY(speed);
             player.anims.play("walk-down", true);
-        } else if (left.isDown) {
+        } else if (walkLeft) {
             player.setVelocityX(-speed);
             player.anims.play("walk-left", true);
-        } else if (right.isDown) {
+        } else if (walkRight) {
             player.setVelocityX(speed);
             player.anims.play("walk-right", true);
         } else {
             player.anims.stop();
+        }
+
+        // Step SFX walking sound trigger
+        if ((player.body.velocity.x !== 0 || player.body.velocity.y !== 0)) {
+            const now = this.time.now;
+            if (now > this.nextStepTime) {
+                this.nextStepTime = now + 340;
+                if (window.portfolioSFX) {
+                    window.portfolioSFX.playStep();
+                }
+            }
         }
 
         // -------------------------------
@@ -221,30 +344,72 @@ export default class MainScene extends Phaser.Scene {
             { key: "bookshelf", normal: this.objects_bs.bookshelf, selected: [this.objects_bs.bookshelf_s, this.objects_bs.skills] }
         ];
 
-        objectGroups.forEach(({ key, normal, selected }) => {
+        objectGroups.forEach(({ key, normal }) => {
             const distance = Phaser.Math.Distance.Between(this.player.x, this.player.y, normal.x, normal.y);
-            const detectionRadius = key === "bookshelf" ? 200 : 120; // Larger radius for bookshelf
+            const detectionRadius = key === "bookshelf" ? 200 : 120;
             if (distance < detectionRadius && distance < minDistance) {
                 minDistance = distance;
                 activeObject = key;
             }
         });
 
+        // Toggle selected state and bubbles
         objectGroups.forEach(({ key, normal, selected }) => {
-            if (key === activeObject) {
+            const isNear = key === activeObject;
+            const bubble = this.bubbles[key];
+
+            if (isNear) {
                 normal.setVisible(false);
                 selected.forEach(obj => obj.setVisible(true));
+                if (bubble && (!bubble.visible || bubble.alpha === 0)) {
+                    bubble.setVisible(true);
+                    this.tweens.add({ targets: bubble, alpha: 1, duration: 180 });
+                }
             } else {
                 normal.setVisible(true);
                 selected.forEach(obj => obj.setVisible(false));
+                if (bubble && bubble.visible && bubble.alpha > 0) {
+                    this.tweens.add({
+                        targets: bubble,
+                        alpha: 0,
+                        duration: 180,
+                        onComplete: () => bubble.setVisible(false)
+                    });
+                }
             }
         });
+
+        // Proximity Dialogue Event dispatch
+        if (activeObject !== this.lastActiveObject) {
+            this.lastActiveObject = activeObject;
+            if (activeObject) {
+                let text = "";
+                let name = "";
+                if (activeObject === "bed") {
+                    name = "Cozy Bed";
+                    text = "My bed. Awards for hackathons and coding achievements were celebrated right here. (Press E or Click to view About Me)";
+                } else if (activeObject === "cabinet") {
+                    name = "Wardrobe & Mail";
+                    text = "A double doors closet. Let's customize my clothes or view my inbox! (Press E or Click to open Cabinet)";
+                } else if (activeObject === "laptop") {
+                    name = "Developer PC Rig";
+                    text = "Workstation rig. Where physics-aware AI pipelines and SAT-MethaneNet were compiled. (Press E or Click to view Projects / Snake)";
+                } else if (activeObject === "bookshelf") {
+                    name = "Study Library";
+                    text = "A collection of AI research papers, WebDev documentations, and CS books. (Press E or Click to view Skills)";
+                }
+                window.dispatchEvent(new CustomEvent("proximity-enter", { 
+                    detail: { text, name, object: activeObject } 
+                }));
+            } else {
+                window.dispatchEvent(new CustomEvent("proximity-leave"));
+            }
+        }
 
         // -------------------------------
         // INTERACT VIA "E" KEY
         // -------------------------------
         if (Phaser.Input.Keyboard.JustDown(this.keys.interactKey)) {
-            // Open popup for highlighted object
             if (this.objects_c.cabinet_s.visible) {
                 window.dispatchEvent(new CustomEvent("open-modal", { detail: "contact" }));
             } else if (this.objects_b.bed_s.visible) {
