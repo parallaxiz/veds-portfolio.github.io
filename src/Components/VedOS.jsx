@@ -468,7 +468,7 @@ export default function VedOS({ onClose }) {
         style={{
           width: "min(960px, 96vw)",
           height: "min(620px, 90vh)",
-          background: "radial-gradient(ellipse at 60% 30%, #1e1b3a 0%, #0d0c1a 70%)",
+          background: "#0d0c1a",
         }}
         onClick={(e) => e.stopPropagation()}
       >
