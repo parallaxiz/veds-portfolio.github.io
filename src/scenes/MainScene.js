@@ -23,7 +23,6 @@ export default class MainScene extends Phaser.Scene {
         const scaleY = height / this.bg.height;
         const scale = Math.max(scaleX, scaleY);
         this.bg.setScale(scale);
-        this.bg.setScrollFactor(0);
         this.bg.setPipeline("TextureTintPipeline");
         this.textures.get("background").setFilter(Phaser.Textures.FilterMode.NEAREST);
 
@@ -57,6 +56,13 @@ export default class MainScene extends Phaser.Scene {
             offset: { x: 0, y: 300 }
         });
         this.player.setFixedRotation();
+
+        // -------------------------------
+        // CAMERA FOLLOW (Player centered)
+        // -------------------------------
+        this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
+        this.cameras.main.setBounds(0, 0, width, height);
+        this.cameras.main.setZoom(1.35);
 
         // Enable debug rendering to show physics bodies (including player hitbox)
         this.matter.world.createDebugGraphic();
@@ -169,9 +175,9 @@ export default class MainScene extends Phaser.Scene {
 
         this.bubbles = {
             bed: createBubble(bed.x, bed.y - 35 * scale),
-            cabinet: createBubble(cabinet.x, cabinet.y - 30 * scale),
+            cabinet: createBubble(cabinet.x, cabinet.y - 20 * scale),
             laptop: createBubble(laptop.x, laptop.y - 25 * scale),
-            bookshelf: createBubble(bookshelf.x, bookshelf.y - 45 * scale)
+            bookshelf: createBubble(bookshelf.x, bookshelf.y - 30 * scale)
         };
 
         // -------------------------------
