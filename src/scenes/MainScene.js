@@ -101,39 +101,29 @@ export default class MainScene extends Phaser.Scene {
             return obj;
         }
 
-        // Bed + About Me
+        // Bed
         const bed = createObject("bed", 600, 592, 205, -28);
         const bed_s = createObject("bed_s", 600, 592, 197, -28, 2);
-        const about_me = createObject("about_me", 600, 400, 63, -221);
         bed_s.setVisible(false);
-        about_me.setVisible(false);
-        this.objects_b = { bed, bed_s, about_me };
+        this.objects_b = { bed, bed_s };
 
-        // Cabinet + Contact Info
+        // Cabinet
         const cabinet = createObject("cabinet", 600, 400, 538, 252);
         const cabinet_s = createObject("cabinet_s", 600, 400, 538, 252, 2);
-        const contact_info = createObject("contact_info", 600, 400, 267, -103);
         cabinet_s.setVisible(false);
-        contact_info.setVisible(false);
-        this.objects_c = { cabinet, cabinet_s, contact_info };
+        this.objects_c = { cabinet, cabinet_s };
 
-        // Laptop + Projects
+        // Laptop
         const laptop = createObject("laptop", 600, 400, -156, 299, 2);
         const laptop_s = createObject("laptop_s", 600, 400, -156, 299, 2);
-        const projects = createObject("projects", 600, 400, -166, -47);
         laptop_s.setVisible(false);
-        projects.setVisible(false);
-        this.objects_l = { laptop, laptop_s, projects };
+        this.objects_l = { laptop, laptop_s };
 
-
-
-        // Bookshelf + Skills
+        // Bookshelf
         const bookshelf = createObject("bookshelf", 600, 400, 887, 92);
         const bookshelf_s = createObject("bookshelf_s", 600, 400, 887, 92, 2);
-        const skills = createObject("skills", 600, 400, 329, -155);
         bookshelf_s.setVisible(false);
-        skills.setVisible(false);
-        this.objects_bs = { bookshelf, bookshelf_s, skills };
+        this.objects_bs = { bookshelf, bookshelf_s };
 
         // -------------------------------
         // PROXIMITY DIALOGUE BUBBLES ("E" Prompts)
@@ -177,10 +167,10 @@ export default class MainScene extends Phaser.Scene {
         };
 
         this.bubbles = {
-            bed: createBubble(bed.x, bed.y - 120 * scale),
-            cabinet: createBubble(cabinet.x, cabinet.y - 150 * scale),
-            laptop: createBubble(laptop.x, laptop.y - 65 * scale),
-            bookshelf: createBubble(bookshelf.x, bookshelf.y - 180 * scale)
+            bed: createBubble(bed.x, bed.y - 35 * scale),
+            cabinet: createBubble(cabinet.x, cabinet.y - 50 * scale),
+            laptop: createBubble(laptop.x, laptop.y - 25 * scale),
+            bookshelf: createBubble(bookshelf.x, bookshelf.y - 65 * scale)
         };
 
         // -------------------------------
@@ -303,10 +293,10 @@ export default class MainScene extends Phaser.Scene {
         let activeObject = null;
         let minDistance = Infinity;
         const objectGroups = [
-            { key: "bed", normal: this.objects_b.bed, selected: [this.objects_b.bed_s, this.objects_b.about_me] },
-            { key: "cabinet", normal: this.objects_c.cabinet, selected: [this.objects_c.cabinet_s, this.objects_c.contact_info] },
-            { key: "laptop", normal: this.objects_l.laptop, selected: [this.objects_l.laptop_s, this.objects_l.projects] },
-            { key: "bookshelf", normal: this.objects_bs.bookshelf, selected: [this.objects_bs.bookshelf_s, this.objects_bs.skills] }
+            { key: "bed", normal: this.objects_b.bed, selected: [this.objects_b.bed_s] },
+            { key: "cabinet", normal: this.objects_c.cabinet, selected: [this.objects_c.cabinet_s] },
+            { key: "laptop", normal: this.objects_l.laptop, selected: [this.objects_l.laptop_s] },
+            { key: "bookshelf", normal: this.objects_bs.bookshelf, selected: [this.objects_bs.bookshelf_s] }
         ];
 
         objectGroups.forEach(({ key, normal }) => {
