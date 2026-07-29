@@ -383,6 +383,15 @@ const PROJECTS = [
     tags: ["PYTHON", "FLASK", "GEMINI PRO", "GENAI"],
     link: "https://github.com/parallaxiz",
   },
+  {
+    id: "flagforge",
+    icon: "🚩",
+    label: "FlagForge",
+    title: "FlagForge: Feature Flagging Platform",
+    desc: "Enterprise-grade feature flagging and A/B testing platform with real-time control over feature rollouts. Built with a Flask backend, React analytics dashboard, and a Flutter mobile banking app — all integrated via MurmurHash3-based deterministic toggles and MySQL.",
+    tags: ["FLASK", "REACT", "FLUTTER", "MYSQL", "DOCKER"],
+    link: "https://github.com/EshwariWasankar/EDI_PROJECT_FLAGFORGE",
+  },
 ];
 
 const DESKTOP_ICONS = [
