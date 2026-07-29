@@ -19,7 +19,7 @@ export default function GameCanvas({ isInteractive }) {
   return (
     <div 
       id="game-container" 
-      className={`w-full h-full flex items-center justify-center bg-black overflow-hidden ${
+      className={`w-full h-full flex items-center justify-center bg-[#161426] overflow-hidden ${
         isInteractive ? "pointer-events-auto" : "pointer-events-none select-none"
       }`}
     />

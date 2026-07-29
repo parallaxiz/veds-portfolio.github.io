@@ -60,8 +60,9 @@ export default class MainScene extends Phaser.Scene {
         // -------------------------------
         // CAMERA FOLLOW (Player centered)
         // -------------------------------
+        const bgBounds = this.bg.getBounds();
         this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
-        this.cameras.main.setBounds(0, 0, width, height);
+        this.cameras.main.setBounds(bgBounds.x, bgBounds.y, bgBounds.width, bgBounds.height);
         this.cameras.main.setZoom(1.35);
 
         // Enable debug rendering to show physics bodies (including player hitbox)
