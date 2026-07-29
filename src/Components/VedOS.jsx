@@ -372,7 +372,7 @@ const PROJECTS = [
     title: "\"The AI Council\" Startup Validator",
     desc: "Engineered a multi-agent orchestration pipeline using n8n to evaluate startup concepts through specialized AI personas. Architected a Next.js frontend with secure API routes and LLM chaining.",
     tags: ["NEXT.JS", "N8N", "GEMINI 1.5 FLASH", "AI"],
-    link: "https://github.com/parallaxiz/dna",
+    link: "https://github.com/parallaxiz",
   },
   {
     id: "oxlo",
@@ -391,6 +391,15 @@ const PROJECTS = [
     desc: "Enterprise-grade feature flagging and A/B testing platform with real-time control over feature rollouts. Built with a Flask backend, React analytics dashboard, and a Flutter mobile banking app — all integrated via MurmurHash3-based deterministic toggles and MySQL.",
     tags: ["FLASK", "REACT", "FLUTTER", "MYSQL", "DOCKER"],
     link: "https://github.com/EshwariWasankar/EDI_PROJECT_FLAGFORGE",
+  },
+  {
+    id: "dna",
+    icon: "🧬",
+    label: "DNA",
+    title: "DNA Project",
+    desc: "A bioinformatics / data-driven project exploring DNA sequence analysis and processing pipelines. Built to apply computational techniques to biological datasets.",
+    tags: ["PYTHON", "BIOINFORMATICS", "DATA SCIENCE"],
+    link: "https://github.com/parallaxiz/dna",
   },
 ];
 
