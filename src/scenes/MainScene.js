@@ -40,28 +40,7 @@ export default class MainScene extends Phaser.Scene {
         this.roomCollider.setScale(colliderScaleX + 1, colliderScaleY + 1);
         this.roomCollider.setPosition(width / 2 + ROOM_OFFSET_X, height / 2 + ROOM_OFFSET_Y);
 
-        // -------------------------------
-        // DYNAMIC ATMOSPHERE & LIGHT EFFECTS
-        // -------------------------------
-        // 1. Window Light Shaft (ADD Blendmode)
-        const lightShaft = this.add.polygon(0, 0, [
-            { x: 220 * scale, y: 150 * scale }, // Top left of window
-            { x: 380 * scale, y: 220 * scale }, // Top right of window
-            { x: 1000 * scale, y: 1100 * scale }, // Bottom right on floor
-            { x: 550 * scale, y: 1100 * scale }  // Bottom left on floor
-        ], 0xfff3a8, 0.12);
-        lightShaft.setOrigin(0, 0);
-        lightShaft.setBlendMode(Phaser.BlendModes.ADD);
-        lightShaft.setDepth(1.5);
 
-        this.tweens.add({
-            targets: lightShaft,
-            alpha: { from: 0.08, to: 0.18 },
-            duration: 4000,
-            yoyo: true,
-            repeat: -1,
-            ease: "Sine.easeInOut"
-        });
 
         // -------------------------------
         // PLAYER
@@ -146,21 +125,7 @@ export default class MainScene extends Phaser.Scene {
         projects.setVisible(false);
         this.objects_l = { laptop, laptop_s, projects };
 
-        // 2. Laptop screen flickering glow (ADD Blendmode)
-        const laptopGlow = this.add.ellipse(laptop.x, laptop.y - 12 * scale, 35 * scale, 18 * scale, 0x00ffff, 0.35);
-        laptopGlow.setBlendMode(Phaser.BlendModes.ADD);
-        laptopGlow.setDepth(laptop.depth + 0.05);
 
-        this.tweens.add({
-            targets: laptopGlow,
-            alpha: { from: 0.15, to: 0.5 },
-            scaleX: { from: 0.9, to: 1.1 },
-            scaleY: { from: 0.9, to: 1.1 },
-            duration: 120,
-            yoyo: true,
-            repeat: -1,
-            ease: "Bounce.easeInOut"
-        });
 
         // Bookshelf + Skills
         const bookshelf = createObject("bookshelf", 600, 400, 887, 92);

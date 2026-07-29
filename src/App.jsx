@@ -508,19 +508,10 @@ export default function App() {
       {/* HUD overlays - only visible when game is active */}
       {isStarted && !activeModal && (
         <div className="absolute inset-0 pointer-events-none z-[100]">
-          {/* Top-Left: Rules Button */}
-          <button
-            onClick={() => { portfolioSFX.playClick(); setActiveModal("rules"); }}
-            className="absolute top-4 left-4 bg-[#3e3b66] hover:bg-[#2d2a4f] text-white border-2 border-white font-bold py-2 px-4 rounded shadow-lg pointer-events-auto transition active:translate-y-0.5"
-            style={{ fontFamily: "edit-undo" }}
-          >
-            📋 Rules
-          </button>
-
           {/* Top-Right: Exit Button */}
           <button
             onClick={handleReturnToMenu}
-            className="absolute top-4 right-4 bg-[#3e3b66] hover:bg-[#2d2a4f] text-white border-2 border-white font-bold py-2 px-4 rounded shadow-lg pointer-events-auto transition active:translate-y-0.5"
+            className="absolute top-4 right-4 bg-[#3e3b66] hover:bg-[#2d2a4f] text-white border-2 border-white font-bold py-2 px-4 rounded shadow-lg pointer-events-auto transition active:translate-y-0.5 cursor-pointer"
             style={{ fontFamily: "edit-undo" }}
           >
             &larr; Exit
@@ -528,17 +519,17 @@ export default function App() {
 
           {/* Bottom-Left: Keyboard Guide & Music HUD */}
           <div 
-            className="absolute bottom-4 left-4 flex flex-col gap-2 bg-[#161426]/90 border-2 border-[#3e3b66] p-3 rounded-lg text-white text-xs select-none pointer-events-auto shadow-md"
+            className="absolute bottom-6 left-6 flex flex-col gap-2.5 bg-[#161426]/95 border-4 border-[#3e3b66] p-4 md:p-5 rounded-xl text-white text-sm select-none pointer-events-auto shadow-2xl"
             style={{ fontFamily: "edit-undo" }}
           >
-            <div className="text-[#e2933f] font-bold uppercase mb-0.5">&gt; System Guide</div>
+            <div className="text-[#e2933f] text-base font-bold uppercase mb-0.5">&gt; System Guide</div>
             <div>⌨️ WASD / Arrows to walk</div>
             <div>💡 Approach object & Press E to open</div>
             
             {/* Music Toggle */}
             <button
               onClick={toggleMute}
-              className="mt-1 flex items-center justify-center gap-1.5 bg-[#3e3b66] hover:bg-[#2d2a4f] active:translate-y-0.5 text-white border border-white/40 font-bold py-1 px-2.5 rounded transition cursor-pointer text-2xs uppercase"
+              className="mt-1 flex items-center justify-center gap-1.5 bg-[#3e3b66] hover:bg-[#2d2a4f] active:translate-y-0.5 text-white border-2 border-white/40 font-bold py-1.5 px-3 rounded-lg transition cursor-pointer text-xs uppercase"
             >
               {isMuted ? "🔇 Lofi Muted" : "🔊 Lofi Playing"}
             </button>
@@ -546,7 +537,7 @@ export default function App() {
             {/* Mobile Controls Toggle */}
             <button
               onClick={() => { portfolioSFX.playClick(); setShowDpad(!showDpad); }}
-              className="md:hidden flex items-center justify-center gap-1.5 bg-[#e2933f] hover:bg-[#d17e2e] active:translate-y-0.5 text-white border border-white/40 font-bold py-1 px-2.5 rounded transition cursor-pointer text-2xs uppercase"
+              className="md:hidden flex items-center justify-center gap-1.5 bg-[#e2933f] hover:bg-[#d17e2e] active:translate-y-0.5 text-white border-2 border-white/40 font-bold py-1.5 px-3 rounded-lg transition cursor-pointer text-xs uppercase"
             >
               {showDpad ? "📱 Hide D-Pad" : "📱 Show D-Pad"}
             </button>
