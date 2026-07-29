@@ -288,6 +288,7 @@ export default function App() {
   const [isMuted, setIsMuted] = useState(true);
   const [dialogue, setDialogue] = useState(null);
   const [showDpad, setShowDpad] = useState(false);
+  const [particleFontSize, setParticleFontSize] = useState(100);
 
   useEffect(() => {
     // Detect mobile touch devices
@@ -296,6 +297,19 @@ export default function App() {
       (navigator.maxTouchPoints > 0) || 
       (window.innerWidth < 768);
     setShowDpad(isTouchDevice);
+
+    const updateParticleSize = () => {
+      if (window.innerWidth < 480) {
+        setParticleFontSize(36);
+      } else if (window.innerWidth < 768) {
+        setParticleFontSize(60);
+      } else {
+        setParticleFontSize(100);
+      }
+    };
+    updateParticleSize();
+    window.addEventListener("resize", updateParticleSize);
+    return () => window.removeEventListener("resize", updateParticleSize);
   }, []);
 
   useEffect(() => {
@@ -418,85 +432,85 @@ export default function App() {
       {/* Start Screen Overlay */}
       {!isLoading && !isStarted && (
         <div 
-          className={`absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-[400] transition-opacity duration-500 ease-in-out p-4 text-white ${
+          className={`absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-[400] transition-opacity duration-500 ease-in-out p-3 sm:p-4 text-white overflow-y-auto ${
             isFadingOut ? "opacity-0 pointer-events-none" : "opacity-100"
           }`}
           style={{ fontFamily: "edit-undo" }}
         >
-          <div className="max-w-4xl w-full text-center space-y-12">
-            <div className="space-y-4">
-              <div className="text-[#e2933f] font-bold tracking-widest text-sm animate-bounce">
+          <div className="max-w-4xl w-full text-center space-y-4 sm:space-y-6 md:space-y-10 my-auto py-4">
+            <div className="space-y-2 sm:space-y-3">
+              <div className="text-[#e2933f] font-bold tracking-widest text-xs sm:text-sm animate-bounce">
                 &gt; VED_PORTFOLIO.EXE READY &lt;
               </div>
-              <div className="w-full h-[160px] flex items-center justify-center">
+              <div className="w-full h-[70px] sm:h-[110px] md:h-[150px] flex items-center justify-center overflow-hidden">
                 <CursorDrivenParticleTypography 
                   text="VED'S PORTFOLIO" 
-                  fontSize={100} 
-                  particleDensity={4} 
-                  dispersionStrength={25}
+                  fontSize={particleFontSize} 
+                  particleDensity={particleFontSize < 50 ? 2 : 4} 
+                  dispersionStrength={window.innerWidth < 640 ? 15 : 25}
                   color="#ffffff"
                 />
               </div>
-              <h2 className="text-[#e2933f] text-xl md:text-2xl font-bold uppercase tracking-wider mt-2">
+              <h2 className="text-[#e2933f] text-sm sm:text-lg md:text-2xl font-bold uppercase tracking-wider mt-1 px-2">
                 Computer Science Student | AI & Full Stack Dev
               </h2>
-              <p className="text-gray-400 text-sm uppercase tracking-widest mt-1">
+              <p className="text-gray-400 text-xs sm:text-sm uppercase tracking-widest">
                 Select your path to enter the bedroom
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8 px-6 max-w-3xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-4 md:gap-8 px-2 sm:px-6 max-w-3xl mx-auto">
               <button
                 onClick={() => {
                   window.location.href = "/recruiters";
                 }}
-                className="bg-[#242238] border-4 border-[#3e3b66] text-white p-6 rounded-lg text-left transition-all duration-200 transform hover:-translate-y-1 shadow-[4px_4px_0px_0px_#e2933f] hover:shadow-[8px_8px_0px_0px_#e2933f] group flex flex-col justify-between min-h-[200px] cursor-pointer"
+                className="bg-[#242238] border-3 md:border-4 border-[#3e3b66] text-white p-4 sm:p-6 rounded-lg text-left transition-all duration-200 transform hover:-translate-y-1 shadow-[4px_4px_0px_0px_#e2933f] hover:shadow-[8px_8px_0px_0px_#e2933f] group flex flex-col justify-between min-h-[140px] sm:min-h-[180px] md:min-h-[200px] cursor-pointer"
               >
                 <div className="flex items-center justify-between w-full">
-                  <span className="text-4xl group-hover:scale-125 transition-transform duration-200">💼</span>
-                  <span className="text-xs border-2 border-[#e2933f] px-2 py-0.5 rounded text-[#e2933f] group-hover:bg-[#e2933f] group-hover:text-white transition font-bold uppercase tracking-wider">
+                  <span className="text-2xl sm:text-4xl group-hover:scale-125 transition-transform duration-200">💼</span>
+                  <span className="text-[10px] sm:text-xs border-2 border-[#e2933f] px-2 py-0.5 rounded text-[#e2933f] group-hover:bg-[#e2933f] group-hover:text-white transition font-bold uppercase tracking-wider">
                     Fast Track
                   </span>
                 </div>
-                <div className="mt-4">
-                  <h3 className="font-bold text-2xl text-[#e2933f] group-hover:text-white transition tracking-wide">
+                <div className="mt-2 sm:mt-4">
+                  <h3 className="font-bold text-lg sm:text-2xl text-[#e2933f] group-hover:text-white transition tracking-wide">
                     RECRUITERS
                   </h3>
-                  <p className="text-xs text-gray-300 mt-2 leading-relaxed font-sans">
+                  <p className="text-[11px] sm:text-xs text-gray-300 mt-1 sm:mt-2 leading-relaxed font-sans">
                     Sleek document view mapping skills, projects, and contact details directly from my CV.
                   </p>
                 </div>
-                <div className="text-left mt-4 text-[#e2933f] font-bold text-xs group-hover:translate-x-1 transition-transform duration-200">
+                <div className="text-left mt-3 sm:mt-4 text-[#e2933f] font-bold text-[10px] sm:text-xs group-hover:translate-x-1 transition-transform duration-200">
                   [ READ RESUME &rarr; ]
                 </div>
               </button>
 
               <button
                 onClick={handleStartGame}
-                className="bg-[#fcecd1] border-4 border-[#3e3b66] text-[#3e3b66] p-6 rounded-lg text-left transition-all duration-200 transform hover:-translate-y-1 shadow-[4px_4px_0px_0px_#3e3b66] hover:shadow-[8px_8px_0px_0px_#e2933f] group flex flex-col justify-between min-h-[200px] cursor-pointer"
+                className="bg-[#fcecd1] border-3 md:border-4 border-[#3e3b66] text-[#3e3b66] p-4 sm:p-6 rounded-lg text-left transition-all duration-200 transform hover:-translate-y-1 shadow-[4px_4px_0px_0px_#3e3b66] hover:shadow-[8px_8px_0px_0px_#e2933f] group flex flex-col justify-between min-h-[140px] sm:min-h-[180px] md:min-h-[200px] cursor-pointer"
               >
                 <div className="flex items-center justify-between w-full">
-                  <span className="text-4xl group-hover:animate-bounce">👀</span>
-                  <span className="text-xs border-2 border-[#3e3b66] px-2 py-0.5 rounded text-[#3e3b66] group-hover:bg-[#3e3b66] group-hover:text-white transition font-bold uppercase tracking-wider">
+                  <span className="text-2xl sm:text-4xl group-hover:animate-bounce">👀</span>
+                  <span className="text-[10px] sm:text-xs border-2 border-[#3e3b66] px-2 py-0.5 rounded text-[#3e3b66] group-hover:bg-[#3e3b66] group-hover:text-white transition font-bold uppercase tracking-wider">
                     Interactive
                   </span>
                 </div>
-                <div className="mt-4">
-                  <h3 className="font-bold text-2xl text-[#3e3b66] group-hover:text-[#e2933f] transition tracking-wide">
+                <div className="mt-2 sm:mt-4">
+                  <h3 className="font-bold text-lg sm:text-2xl text-[#3e3b66] group-hover:text-[#e2933f] transition tracking-wide">
                     JUST LOOKING
                   </h3>
-                  <p className="text-xs text-[#3e3b66]/80 mt-2 leading-relaxed font-sans">
+                  <p className="text-[11px] sm:text-xs text-[#3e3b66]/80 mt-1 sm:mt-2 leading-relaxed font-sans">
                     Walk around the interactive pixel art room using WASD keys. Find info and easter eggs!
                   </p>
                 </div>
-                <div className="text-left mt-4 text-[#3e3b66] group-hover:text-[#e2933f] font-bold text-xs group-hover:translate-x-1 transition-transform duration-200">
+                <div className="text-left mt-3 sm:mt-4 text-[#3e3b66] group-hover:text-[#e2933f] font-bold text-[10px] sm:text-xs group-hover:translate-x-1 transition-transform duration-200">
                   [ ENTER GAME &rarr; ]
                 </div>
               </button>
             </div>
 
-            <div className="text-xs text-gray-500 font-bold uppercase tracking-widest">
-              Move with WASD &bull; Press E or Click to interact
+            <div className="text-[10px] sm:text-xs text-gray-500 font-bold uppercase tracking-widest pt-2">
+              Move with WASD / Arrows &bull; Press E or Touch to interact
             </div>
           </div>
         </div>
@@ -517,25 +531,25 @@ export default function App() {
           {/* Top-Right: Exit Button */}
           <button
             onClick={handleReturnToMenu}
-            className="absolute top-4 right-4 bg-[#3e3b66] hover:bg-[#2d2a4f] text-white border-2 border-white font-bold py-2 px-4 rounded shadow-lg pointer-events-auto transition active:translate-y-0.5 cursor-pointer"
+            className="fixed top-3 right-3 sm:top-4 sm:right-4 bg-[#3e3b66] hover:bg-[#2d2a4f] text-white border-2 border-white font-bold py-1.5 px-3 sm:py-2 sm:px-4 rounded-lg text-xs sm:text-sm shadow-lg pointer-events-auto transition active:translate-y-0.5 cursor-pointer touch-manipulation z-[150]"
             style={{ fontFamily: "edit-undo" }}
           >
             &larr; Exit
           </button>
 
-          {/* Bottom-Left: Keyboard Guide & Music HUD */}
+          {/* Bottom-Left: System Guide & Music HUD */}
           <div 
-            className="absolute bottom-6 left-6 flex flex-col gap-2.5 bg-[#161426]/95 border-4 border-[#3e3b66] p-4 md:p-5 rounded-xl text-white text-sm select-none pointer-events-auto shadow-2xl"
+            className="fixed bottom-3 left-3 sm:bottom-6 sm:left-6 flex flex-col gap-1.5 sm:gap-2.5 bg-[#161426]/95 border-2 sm:border-4 border-[#3e3b66] p-2.5 sm:p-4 md:p-5 rounded-xl text-white text-[10px] sm:text-xs md:text-sm select-none pointer-events-auto shadow-2xl max-w-[150px] sm:max-w-none z-[150]"
             style={{ fontFamily: "edit-undo" }}
           >
-            <div className="text-[#e2933f] text-base font-bold uppercase mb-0.5">&gt; System Guide</div>
-            <div>⌨️ WASD / Arrows to walk</div>
-            <div>💡 Approach object & Press E to open</div>
+            <div className="text-[#e2933f] text-xs sm:text-sm md:text-base font-bold uppercase mb-0.5">&gt; System Guide</div>
+            <div className="hidden md:block">⌨️ WASD / Arrows to walk</div>
+            <div>💡 Approach & Press E to open</div>
             
             {/* Music Toggle */}
             <button
               onClick={toggleMute}
-              className="mt-1 flex items-center justify-center gap-1.5 bg-[#3e3b66] hover:bg-[#2d2a4f] active:translate-y-0.5 text-white border-2 border-white/40 font-bold py-1.5 px-3 rounded-lg transition cursor-pointer text-xs uppercase"
+              className="mt-1 flex items-center justify-center gap-1.5 bg-[#3e3b66] hover:bg-[#2d2a4f] active:translate-y-0.5 text-white border-2 border-white/40 font-bold py-1 px-2 sm:py-1.5 sm:px-3 rounded-lg transition cursor-pointer text-[9px] sm:text-xs uppercase touch-manipulation"
             >
               {isMuted ? "🔇 Lofi Muted" : "🔊 Lofi Playing"}
             </button>
@@ -543,7 +557,7 @@ export default function App() {
             {/* Mobile Controls Toggle */}
             <button
               onClick={() => { portfolioSFX.playClick(); setShowDpad(!showDpad); }}
-              className="md:hidden flex items-center justify-center gap-1.5 bg-[#e2933f] hover:bg-[#d17e2e] active:translate-y-0.5 text-white border-2 border-white/40 font-bold py-1.5 px-3 rounded-lg transition cursor-pointer text-xs uppercase"
+              className="md:hidden flex items-center justify-center gap-1.5 bg-[#e2933f] hover:bg-[#d17e2e] active:translate-y-0.5 text-white border-2 border-white/40 font-bold py-1 px-2 sm:py-1.5 sm:px-3 rounded-lg transition cursor-pointer text-[9px] sm:text-xs uppercase touch-manipulation"
             >
               {showDpad ? "📱 Hide D-Pad" : "📱 Show D-Pad"}
             </button>
@@ -553,36 +567,36 @@ export default function App() {
 
       {/* Mobile Virtual D-Pad Overlay */}
       {isStarted && !activeModal && showDpad && (
-        <div className="absolute bottom-4 right-4 flex flex-col items-center gap-1.5 z-[300] pointer-events-auto select-none md:hidden">
+        <div className="fixed bottom-3 right-3 flex flex-col items-center gap-1 z-[300] pointer-events-auto select-none md:hidden scale-90 sm:scale-100 origin-bottom-right">
           {/* Up */}
           <button
-            onTouchStart={() => triggerMobileMove("up", true)}
-            onTouchEnd={() => triggerMobileMove("up", false)}
+            onTouchStart={(e) => { e.preventDefault(); triggerMobileMove("up", true); }}
+            onTouchEnd={(e) => { e.preventDefault(); triggerMobileMove("up", false); }}
             onMouseDown={() => triggerMobileMove("up", true)}
             onMouseUp={() => triggerMobileMove("up", false)}
-            className="w-12 h-12 bg-[#3e3b66]/90 hover:bg-[#2d2a4f]/90 active:bg-white/80 border-2 border-white rounded-full flex items-center justify-center text-white text-xl font-bold font-sans shadow-lg cursor-pointer"
+            className="w-12 h-12 bg-[#3e3b66]/90 hover:bg-[#2d2a4f]/90 active:bg-[#e2933f] border-2 border-white rounded-full flex items-center justify-center text-white text-xl font-bold font-sans shadow-lg cursor-pointer touch-manipulation active:scale-95"
           >
             ▲
           </button>
           
-          <div className="flex gap-6">
+          <div className="flex gap-4">
             {/* Left */}
             <button
-              onTouchStart={() => triggerMobileMove("left", true)}
-              onTouchEnd={() => triggerMobileMove("left", false)}
+              onTouchStart={(e) => { e.preventDefault(); triggerMobileMove("left", true); }}
+              onTouchEnd={(e) => { e.preventDefault(); triggerMobileMove("left", false); }}
               onMouseDown={() => triggerMobileMove("left", true)}
               onMouseUp={() => triggerMobileMove("left", false)}
-              className="w-12 h-12 bg-[#3e3b66]/90 hover:bg-[#2d2a4f]/90 active:bg-white/80 border-2 border-white rounded-full flex items-center justify-center text-white text-xl font-bold font-sans shadow-lg cursor-pointer"
+              className="w-12 h-12 bg-[#3e3b66]/90 hover:bg-[#2d2a4f]/90 active:bg-[#e2933f] border-2 border-white rounded-full flex items-center justify-center text-white text-xl font-bold font-sans shadow-lg cursor-pointer touch-manipulation active:scale-95"
             >
               ◀
             </button>
             {/* Right */}
             <button
-              onTouchStart={() => triggerMobileMove("right", true)}
-              onTouchEnd={() => triggerMobileMove("right", false)}
+              onTouchStart={(e) => { e.preventDefault(); triggerMobileMove("right", true); }}
+              onTouchEnd={(e) => { e.preventDefault(); triggerMobileMove("right", false); }}
               onMouseDown={() => triggerMobileMove("right", true)}
               onMouseUp={() => triggerMobileMove("right", false)}
-              className="w-12 h-12 bg-[#3e3b66]/90 hover:bg-[#2d2a4f]/90 active:bg-white/80 border-2 border-white rounded-full flex items-center justify-center text-white text-xl font-bold font-sans shadow-lg cursor-pointer"
+              className="w-12 h-12 bg-[#3e3b66]/90 hover:bg-[#2d2a4f]/90 active:bg-[#e2933f] border-2 border-white rounded-full flex items-center justify-center text-white text-xl font-bold font-sans shadow-lg cursor-pointer touch-manipulation active:scale-95"
             >
               ▶
             </button>
@@ -590,11 +604,11 @@ export default function App() {
           
           {/* Down */}
           <button
-            onTouchStart={() => triggerMobileMove("down", true)}
-            onTouchEnd={() => triggerMobileMove("down", false)}
+            onTouchStart={(e) => { e.preventDefault(); triggerMobileMove("down", true); }}
+            onTouchEnd={(e) => { e.preventDefault(); triggerMobileMove("down", false); }}
             onMouseDown={() => triggerMobileMove("down", true)}
             onMouseUp={() => triggerMobileMove("down", false)}
-            className="w-12 h-12 bg-[#3e3b66]/90 hover:bg-[#2d2a4f]/90 active:bg-white/80 border-2 border-white rounded-full flex items-center justify-center text-white text-xl font-bold font-sans shadow-lg cursor-pointer"
+            className="w-12 h-12 bg-[#3e3b66]/90 hover:bg-[#2d2a4f]/90 active:bg-[#e2933f] border-2 border-white rounded-full flex items-center justify-center text-white text-xl font-bold font-sans shadow-lg cursor-pointer touch-manipulation active:scale-95"
           >
             ▼
           </button>
