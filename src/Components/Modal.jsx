@@ -310,7 +310,7 @@ export default function Modal({ isOpen, type, onClose }) {
                   <div>
                     <div className="flex justify-between items-start font-bold">
                       <span className="text-[#3e3b66] text-lg">Elevate Labs</span>
-                      <span className="text-sm bg-[#3e3b66] text-white px-2 py-0.5 rounded">May 2026 – July 2026</span>
+                      <span className="text-sm bg-[#3e3b66] text-white px-2 py-0.5 rounded-none">May 2026 – July 2026</span>
                     </div>
                     <div className="text-sm italic text-gray-600 font-bold mb-2">
                       AI & ML Intern &bull; <span className="text-[#e2933f]">Awarded Best Performer</span>
@@ -344,7 +344,7 @@ export default function Modal({ isOpen, type, onClose }) {
                     <h3 className="font-bold text-lg text-[#e2933f] border-b border-[#3e3b66]/20 pb-1 mb-2">
                       CERTIFICATIONS
                     </h3>
-                    <div className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-2.5 rounded text-sm md:text-base">
+                    <div className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-2.5 rounded-none text-sm md:text-base shadow-[2px_2px_0px_0px_#3e3b66]">
                       <strong>Supervised Machine Learning: Regression and Classification</strong> &bull; Stanford University & DeepLearning.AI
                     </div>
                   </div>
@@ -356,7 +356,7 @@ export default function Modal({ isOpen, type, onClose }) {
               <button
                 disabled={aboutPage === 1}
                 onClick={() => { if (window.portfolioSFX) window.portfolioSFX.playClick(); setAboutPage((p) => p - 1); }}
-                className={`px-4 py-2 bg-[#3e3b66] text-white rounded font-semibold transition ${
+                className={`px-4 py-2 bg-[#3e3b66] text-white rounded-none font-bold border-2 border-[#3e3b66] shadow-[2px_2px_0px_0px_#161426] transition active:translate-y-0.5 ${
                   aboutPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-[#2e2b54] cursor-pointer"
                 }`}
               >
@@ -366,7 +366,7 @@ export default function Modal({ isOpen, type, onClose }) {
               <button
                 disabled={aboutPage === 3}
                 onClick={() => { if (window.portfolioSFX) window.portfolioSFX.playClick(); setAboutPage((p) => p + 1); }}
-                className={`px-4 py-2 bg-[#3e3b66] text-white rounded font-semibold transition ${
+                className={`px-4 py-2 bg-[#3e3b66] text-white rounded-none font-bold border-2 border-[#3e3b66] shadow-[2px_2px_0px_0px_#161426] transition active:translate-y-0.5 ${
                   aboutPage === 3 ? "opacity-50 cursor-not-allowed" : "hover:bg-[#2e2b54] cursor-pointer"
                 }`}
               >
@@ -400,9 +400,9 @@ export default function Modal({ isOpen, type, onClose }) {
                 {stats.map((stat) => (
                   <div key={stat.name} className="flex items-center gap-3">
                     <span className="w-24 text-left font-bold text-sm text-[#3e3b66]">{stat.name}</span>
-                    <div className="flex-grow h-5 bg-gray-200 border-2 border-[#3e3b66] rounded overflow-hidden">
+                    <div className="flex-grow h-5 bg-[#fcf3e3] border-2 border-[#3e3b66] rounded-none overflow-hidden shadow-inner">
                       <div
-                        className="h-full bg-gradient-to-r from-[#3e3b66] to-[#5a569c]"
+                        className="h-full bg-[#3e3b66]"
                         style={{ width: `${stat.value}%` }}
                       />
                     </div>
@@ -413,7 +413,7 @@ export default function Modal({ isOpen, type, onClose }) {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-3 border-t-2 border-[#3e3b66]/20">
                 {skillCategories.map((cat) => (
-                  <div key={cat.title} className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-2 rounded text-left">
+                  <div key={cat.title} className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-2.5 rounded-none text-left shadow-[2px_2px_0px_0px_#3e3b66]">
                     <h4 className="font-bold text-[#e2933f] text-sm mb-1">{cat.title}</h4>
                     <p className="text-sm text-[#3e3b66] leading-tight font-bold">
                       {cat.items.join(", ")}
@@ -442,20 +442,20 @@ export default function Modal({ isOpen, type, onClose }) {
             <div className="flex border-b-4 border-[#3e3b66] pb-1 gap-2">
               <button
                 onClick={() => handleTabChange("contact", "cabinet")}
-                className={`px-3 py-1 font-bold rounded-t-lg transition ${
+                className={`px-3 py-1 font-bold rounded-none border-2 border-[#3e3b66] transition ${
                   cabinetTab === "contact"
                     ? "bg-[#3e3b66] text-white"
-                    : "bg-[#fcf3e3] text-[#3e3b66] border border-[#3e3b66] hover:bg-[#3e3b66]/10 cursor-pointer"
+                    : "bg-[#fcf3e3] text-[#3e3b66] hover:bg-[#3e3b66]/10 cursor-pointer"
                 }`}
               >
                 📬 INBOX CONTACTS
               </button>
               <button
                 onClick={() => handleTabChange("wardrobe", "cabinet")}
-                className={`px-3 py-1 font-bold rounded-t-lg transition ${
+                className={`px-3 py-1 font-bold rounded-none border-2 border-[#3e3b66] transition ${
                   cabinetTab === "wardrobe"
                     ? "bg-[#3e3b66] text-white"
-                    : "bg-[#fcf3e3] text-[#3e3b66] border border-[#3e3b66] hover:bg-[#3e3b66]/10 cursor-pointer"
+                    : "bg-[#fcf3e3] text-[#3e3b66] hover:bg-[#3e3b66]/10 cursor-pointer"
                 }`}
               >
                 👕 OUTFIT CUSTOMIZER
@@ -476,7 +476,7 @@ export default function Modal({ isOpen, type, onClose }) {
                           window.open(c.link, "_blank");
                         }
                       }}
-                      className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-3 rounded flex items-center justify-between cursor-pointer transition transform hover:-translate-y-0.5 hover:bg-[#3e3b66] hover:text-white group text-[#3e3b66]"
+                      className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-3 rounded-none flex items-center justify-between cursor-pointer transition transform hover:-translate-y-0.5 hover:bg-[#3e3b66] hover:text-white group text-[#3e3b66] shadow-[2px_2px_0px_0px_#3e3b66]"
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-2xl">{c.icon}</span>
@@ -485,7 +485,7 @@ export default function Modal({ isOpen, type, onClose }) {
                           <div className="font-semibold text-sm md:text-base group-hover:text-white">{c.value}</div>
                         </div>
                       </div>
-                      <span className="text-xs border-2 border-[#3e3b66] rounded px-2.5 py-1 bg-white text-[#3e3b66] group-hover:bg-[#e2933f] group-hover:text-white group-hover:border-white font-bold transition">
+                      <span className="text-xs border-2 border-[#3e3b66] rounded-none px-2.5 py-1 bg-white text-[#3e3b66] group-hover:bg-[#e2933f] group-hover:text-white group-hover:border-white font-bold transition">
                         {c.action === "copy" ? (copiedText === c.label ? "Copied!" : "Copy") : "Open"}
                       </span>
                     </div>
@@ -507,31 +507,31 @@ export default function Modal({ isOpen, type, onClose }) {
               RULES & CONTROLS
             </h2>
             <div className="flex-grow my-4 text-left overflow-y-auto px-2 max-h-[350px] space-y-4 text-[#3e3b66] text-lg">
-              <div className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-3 rounded space-y-2">
+              <div className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-3 rounded-none space-y-2 shadow-[2px_2px_0px_0px_#3e3b66]">
                 <h3 className="font-bold text-[#e2933f] border-b border-[#3e3b66]/20 pb-1">Character Controls</h3>
                 <p className="flex items-center gap-2">
-                  <span className="font-bold bg-[#3e3b66] text-white px-2 py-0.5 rounded text-sm">W A S D</span> or 
-                  <span className="font-bold bg-[#3e3b66] text-white px-2 py-0.5 rounded text-sm">&uarr; &larr; &rarr; &darr;</span> keys to move the player around.
+                  <span className="font-bold bg-[#3e3b66] text-white px-2 py-0.5 rounded-none text-sm">W A S D</span> or 
+                  <span className="font-bold bg-[#3e3b66] text-white px-2 py-0.5 rounded-none text-sm">&uarr; &larr; &rarr; &darr;</span> keys to move the player around.
                 </p>
                 <p>
                   The avatar animates and moves in all directions across the isometric room.
                 </p>
               </div>
 
-              <div className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-3 rounded space-y-2">
+              <div className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-3 rounded-none space-y-2 shadow-[2px_2px_0px_0px_#3e3b66]">
                 <h3 className="font-bold text-[#e2933f] border-b border-[#3e3b66]/20 pb-1">Interactions</h3>
                 <p>
                   Walk up to room elements (<strong className="text-[#e2933f]">Bed</strong>, <strong className="text-[#e2933f]">Cabinet</strong>, <strong className="text-[#e2933f]">Laptop</strong>, <strong className="text-[#e2933f]">Bookshelf</strong>) to highlight them.
                 </p>
                 <p>
-                  Press <span className="font-bold bg-[#3e3b66] text-white px-2 py-0.5 rounded text-sm">E</span> or <strong>click directly</strong> on the highlighted objects to read about different portfolio sections.
+                  Press <span className="font-bold bg-[#3e3b66] text-white px-2 py-0.5 rounded-none text-sm">E</span> or <strong>click directly</strong> on the highlighted objects to read about different portfolio sections.
                 </p>
               </div>
 
-              <div className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-3 rounded space-y-2">
+              <div className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-3 rounded-none space-y-2 shadow-[2px_2px_0px_0px_#3e3b66]">
                 <h3 className="font-bold text-[#e2933f] border-b border-[#3e3b66]/20 pb-1">Closing Modals</h3>
                 <p>
-                  Press <span className="font-bold bg-[#3e3b66] text-white px-2 py-0.5 rounded text-sm">E</span>, <span className="font-bold bg-[#3e3b66] text-white px-2 py-0.5 rounded text-sm">ESC</span>, click the <strong>X button</strong>, or click <strong>outside the box</strong> to close any popup and return to walking.
+                  Press <span className="font-bold bg-[#3e3b66] text-white px-2 py-0.5 rounded-none text-sm">E</span>, <span className="font-bold bg-[#3e3b66] text-white px-2 py-0.5 rounded-none text-sm">ESC</span>, click the <strong>X button</strong>, or click <strong>outside the box</strong> to close any popup and return to walking.
                 </p>
               </div>
             </div>
@@ -550,22 +550,30 @@ export default function Modal({ isOpen, type, onClose }) {
 
   return (
     <div 
-      className="fixed inset-0 bg-black/70 flex items-center justify-center z-[1000] p-3 sm:p-4 transition-opacity duration-300"
+      className="fixed inset-0 bg-black/75 flex items-center justify-center z-[1000] p-3 sm:p-4 transition-opacity duration-300 backdrop-blur-xs"
       onClick={onClose}
     >
       <div 
-        className="relative bg-[#fcecd1] border-4 border-[#3e3b66] rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-[95vw] md:max-w-[650px] min-h-[380px] md:min-h-[480px] max-h-[90vh] overflow-y-auto shadow-2xl text-center flex flex-col select-none"
+        className="relative bg-[#fcecd1] border-4 border-[#3e3b66] rounded-none p-4 sm:p-5 md:p-6 w-full max-w-[95vw] md:max-w-[650px] min-h-[380px] md:min-h-[480px] max-h-[90vh] shadow-[8px_8px_0px_0px_#161426] text-center flex flex-col select-none overflow-hidden"
         style={{ fontFamily: 'edit-undo' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <button
-          onClick={onClose}
-          className="absolute -top-3 -right-3 md:-top-4 md:-right-4 w-10 h-10 md:w-9 md:h-9 bg-red-500 hover:bg-red-600 active:scale-95 text-white rounded-full border-2 border-[#3e3b66] font-bold text-xl md:text-lg flex items-center justify-center shadow-lg transition duration-200 cursor-pointer touch-manipulation z-50"
-        >
-          ✕
-        </button>
+        {/* Retro Header Bar with Sharp Close Button */}
+        <div className="flex items-center justify-between pb-3 mb-3 border-b-4 border-[#3e3b66]">
+          <div className="text-xs md:text-sm font-bold text-[#e2933f] uppercase tracking-wider flex items-center gap-2">
+            <span>&gt;</span>
+            <span>PORTFOLIO_SYSTEM.EXE</span>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 md:w-9 md:h-9 bg-red-500 hover:bg-red-600 active:translate-y-0.5 text-white font-bold text-lg rounded-none border-2 border-[#3e3b66] flex items-center justify-center shadow-[2px_2px_0px_0px_#3e3b66] transition duration-150 cursor-pointer touch-manipulation z-50"
+            title="Close"
+          >
+            ✕
+          </button>
+        </div>
 
-        <div className="flex-grow">
+        <div className="flex-grow overflow-y-auto pr-1">
           {renderContent()}
         </div>
       </div>
