@@ -2,25 +2,27 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 const defaultChars =
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
 
 export function TextScramble({
   children,
   duration = 0.8,
-  speed = 0.04,
+  speed = 0.03,
   characterSet = defaultChars,
   className,
-  as: Component = 'p',
+  as: Component = 'span',
   trigger = true,
+  scrambleOnHover = true,
   onScrambleComplete,
   ...props
 }) {
   const MotionComponent = motion.create(Component);
   const [displayText, setDisplayText] = useState(children);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [scrambleCount, setScrambleCount] = useState(0);
   const text = String(children || '');
 
-  const scramble = async () => {
+  const scramble = () => {
     if (isAnimating) return;
     setIsAnimating(true);
 
@@ -60,10 +62,25 @@ export function TextScramble({
   useEffect(() => {
     if (!trigger) return;
     scramble();
-  }, [trigger, text]);
+  }, [trigger, text, scrambleCount]);
+
+  const handleMouseEnter = () => {
+    if (scrambleOnHover && !isAnimating) {
+      setScrambleCount((c) => c + 1);
+    }
+  };
 
   return (
-    <MotionComponent className={className} {...props}>
+    <MotionComponent 
+      className={`inline-block ${className || ''}`}
+      onMouseEnter={handleMouseEnter}
+      whileInView={{ opacity: 1 }}
+      onViewportEnter={() => {
+        if (!isAnimating) setScrambleCount((c) => c + 1);
+      }}
+      viewport={{ once: false }}
+      {...props}
+    >
       {displayText}
     </MotionComponent>
   );

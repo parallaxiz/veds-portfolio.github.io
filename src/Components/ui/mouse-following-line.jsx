@@ -4,25 +4,24 @@ import { cn } from "@/lib/utils";
 
 export function GridAnimation({
   className,
-  cols = 50,
-  rows = 50,
+  cols = 60,
+  rows = 60,
   spacing = 30,
   strokeLength = 12,
-  strokeWidth = 1,
-  strokeColor = "rgba(61, 189, 189, 0.35)",
+  strokeWidth = 1.2,
+  strokeColor = "rgba(61, 189, 189, 0.45)",
   ...props
 }) {
   const canvasRef = useRef(null);
   const [ballRef, animate] = useAnimate();
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const animationFrameRef = useRef(null);
-  const isMouseOverRef = useRef(true);
   const currentBallPosition = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const updateDimensions = () => {
-      const width = Math.max(window.innerWidth, cols * spacing);
-      const height = Math.max(document.documentElement.scrollHeight || window.innerHeight, rows * spacing);
+      const width = window.innerWidth;
+      const height = window.innerHeight;
       setDimensions({ width, height });
 
       const centerX = width / 2;
@@ -68,7 +67,7 @@ export function GridAnimation({
         const dy = ballY - pointY;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < 15) continue;
+        if (distance < 12) continue;
 
         const angle = Math.atan2(dy, dx);
 
@@ -84,93 +83,45 @@ export function GridAnimation({
       }
     }
 
-    if (isMouseOverRef.current) {
-      animationFrameRef.current = requestAnimationFrame(animateCanvas);
-    }
+    animationFrameRef.current = requestAnimationFrame(animateCanvas);
   }, [dimensions, spacing, strokeLength, strokeWidth, strokeColor]);
 
-  const startAnimationLoop = useCallback(() => {
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-    }
-    isMouseOverRef.current = true;
-    animationFrameRef.current = requestAnimationFrame(animateCanvas);
-  }, [animateCanvas]);
-
-  const stopAnimationLoop = useCallback(() => {
-    isMouseOverRef.current = false;
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-    }
-    requestAnimationFrame(animateCanvas);
-  }, [animateCanvas]);
-
-  const handleMouseMove = (event) => {
-    const rect = canvasRef.current?.getBoundingClientRect();
-    if (!rect) return;
-
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
-    const { x: snapX, y: snapY } = snapToGrid(mouseX, mouseY);
-
-    currentBallPosition.current = { x: snapX, y: snapY };
-
-    animate(
-      ballRef.current,
-      { x: snapX, y: snapY },
-      {
-        type: "spring",
-        stiffness: 300,
-        damping: 20,
-      }
-    );
-  };
-
-  const handleMouseEnter = () => {
-    startAnimationLoop();
-  };
-
-  const handleMouseLeave = () => {
-    const centerX = dimensions.width / 2;
-    const centerY = dimensions.height / 2;
-
-    currentBallPosition.current = { x: centerX, y: centerY };
-
-    animate(
-      ballRef.current,
-      { x: centerX, y: centerY },
-      {
-        type: "spring",
-        stiffness: 300,
-        damping: 20,
-      }
-    );
-
-    stopAnimationLoop();
-  };
-
+  // Global mouse position listener
   useEffect(() => {
-    if (canvasRef.current && ballRef.current) {
-      requestAnimationFrame(animateCanvas);
-    }
+    const handleGlobalMouseMove = (event) => {
+      const mouseX = event.clientX;
+      const mouseY = event.clientY;
+      const { x: snapX, y: snapY } = snapToGrid(mouseX, mouseY);
+
+      currentBallPosition.current = { x: snapX, y: snapY };
+
+      if (ballRef.current) {
+        animate(
+          ballRef.current,
+          { x: snapX, y: snapY },
+          {
+            type: "spring",
+            stiffness: 350,
+            damping: 22,
+          }
+        );
+      }
+    };
+
+    window.addEventListener("mousemove", handleGlobalMouseMove);
+    animationFrameRef.current = requestAnimationFrame(animateCanvas);
 
     return () => {
+      window.removeEventListener("mousemove", handleGlobalMouseMove);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [animateCanvas]);
+  }, [animateCanvas, animate, ballRef, spacing]);
 
   return (
     <div
-      className={cn("relative cursor-pointer", className)}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        width: dimensions.width > 0 ? dimensions.width : "100%",
-        height: dimensions.height > 0 ? dimensions.height : "100%",
-      }}
+      className={cn("fixed inset-0 pointer-events-none z-0 overflow-hidden", className)}
       {...props}
     >
       <canvas
@@ -181,12 +132,12 @@ export function GridAnimation({
       />
       <motion.div
         ref={ballRef}
-        className="absolute w-[6px] h-[6px] rounded-full bg-[#56e0d8] shadow-[0_0_10px_#56e0d8] pointer-events-none"
+        className="absolute w-[8px] h-[8px] rounded-full bg-[#56e0d8] shadow-[0_0_12px_#56e0d8] pointer-events-none z-10"
         style={{
           x: 0,
           y: 0,
-          marginLeft: -3,
-          marginTop: -3,
+          marginLeft: -4,
+          marginTop: -4,
         }}
       />
     </div>
