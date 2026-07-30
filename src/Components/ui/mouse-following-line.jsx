@@ -1,9 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { motion, useAnimate } from "framer-motion";
-import { cn } from "@/lib/utils";
 
 export function GridAnimation({
-  className,
+  className = "",
   cols = 60,
   rows = 60,
   spacing = 30,
@@ -13,10 +11,11 @@ export function GridAnimation({
   ...props
 }) {
   const canvasRef = useRef(null);
-  const [ballRef, animate] = useAnimate();
+  const ballRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const animationFrameRef = useRef(null);
   const currentBallPosition = useRef({ x: 0, y: 0 });
+  const targetBallPosition = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -27,16 +26,13 @@ export function GridAnimation({
       const centerX = width / 2;
       const centerY = height / 2;
       currentBallPosition.current = { x: centerX, y: centerY };
-
-      if (ballRef.current) {
-        animate(ballRef.current, { x: centerX, y: centerY }, { duration: 0 });
-      }
+      targetBallPosition.current = { x: centerX, y: centerY };
     };
 
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
     return () => window.removeEventListener("resize", updateDimensions);
-  }, [cols, rows, spacing, ballRef, animate]);
+  }, [cols, rows, spacing]);
 
   const snapToGrid = (pointX, pointY) => {
     const nearestX = Math.round(pointX / spacing) * spacing;
@@ -50,6 +46,14 @@ export function GridAnimation({
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
+    // Smooth lerp ball position towards target
+    currentBallPosition.current.x += (targetBallPosition.current.x - currentBallPosition.current.x) * 0.2;
+    currentBallPosition.current.y += (targetBallPosition.current.y - currentBallPosition.current.y) * 0.2;
+
+    if (ballRef.current) {
+      ballRef.current.style.transform = `translate3d(${currentBallPosition.current.x}px, ${currentBallPosition.current.y}px, 0px)`;
+    }
 
     ctx.clearRect(0, 0, dimensions.width, dimensions.height);
 
@@ -86,26 +90,12 @@ export function GridAnimation({
     animationFrameRef.current = requestAnimationFrame(animateCanvas);
   }, [dimensions, spacing, strokeLength, strokeWidth, strokeColor]);
 
-  // Global mouse position listener
   useEffect(() => {
     const handleGlobalMouseMove = (event) => {
       const mouseX = event.clientX;
       const mouseY = event.clientY;
       const { x: snapX, y: snapY } = snapToGrid(mouseX, mouseY);
-
-      currentBallPosition.current = { x: snapX, y: snapY };
-
-      if (ballRef.current) {
-        animate(
-          ballRef.current,
-          { x: snapX, y: snapY },
-          {
-            type: "spring",
-            stiffness: 350,
-            damping: 22,
-          }
-        );
-      }
+      targetBallPosition.current = { x: snapX, y: snapY };
     };
 
     window.addEventListener("mousemove", handleGlobalMouseMove);
@@ -117,11 +107,11 @@ export function GridAnimation({
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [animateCanvas, animate, ballRef, spacing]);
+  }, [animateCanvas, spacing]);
 
   return (
     <div
-      className={cn("fixed inset-0 pointer-events-none z-0 overflow-hidden", className)}
+      className={`fixed inset-0 pointer-events-none z-0 overflow-hidden ${className}`}
       {...props}
     >
       <canvas
@@ -130,14 +120,13 @@ export function GridAnimation({
         height={dimensions.height}
         className="absolute inset-0 pointer-events-none"
       />
-      <motion.div
+      <div
         ref={ballRef}
-        className="absolute w-[8px] h-[8px] rounded-full bg-[#56e0d8] shadow-[0_0_12px_#56e0d8] pointer-events-none z-10"
+        className="absolute top-0 left-0 w-[8px] h-[8px] rounded-full bg-[#56e0d8] shadow-[0_0_12px_#56e0d8] pointer-events-none z-10"
         style={{
-          x: 0,
-          y: 0,
           marginLeft: -4,
           marginTop: -4,
+          willChange: "transform",
         }}
       />
     </div>

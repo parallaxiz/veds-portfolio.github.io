@@ -1,5 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState, useRef } from 'react';
 
 const defaultChars =
   'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -9,13 +8,12 @@ export function TextScramble({
   duration = 0.8,
   speed = 0.04,
   characterSet = defaultChars,
-  className,
+  className = '',
   as: Component = 'span',
   trigger = true,
   onScrambleComplete,
   ...props
 }) {
-  const MotionComponent = motion.create(Component);
   const [displayText, setDisplayText] = useState(children);
   const hasScrambledRef = useRef(false);
   const text = String(children || '');
@@ -63,8 +61,10 @@ export function TextScramble({
   }, [trigger, text]);
 
   return (
-    <MotionComponent className={`inline-block ${className || ''}`} {...props}>
+    <Component className={`inline-block ${className}`} {...props}>
       {displayText}
-    </MotionComponent>
+    </Component>
   );
 }
+
+export default TextScramble;
