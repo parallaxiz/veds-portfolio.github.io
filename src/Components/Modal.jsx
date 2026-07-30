@@ -438,64 +438,38 @@ export default function Modal({ isOpen, type, onClose }) {
         ];
         return (
           <div className="flex flex-col h-full justify-between">
-            {/* Tabs Header */}
-            <div className="flex border-b-4 border-[#3e3b66] pb-1 gap-2">
-              <button
-                onClick={() => handleTabChange("contact", "cabinet")}
-                className={`px-3 py-1 font-bold rounded-none border-2 border-[#3e3b66] transition ${
-                  cabinetTab === "contact"
-                    ? "bg-[#3e3b66] text-white"
-                    : "bg-[#fcf3e3] text-[#3e3b66] hover:bg-[#3e3b66]/10 cursor-pointer"
-                }`}
-              >
-                📬 INBOX CONTACTS
-              </button>
-              <button
-                onClick={() => handleTabChange("wardrobe", "cabinet")}
-                className={`px-3 py-1 font-bold rounded-none border-2 border-[#3e3b66] transition ${
-                  cabinetTab === "wardrobe"
-                    ? "bg-[#3e3b66] text-white"
-                    : "bg-[#fcf3e3] text-[#3e3b66] hover:bg-[#3e3b66]/10 cursor-pointer"
-                }`}
-              >
-                👕 OUTFIT CUSTOMIZER
-              </button>
-            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-center border-b-4 border-[#3e3b66] pb-2 text-[#3e3b66]">
+              CONTACT INFO
+            </h2>
 
             <div className="flex-grow my-4 px-2 max-h-[380px] overflow-y-auto">
-              {cabinetTab === "contact" ? (
-                <div className="flex flex-col gap-3 py-2">
-                  {contacts.map((c) => (
-                    <div
-                      key={c.label}
-                      onClick={() => {
-                        if (c.action === "copy") {
-                          copyToClipboard(c.value, c.label);
-                        } else {
-                          if (window.portfolioSFX) window.portfolioSFX.playClick();
-                          window.open(c.link, "_blank");
-                        }
-                      }}
-                      className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-3 rounded-none flex items-center justify-between cursor-pointer transition transform hover:-translate-y-0.5 hover:bg-[#3e3b66] hover:text-white group text-[#3e3b66] shadow-[2px_2px_0px_0px_#3e3b66]"
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="text-2xl">{c.icon}</span>
-                        <div className="text-left select-none">
-                          <div className="text-xs md:text-sm text-[#e2933f] group-hover:text-amber-200 font-bold uppercase">{c.label}</div>
-                          <div className="font-semibold text-sm md:text-base group-hover:text-white">{c.value}</div>
-                        </div>
+              <div className="flex flex-col gap-3 py-2">
+                {contacts.map((c) => (
+                  <div
+                    key={c.label}
+                    onClick={() => {
+                      if (c.action === "copy") {
+                        copyToClipboard(c.value, c.label);
+                      } else {
+                        if (window.portfolioSFX) window.portfolioSFX.playClick();
+                        window.open(c.link, "_blank");
+                      }
+                    }}
+                    className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-3 rounded-none flex items-center justify-between cursor-pointer transition transform hover:-translate-y-0.5 hover:bg-[#3e3b66] hover:text-white group text-[#3e3b66] shadow-[2px_2px_0px_0px_#3e3b66]"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{c.icon}</span>
+                      <div className="text-left select-none">
+                        <div className="text-xs md:text-sm text-[#e2933f] group-hover:text-amber-200 font-bold uppercase">{c.label}</div>
+                        <div className="font-semibold text-sm md:text-base group-hover:text-white">{c.value}</div>
                       </div>
-                      <span className="text-xs border-2 border-[#3e3b66] rounded-none px-2.5 py-1 bg-white text-[#3e3b66] group-hover:bg-[#e2933f] group-hover:text-white group-hover:border-white font-bold transition">
-                        {c.action === "copy" ? (copiedText === c.label ? "Copied!" : "Copy") : "Open"}
-                      </span>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="py-2">
-                  <WardrobeSelector />
-                </div>
-              )}
+                    <span className="text-xs border-2 border-[#3e3b66] rounded-none px-2.5 py-1 bg-white text-[#3e3b66] group-hover:bg-[#e2933f] group-hover:text-white group-hover:border-white font-bold transition">
+                      {c.action === "copy" ? (copiedText === c.label ? "Copied!" : "Copy") : "Open"}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         );
