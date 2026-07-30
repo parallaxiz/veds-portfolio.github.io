@@ -427,12 +427,9 @@ export default function App() {
             <div className="flex flex-col items-center gap-6 py-4">
               <DotLoader
                 frames={loaderFrames}
-                className="gap-1 border-4 border-[#3e3b66] p-4 bg-[#161426] rounded-lg shadow-inner scale-150"
-                dotClassName="bg-[#3e3b66] [&.active]:bg-[#e2933f] w-3 h-3 rounded-xs transition-colors duration-75"
+                className="gap-1 border-4 border-[#3e3b66] p-4 bg-[#161426] rounded-none shadow-inner scale-150"
+                dotClassName="bg-[#3e3b66] [&.active]:bg-[#e2933f] w-3 h-3 rounded-none transition-colors duration-75"
               />
-              <div className="text-xl font-bold text-[#e2933f] animate-pulse">
-                {progress}%
-              </div>
             </div>
           </div>
         </div>
