@@ -240,7 +240,7 @@ function TypewriterDialogue({ text, name, onTriggerInteract }) {
   return (
     <div 
       onClick={onTriggerInteract}
-      className="fixed bottom-3 left-3 w-[calc(100vw-180px)] max-w-[340px] md:w-[90%] md:max-w-[650px] md:bottom-6 md:left-1/2 md:-translate-x-1/2 bg-[#161426]/95 border-2 md:border-4 border-[#3e3b66] rounded-xl p-2.5 md:p-4 text-white z-[350] flex flex-col gap-1 select-none shadow-2xl hover:border-[#e2933f] transition duration-200 cursor-pointer touch-manipulation active:scale-[0.99]"
+      className="fixed bottom-3 left-3 w-[calc(100vw-180px)] max-w-[340px] md:w-[90%] md:max-w-[650px] md:bottom-6 md:left-1/2 md:-translate-x-1/2 bg-[#161426]/95 border-2 md:border-4 border-[#3e3b66] rounded-none p-2.5 md:p-4 text-white z-[350] flex flex-col gap-1 select-none shadow-[4px_4px_0px_0px_#161426] hover:border-[#e2933f] transition duration-200 cursor-pointer touch-manipulation active:scale-[0.99]"
       style={{ fontFamily: 'edit-undo' }}
     >
       <div className="text-[#e2933f] text-xs md:text-sm uppercase tracking-wider font-bold">
@@ -540,7 +540,7 @@ export default function App() {
           {/* Top-Right: Exit Button */}
           <button
             onClick={handleReturnToMenu}
-            className="fixed top-3 right-3 sm:top-4 sm:right-4 bg-[#3e3b66] hover:bg-[#2d2a4f] text-white border-2 border-white font-bold py-1.5 px-3 sm:py-2 sm:px-4 rounded-lg text-xs sm:text-sm shadow-lg pointer-events-auto transition active:translate-y-0.5 cursor-pointer touch-manipulation z-[150]"
+            className="fixed top-3 right-3 sm:top-4 sm:right-4 bg-[#3e3b66] hover:bg-[#2d2a4f] text-white border-2 border-white font-bold py-1.5 px-3 sm:py-2 sm:px-4 rounded-none text-xs sm:text-sm shadow-[3px_3px_0px_0px_#161426] pointer-events-auto transition active:translate-y-0.5 cursor-pointer touch-manipulation z-[150]"
             style={{ fontFamily: "edit-undo" }}
           >
             &larr; Exit
@@ -548,7 +548,7 @@ export default function App() {
 
           {/* System Guide & Music HUD — Top-Left on mobile, Bottom-Left on desktop */}
           <div 
-            className="fixed top-3 left-3 md:top-auto md:bottom-6 md:left-6 flex flex-col gap-1 sm:gap-2 bg-[#161426]/95 border-2 md:border-4 border-[#3e3b66] p-2 sm:p-4 rounded-xl text-white text-[9px] sm:text-xs md:text-sm select-none pointer-events-auto shadow-2xl max-w-[145px] sm:max-w-none z-[150]"
+            className="fixed top-3 left-3 md:top-auto md:bottom-6 md:left-6 flex flex-col gap-1 sm:gap-2 bg-[#161426]/95 border-2 md:border-4 border-[#3e3b66] p-2 sm:p-4 rounded-none text-white text-[9px] sm:text-xs md:text-sm select-none pointer-events-auto shadow-[4px_4px_0px_0px_#161426] max-w-[145px] sm:max-w-none z-[150]"
             style={{ fontFamily: "edit-undo" }}
           >
             <div className="text-[#e2933f] text-[10px] sm:text-xs md:text-base font-bold uppercase mb-0.5">&gt; System Guide</div>
@@ -559,7 +559,7 @@ export default function App() {
             {/* Music Toggle */}
             <button
               onClick={toggleMute}
-              className="mt-0.5 flex items-center justify-center gap-1 bg-[#3e3b66] hover:bg-[#2d2a4f] active:translate-y-0.5 text-white border border-white/40 font-bold py-1 px-1.5 sm:py-1.5 sm:px-3 rounded-lg transition cursor-pointer text-[8px] sm:text-xs uppercase touch-manipulation"
+              className="mt-0.5 flex items-center justify-center gap-1 bg-[#3e3b66] hover:bg-[#2d2a4f] active:translate-y-0.5 text-white border border-white/40 font-bold py-1 px-1.5 sm:py-1.5 sm:px-3 rounded-none transition cursor-pointer text-[8px] sm:text-xs uppercase touch-manipulation"
             >
               {isMuted ? "🔇 Lofi Muted" : "🔊 Lofi Playing"}
             </button>
@@ -569,7 +569,7 @@ export default function App() {
 
       {/* Mobile Virtual D-Pad Overlay (3x3 Square Grid with centered [E] button) */}
       {isStarted && !activeModal && showDpad && (
-        <div className="fixed bottom-3 right-3 grid grid-cols-3 gap-1.5 p-2 bg-[#161426]/90 border-2 border-[#3e3b66] rounded-2xl z-[300] pointer-events-auto select-none md:hidden shadow-2xl">
+        <div className="fixed bottom-3 right-3 grid grid-cols-3 gap-1.5 p-2 bg-[#161426]/90 border-2 border-[#3e3b66] rounded-none z-[300] pointer-events-auto select-none md:hidden shadow-[4px_4px_0px_0px_#161426]">
           {/* Row 1 */}
           <div />
           <button
@@ -577,7 +577,7 @@ export default function App() {
             onTouchEnd={(e) => { e.preventDefault(); triggerMobileMove("up", false); }}
             onMouseDown={() => triggerMobileMove("up", true)}
             onMouseUp={() => triggerMobileMove("up", false)}
-            className="w-11 h-11 bg-[#242238] active:bg-[#e2933f] border-2 border-[#5c5893] active:border-white rounded-lg flex items-center justify-center text-white text-base font-bold shadow-md cursor-pointer touch-manipulation active:scale-95 transition-colors"
+            className="w-11 h-11 bg-[#242238] active:bg-[#e2933f] border-2 border-[#5c5893] active:border-white rounded-none flex items-center justify-center text-white text-base font-bold shadow-md cursor-pointer touch-manipulation active:scale-95 transition-colors"
           >
             ▲
           </button>
@@ -589,7 +589,7 @@ export default function App() {
             onTouchEnd={(e) => { e.preventDefault(); triggerMobileMove("left", false); }}
             onMouseDown={() => triggerMobileMove("left", true)}
             onMouseUp={() => triggerMobileMove("left", false)}
-            className="w-11 h-11 bg-[#242238] active:bg-[#e2933f] border-2 border-[#5c5893] active:border-white rounded-lg flex items-center justify-center text-white text-base font-bold shadow-md cursor-pointer touch-manipulation active:scale-95 transition-colors"
+            className="w-11 h-11 bg-[#242238] active:bg-[#e2933f] border-2 border-[#5c5893] active:border-white rounded-none flex items-center justify-center text-white text-base font-bold shadow-md cursor-pointer touch-manipulation active:scale-95 transition-colors"
           >
             ◀
           </button>
@@ -598,7 +598,7 @@ export default function App() {
           <button
             onTouchStart={(e) => { e.preventDefault(); handleInteractButton(); }}
             onClick={handleInteractButton}
-            className={`w-11 h-11 rounded-lg flex items-center justify-center cursor-pointer touch-manipulation select-none transition-all duration-150 shadow-md ${
+            className={`w-11 h-11 rounded-none flex items-center justify-center cursor-pointer touch-manipulation select-none transition-all duration-150 shadow-md ${
               dialogue
                 ? "bg-[#e2933f] text-white border-2 border-yellow-300 shadow-[0_0_15px_rgba(226,147,63,0.9)] animate-pulse scale-105 font-bold"
                 : "bg-[#3e3b66] text-white/70 border-2 border-[#5c5893]"
@@ -614,7 +614,7 @@ export default function App() {
             onTouchEnd={(e) => { e.preventDefault(); triggerMobileMove("right", false); }}
             onMouseDown={() => triggerMobileMove("right", true)}
             onMouseUp={() => triggerMobileMove("right", false)}
-            className="w-11 h-11 bg-[#242238] active:bg-[#e2933f] border-2 border-[#5c5893] active:border-white rounded-lg flex items-center justify-center text-white text-base font-bold shadow-md cursor-pointer touch-manipulation active:scale-95 transition-colors"
+            className="w-11 h-11 bg-[#242238] active:bg-[#e2933f] border-2 border-[#5c5893] active:border-white rounded-none flex items-center justify-center text-white text-base font-bold shadow-md cursor-pointer touch-manipulation active:scale-95 transition-colors"
           >
             ▶
           </button>
@@ -626,7 +626,7 @@ export default function App() {
             onTouchEnd={(e) => { e.preventDefault(); triggerMobileMove("down", false); }}
             onMouseDown={() => triggerMobileMove("down", true)}
             onMouseUp={() => triggerMobileMove("down", false)}
-            className="w-11 h-11 bg-[#242238] active:bg-[#e2933f] border-2 border-[#5c5893] active:border-white rounded-lg flex items-center justify-center text-white text-base font-bold shadow-md cursor-pointer touch-manipulation active:scale-95 transition-colors"
+            className="w-11 h-11 bg-[#242238] active:bg-[#e2933f] border-2 border-[#5c5893] active:border-white rounded-none flex items-center justify-center text-white text-base font-bold shadow-md cursor-pointer touch-manipulation active:scale-95 transition-colors"
           >
             ▼
           </button>
