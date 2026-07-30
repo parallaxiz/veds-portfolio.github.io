@@ -278,8 +278,27 @@ const loaderFrames = [
 ];
 
 export default function App() {
-  if (typeof window !== "undefined" && window.location.pathname.includes("/recruiters")) {
-    return <RecruitersView />;
+  const [currentPath, setCurrentPath] = useState(
+    typeof window !== "undefined" ? window.location.pathname : "/"
+  );
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setCurrentPath(window.location.pathname);
+    };
+    window.addEventListener("popstate", handleLocationChange);
+    return () => window.removeEventListener("popstate", handleLocationChange);
+  }, []);
+
+  if (currentPath.includes("/recruiters")) {
+    return (
+      <RecruitersView
+        onNavigateHome={() => {
+          window.history.pushState({}, "", "/");
+          setCurrentPath("/");
+        }}
+      />
+    );
   }
 
   const [progress, setProgress] = useState(0);
@@ -470,7 +489,8 @@ export default function App() {
             <div className="grid md:grid-cols-2 gap-4 md:gap-8 px-2 sm:px-6 max-w-3xl mx-auto">
               <button
                 onClick={() => {
-                  window.location.href = "/recruiters";
+                  window.history.pushState({}, "", "/recruiters");
+                  setCurrentPath("/recruiters");
                 }}
                 className="bg-[#242238] border-3 md:border-4 border-[#3e3b66] text-white p-4 sm:p-6 rounded-lg text-left transition-all duration-200 transform hover:-translate-y-1 shadow-[4px_4px_0px_0px_#e2933f] hover:shadow-[8px_8px_0px_0px_#e2933f] group flex flex-col justify-between min-h-[140px] sm:min-h-[180px] md:min-h-[200px] cursor-pointer"
               >

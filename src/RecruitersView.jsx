@@ -2,8 +2,18 @@ import React, { useState } from "react";
 import { TextScramble } from "./components/ui/text-scramble";
 import { GridAnimation } from "./components/ui/mouse-following-line";
 
-export default function RecruitersView() {
+export default function RecruitersView({ onNavigateHome }) {
   const [activeSection, setActiveSection] = useState("about");
+
+  const handleBackToGame = (e) => {
+    e.preventDefault();
+    if (onNavigateHome) {
+      onNavigateHome();
+    } else {
+      window.history.pushState({}, "", "/");
+      window.dispatchEvent(new Event("popstate"));
+    }
+  };
 
   const projects = [
     {
@@ -64,6 +74,7 @@ export default function RecruitersView() {
       {/* Fixed Top Back Button */}
       <a 
         href="/"
+        onClick={handleBackToGame}
         className="fixed top-3 left-3 sm:top-4 sm:left-4 z-[10000] bg-[#0f2a44] border-2 border-[#3dbdbd] text-[#f0f8ff] hover:bg-[#3dbdbd] hover:text-[#1a1a2e] px-3 py-2 text-[10px] sm:text-xs font-bold shadow-[3px_3px_0px_0px_#1a1a2e] transition transform active:translate-y-0.5 cursor-pointer uppercase"
         style={{ fontFamily: "'Press Start 2P', monospace" }}
       >
@@ -93,6 +104,7 @@ export default function RecruitersView() {
         <div className="mt-5">
           <a
             href="/"
+            onClick={handleBackToGame}
             className="inline-block bg-[#ff9f5a] text-[#1a1a2e] border-2 border-white px-4 py-2 sm:px-6 sm:py-3 text-xs sm:text-sm font-bold shadow-[4px_4px_0px_0px_#1a1a2e] hover:bg-[#56e0d8] transition transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer uppercase"
             style={{ fontFamily: "'Press Start 2P', monospace" }}
           >
