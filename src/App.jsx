@@ -3,6 +3,7 @@ import GameCanvas from "./Components/GameCanvas";
 import Modal from "./Components/Modal";
 import { CursorDrivenParticleTypography } from "./Components/ui/cursor-driven-particles-typography";
 import { DotLoader } from "./Components/ui/dot-loader";
+import RecruitersView from "./RecruitersView";
 
 // ==========================================
 // PROCEDURAL RETRO AUDIO SYSTEM (WEB AUDIO API)
@@ -272,14 +273,15 @@ const loaderFrames = [
   [34, 28, 41, 21, 14, 16, 27],
   [34, 28, 21, 14, 10, 20, 27],
   [28, 21, 14, 4, 13, 20, 27],
-  [28, 21, 14, 12, 6, 13, 20],
-  [28, 21, 14, 6, 13, 20, 11],
-  [28, 21, 14, 6, 13, 20, 10],
   [14, 6, 13, 20, 9, 7, 21],
   [14, 6, 13, 20, 9, 7, 21],
 ];
 
 export default function App() {
+  if (typeof window !== "undefined" && window.location.pathname.includes("/recruiters")) {
+    return <RecruitersView />;
+  }
+
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isStarted, setIsStarted] = useState(false);
