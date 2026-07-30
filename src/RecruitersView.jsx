@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { TextScramble } from "./components/ui/text-scramble";
+import { GridAnimation } from "./components/ui/mouse-following-line";
 
 export default function RecruitersView() {
   const [activeSection, setActiveSection] = useState("about");
@@ -39,6 +40,11 @@ export default function RecruitersView() {
 
   return (
     <div className="min-h-screen bg-[#1a1a2e] text-[#d8eaf4] font-mono relative overflow-x-hidden select-none pb-20">
+      {/* Interactive Mouse-Following Grid Animation Background */}
+      <div className="fixed inset-0 z-0 opacity-40">
+        <GridAnimation spacing={35} strokeLength={12} strokeColor="rgba(61, 189, 189, 0.45)" />
+      </div>
+
       {/* Scanline overlay */}
       <div 
         className="fixed inset-0 pointer-events-none z-[9999]"
