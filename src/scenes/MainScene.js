@@ -74,9 +74,6 @@ export default class MainScene extends Phaser.Scene {
 
         this.scale.on("resize", updateZoom);
 
-        // Enable debug rendering to show physics bodies (including player hitbox)
-        this.matter.world.createDebugGraphic();
-
         this.keys = this.input.keyboard.addKeys({
             w: Phaser.Input.Keyboard.KeyCodes.W,
             s: Phaser.Input.Keyboard.KeyCodes.S,
