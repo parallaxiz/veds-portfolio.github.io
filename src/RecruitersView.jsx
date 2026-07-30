@@ -48,8 +48,21 @@ export default function RecruitersView({ onNavigateHome }) {
     }
   ];
 
+  useEffect(() => {
+    document.documentElement.style.overflowY = "auto";
+    document.body.style.overflowY = "auto";
+    const rootEl = document.getElementById("root");
+    if (rootEl) rootEl.style.overflowY = "auto";
+
+    return () => {
+      document.documentElement.style.overflowY = "hidden";
+      document.body.style.overflowY = "hidden";
+      if (rootEl) rootEl.style.overflowY = "hidden";
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen bg-[#1a1a2e] text-[#d8eaf4] font-mono relative overflow-x-hidden select-none pb-20">
+    <div className="w-full h-screen overflow-y-auto bg-[#1a1a2e] text-[#d8eaf4] font-mono relative select-none pb-20">
       {/* Interactive Mouse-Following Grid Animation Background */}
       <div className="fixed inset-0 z-0 opacity-40">
         <GridAnimation spacing={35} strokeLength={12} strokeColor="rgba(61, 189, 189, 0.45)" />
