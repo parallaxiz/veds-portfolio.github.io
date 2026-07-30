@@ -278,19 +278,24 @@ const loaderFrames = [
 ];
 
 export default function App() {
-  const [currentPath, setCurrentPath] = useState(
-    typeof window !== "undefined" ? window.location.pathname : "/"
-  );
+  const [currentPath, setCurrentPath] = useState(() => {
+    if (typeof window === "undefined") return "/";
+    return window.location.pathname + window.location.hash + window.location.search;
+  });
 
   useEffect(() => {
     const handleLocationChange = () => {
-      setCurrentPath(window.location.pathname);
+      setCurrentPath(window.location.pathname + window.location.hash + window.location.search);
     };
     window.addEventListener("popstate", handleLocationChange);
-    return () => window.removeEventListener("popstate", handleLocationChange);
+    window.addEventListener("hashchange", handleLocationChange);
+    return () => {
+      window.removeEventListener("popstate", handleLocationChange);
+      window.removeEventListener("hashchange", handleLocationChange);
+    };
   }, []);
 
-  if (currentPath.includes("/recruiters")) {
+  if (currentPath.toLowerCase().includes("recruiter")) {
     return (
       <RecruitersView
         onNavigateHome={() => {
