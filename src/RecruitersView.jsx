@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { TextScramble } from "./components/ui/text-scramble";
-import { GridAnimation } from "./components/ui/mouse-following-line";
+import { TextScramble } from "./Components/ui/text-scramble.jsx";
+import { GridAnimation } from "./Components/ui/mouse-following-line.jsx";
 
 export default function RecruitersView({ onNavigateHome }) {
   const [activeSection, setActiveSection] = useState("about");
