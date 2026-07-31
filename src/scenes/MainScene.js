@@ -107,8 +107,23 @@ export default class MainScene extends Phaser.Scene {
             down: Phaser.Input.Keyboard.KeyCodes.DOWN,
             left: Phaser.Input.Keyboard.KeyCodes.LEFT,
             right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
-            interactKey: Phaser.Input.Keyboard.KeyCodes.E
+            interactKey: Phaser.Input.Keyboard.KeyCodes.E,
+            spaceKey: Phaser.Input.Keyboard.KeyCodes.SPACE
         });
+
+        // Capture navigation and action keys to prevent page scrolling on laptop/desktop
+        this.input.keyboard.addCapture([
+            Phaser.Input.Keyboard.KeyCodes.UP,
+            Phaser.Input.Keyboard.KeyCodes.DOWN,
+            Phaser.Input.Keyboard.KeyCodes.LEFT,
+            Phaser.Input.Keyboard.KeyCodes.RIGHT,
+            Phaser.Input.Keyboard.KeyCodes.W,
+            Phaser.Input.Keyboard.KeyCodes.A,
+            Phaser.Input.Keyboard.KeyCodes.S,
+            Phaser.Input.Keyboard.KeyCodes.D,
+            Phaser.Input.Keyboard.KeyCodes.SPACE,
+            Phaser.Input.Keyboard.KeyCodes.E
+        ]);
 
         // -------------------------------
         // PLAYER ANIMATIONS
@@ -280,7 +295,7 @@ export default class MainScene extends Phaser.Scene {
 
     update() {
         if (this.inputLocked) {
-            if (Phaser.Input.Keyboard.JustDown(this.keys.interactKey)) {
+            if (Phaser.Input.Keyboard.JustDown(this.keys.interactKey) || Phaser.Input.Keyboard.JustDown(this.keys.spaceKey)) {
                 window.dispatchEvent(new CustomEvent("close-modal"));
             }
             if (this.player && this.player.body) {
@@ -399,16 +414,16 @@ export default class MainScene extends Phaser.Scene {
                 let name = "";
                 if (activeObject === "bed") {
                     name = "Cozy Bed";
-                    text = "   My bed. Awards for hackathons and coding achievements were celebrated right here. Press E to view About Me.";
+                    text = "   My bed. Awards for hackathons and coding achievements were celebrated right here. Press E or Space to view About Me.";
                 } else if (activeObject === "cabinet") {
                     name = "Side Table with Drawers";
-                    text = "   A side table with drawers holding useful items. Press E to examine the table.";
+                    text = "   A side table with drawers holding useful items. Press E or Space to examine the table.";
                 } else if (activeObject === "laptop") {
                     name = "Developer PC Rig";
-                    text = "   Workstation rig where physics‑aware AI pipelines and SAT‑MethaneNet were compiled. Press E to view Projects or Snake.";
+                    text = "   Workstation rig where physics‑aware AI pipelines and SAT‑MethaneNet were compiled. Press E or Space to view Projects or Snake.";
                 } else if (activeObject === "bookshelf") {
                     name = "Study Library";
-                    text = "   A collection of AI research papers, WebDev documentation, and CS books. Press E to view Skills.";
+                    text = "   A collection of AI research papers, WebDev documentation, and CS books. Press E or Space to view Skills.";
                 }
                 window.dispatchEvent(new CustomEvent("proximity-enter", {
                     detail: { text, name, object: activeObject }
@@ -419,9 +434,9 @@ export default class MainScene extends Phaser.Scene {
         }
 
         // -------------------------------
-        // INTERACT VIA "E" KEY
+        // INTERACT VIA "E" OR "SPACE" KEY
         // -------------------------------
-        if (Phaser.Input.Keyboard.JustDown(this.keys.interactKey)) {
+        if (Phaser.Input.Keyboard.JustDown(this.keys.interactKey) || Phaser.Input.Keyboard.JustDown(this.keys.spaceKey)) {
             if (this.objects_c.cabinet_s.visible) {
                 window.dispatchEvent(new CustomEvent("open-modal", { detail: "contact" }));
             } else if (this.objects_b.bed_s.visible) {

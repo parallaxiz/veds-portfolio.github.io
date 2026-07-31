@@ -233,7 +233,7 @@ export default function Modal({ isOpen, type, onClose }) {
 
     const timer = setTimeout(() => {
       handleKeyDown = (e) => {
-        if (e.key === "Escape" || e.key === "e" || e.key === "E") {
+        if (e.key === "Escape" || e.key === "e" || e.key === "E" || e.key === " " || e.code === "Space") {
           e.stopPropagation();
           onClose();
         }

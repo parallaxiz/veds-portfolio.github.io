@@ -251,7 +251,7 @@ function TypewriterDialogue({ text, name, onTriggerInteract }) {
         {displayedText}
       </div>
       <div className="text-right text-[8px] md:text-[9px] text-gray-400 animate-pulse uppercase mt-0.5">
-        [ Tap or Press E to interact ]
+        [ Tap or Press E / Space to interact ]
       </div>
     </div>
   );
@@ -276,6 +276,23 @@ const loaderFrames = [
   [14, 6, 13, 20, 9, 7, 21],
   [14, 6, 13, 20, 9, 7, 21],
 ];
+
+function DownloadCVButton() {
+  return (
+    <a
+      href="/assets/Ved_Madurwar_cv_ver2.pdf"
+      download="Ved_Madurwar_CV.pdf"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="fixed top-3 right-3 sm:top-4 sm:right-4 z-[10000] bg-[#e2933f] hover:bg-[#c87e2a] text-white border-2 border-white font-bold py-1.5 px-3 sm:py-2 sm:px-4 rounded-none text-xs sm:text-sm shadow-[3px_3px_0px_0px_#161426] cursor-pointer active:translate-y-0.5 transition font-mono flex items-center gap-1.5 select-none pointer-events-auto"
+      style={{ fontFamily: "'edit-undo', monospace" }}
+      title="Download CV (PDF)"
+    >
+      <span>📄</span>
+      <span>Download CV</span>
+    </a>
+  );
+}
 
 export default function App() {
   const [currentPath, setCurrentPath] = useState(() => {
@@ -369,12 +386,15 @@ export default function App() {
 
   if (currentPath.toLowerCase().includes("recruiter")) {
     return (
-      <RecruitersView
-        onNavigateHome={() => {
-          window.history.pushState({}, "", "/");
-          setCurrentPath("/");
-        }}
-      />
+      <>
+        <DownloadCVButton />
+        <RecruitersView
+          onNavigateHome={() => {
+            window.history.pushState({}, "", "/");
+            setCurrentPath("/");
+          }}
+        />
+      </>
     );
   }
 
@@ -448,8 +468,28 @@ export default function App() {
     window.dispatchEvent(new CustomEvent("mobile-move", { detail: { dir, active } }));
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!isStarted || activeModal !== null) return;
+      if (e.key === "e" || e.key === "E" || e.key === " " || e.code === "Space") {
+        if (e.key === " " || e.code === "Space") {
+          if (e.target === document.body || e.target === document.documentElement) {
+            e.preventDefault();
+          }
+        }
+        handleInteractButton(e);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isStarted, activeModal, dialogue]);
+
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-[#3e3b66] font-mono select-none">
+      {/* Global Top-Right Download CV Button */}
+      <DownloadCVButton />
+
       {/* Phaser Canvas Container */}
       <GameCanvas isInteractive={isStarted && activeModal === null} />
 
@@ -554,7 +594,7 @@ export default function App() {
             </div>
 
             <div className="text-[10px] sm:text-xs text-gray-500 font-bold uppercase tracking-widest pt-2">
-              Move with WASD / Arrows &bull; Press E or Touch to interact
+              Move with WASD / Arrows &bull; Press E / Space or Touch to interact
             </div>
           </div>
         </div>
@@ -572,24 +612,24 @@ export default function App() {
       {/* HUD overlays - only visible when game is active */}
       {isStarted && !activeModal && (
         <div className="absolute inset-0 pointer-events-none z-[100]">
-          {/* Top-Right: Exit Button */}
+          {/* Top-Left: Exit Button */}
           <button
             onClick={handleReturnToMenu}
-            className="fixed top-3 right-3 sm:top-4 sm:right-4 bg-[#3e3b66] hover:bg-[#2d2a4f] text-white border-2 border-white font-bold py-1.5 px-3 sm:py-2 sm:px-4 rounded-none text-xs sm:text-sm shadow-[3px_3px_0px_0px_#161426] pointer-events-auto transition active:translate-y-0.5 cursor-pointer touch-manipulation z-[150]"
+            className="fixed top-3 left-3 sm:top-4 sm:left-4 bg-[#3e3b66] hover:bg-[#2d2a4f] text-white border-2 border-white font-bold py-1.5 px-3 sm:py-2 sm:px-4 rounded-none text-xs sm:text-sm shadow-[3px_3px_0px_0px_#161426] pointer-events-auto transition active:translate-y-0.5 cursor-pointer touch-manipulation z-[150]"
             style={{ fontFamily: "edit-undo" }}
           >
             &larr; Exit
           </button>
 
-          {/* System Guide & Music HUD — Top-Left on mobile, Bottom-Left on desktop */}
+          {/* System Guide & Music HUD — Top-Left below Exit on mobile, Bottom-Left on desktop */}
           <div 
-            className="fixed top-3 left-3 md:top-auto md:bottom-6 md:left-6 flex flex-col gap-1 sm:gap-2 bg-[#161426]/95 border-2 md:border-4 border-[#3e3b66] p-2 sm:p-4 rounded-none text-white text-[9px] sm:text-xs md:text-sm select-none pointer-events-auto shadow-[4px_4px_0px_0px_#161426] max-w-[145px] sm:max-w-none z-[150]"
+            className="fixed top-14 left-3 sm:top-16 sm:left-4 md:top-auto md:bottom-6 md:left-6 flex flex-col gap-1 sm:gap-2 bg-[#161426]/95 border-2 md:border-4 border-[#3e3b66] p-2 sm:p-4 rounded-none text-white text-[9px] sm:text-xs md:text-sm select-none pointer-events-auto shadow-[4px_4px_0px_0px_#161426] max-w-[155px] sm:max-w-none z-[150]"
             style={{ fontFamily: "edit-undo" }}
           >
             <div className="text-[#e2933f] text-[10px] sm:text-xs md:text-base font-bold uppercase mb-0.5">&gt; System Guide</div>
             <div className="hidden md:block">⌨️ WASD / Arrows to walk</div>
-            <div className="md:hidden">💡 Walk near &amp; tap E</div>
-            <div className="hidden md:block">💡 Approach &amp; Press E to open</div>
+            <div className="md:hidden">💡 Walk near &amp; tap E / Space</div>
+            <div className="hidden md:block">💡 Approach &amp; Press E / Space to open</div>
             
             {/* Music Toggle */}
             <button
