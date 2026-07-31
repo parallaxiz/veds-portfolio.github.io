@@ -242,18 +242,6 @@ export function CursorDrivenParticleTypography({
         className
       )}
     >
-      {/* Fallback CSS typography element ensuring text is always visible */}
-      <h1 
-        className="text-white font-bold tracking-wider text-center select-none drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]"
-        style={{
-          fontFamily: fontFamily,
-          fontSize: `${Math.max(20, Math.min(fontSize, window.innerWidth < 640 ? 32 : 80))}px`,
-          lineHeight: 1
-        }}
-      >
-        {text}
-      </h1>
-
       <div
         ref={containerRef}
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-[600%] pointer-events-none overflow-visible z-10"
