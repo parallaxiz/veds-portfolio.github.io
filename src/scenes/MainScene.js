@@ -66,7 +66,7 @@ export default class MainScene extends Phaser.Scene {
 
         const updateZoom = () => {
             const isMobileScreen = window.innerWidth < 768 || this.sys.game.device.input.touch;
-            const zoom = isMobileScreen ? 1.3 : 1.15;
+            const zoom = isMobileScreen ? 0.7 : 1.15;
             this.cameras.main.setZoom(zoom);
 
             const visibleWidth = this.scale.width / zoom;
