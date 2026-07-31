@@ -103,8 +103,8 @@ export function CursorDrivenParticleTypography({
       const parent = container.parentElement ? container.parentElement.parentElement : container.parentElement;
       const parentWidth = parent ? parent.clientWidth : container.clientWidth;
 
-      containerWidth = container.clientWidth;
-      containerHeight = container.clientHeight;
+      containerWidth = container.clientWidth || (parentWidth ? parentWidth * 3 : 800);
+      containerHeight = container.clientHeight || 300;
 
       const dpr = window.devicePixelRatio || 1;
       canvas.width = containerWidth * dpr;
@@ -122,8 +122,9 @@ export function CursorDrivenParticleTypography({
 
       // Proportionally scale font size to match standard HTML/CSS text scaling on browser zoom
       const charWidthRatio = 0.52;
-      const maxFontForParent = parentWidth / (text.length * charWidthRatio);
-      const effectiveFontSize = Math.min(fontSize, maxFontForParent);
+      const validParentWidth = (parentWidth && parentWidth > 0) ? parentWidth : (window.innerWidth || 800);
+      const maxFontForParent = validParentWidth / (text.length * charWidthRatio);
+      const effectiveFontSize = Math.max(18, Math.min(fontSize, maxFontForParent));
 
       ctx.fillStyle = textColor;
       ctx.font = `bold ${effectiveFontSize}px ${fontFamily}`;
@@ -141,14 +142,14 @@ export function CursorDrivenParticleTypography({
 
       particles = [];
 
-      const step = Math.max(1, Math.round(particleDensity * dpr));
+      const step = Math.max(1, Math.round(particleDensity));
 
       for (let y = 0; y < textCoordinates.height; y += step) {
         for (let x = 0; x < textCoordinates.width; x += step) {
           const index = (y * textCoordinates.width + x) * 4;
           const alpha = textCoordinates.data[index + 3] || 0;
 
-          if (alpha > 128) {
+          if (alpha > 30) {
             particles.push(
               new Particle(
                 x / dpr,
@@ -190,14 +191,25 @@ export function CursorDrivenParticleTypography({
       init();
     };
 
+    init();
+    animate();
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        init();
+      });
+    }
+
     const timeoutId = setTimeout(() => {
       init();
-      animate();
-    }, 100);
+    }, 200);
 
     const resizeObserver = new ResizeObserver(handleResize);
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current);
+      if (containerRef.current.parentElement) {
+        resizeObserver.observe(containerRef.current.parentElement);
+      }
     }
 
     window.addEventListener("resize", handleResize);
@@ -226,10 +238,22 @@ export function CursorDrivenParticleTypography({
   return (
     <div
       className={cn(
-        "w-full h-full relative touch-none overflow-visible",
+        "w-full h-full relative touch-none overflow-visible flex items-center justify-center",
         className
       )}
     >
+      {/* Fallback CSS typography element ensuring text is always visible */}
+      <h1 
+        className="text-white font-bold tracking-wider text-center select-none drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]"
+        style={{
+          fontFamily: fontFamily,
+          fontSize: `${Math.max(20, Math.min(fontSize, window.innerWidth < 640 ? 32 : 80))}px`,
+          lineHeight: 1
+        }}
+      >
+        {text}
+      </h1>
+
       <div
         ref={containerRef}
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-[600%] pointer-events-none overflow-visible z-10"

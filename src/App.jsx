@@ -485,11 +485,11 @@ export default function App() {
               <div className="text-[#e2933f] font-bold tracking-widest text-xs sm:text-sm animate-bounce relative z-20">
                 &gt; VED_PORTFOLIO.EXE READY &lt;
               </div>
-              <div className="w-full min-h-[60px] sm:min-h-[100px] flex items-center justify-center overflow-visible relative z-10 my-1">
+              <div className="w-full h-[60px] sm:h-[90px] md:h-[110px] flex items-center justify-center overflow-visible relative z-10 my-1">
                 <CursorDrivenParticleTypography 
                   text="VED'S PORTFOLIO" 
                   fontSize={particleFontSize} 
-                  particleDensity={particleFontSize < 50 ? 2 : 3} 
+                  particleDensity={particleFontSize < 50 ? 1.5 : 2} 
                   dispersionStrength={window.innerWidth < 640 ? 15 : 25}
                   color="#ffffff"
                 />
