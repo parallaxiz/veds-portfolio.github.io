@@ -221,15 +221,15 @@ export function CursorDrivenParticleTypography({
   return (
     <div
       className={cn(
-        "w-full h-full relative touch-none",
+        "w-full h-full relative touch-none overflow-visible",
         className
       )}
     >
       <div
         ref={containerRef}
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] h-[260%] pointer-events-none"
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-[600%] pointer-events-none overflow-visible z-10"
       >
-        <canvas ref={canvasRef} className="block w-full h-full" />
+        <canvas ref={canvasRef} className="block w-full h-full pointer-events-none" />
       </div>
     </div>
   );

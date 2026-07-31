@@ -471,10 +471,10 @@ export default function App() {
         >
           <div className="max-w-4xl w-full text-center space-y-4 sm:space-y-6 md:space-y-10 my-auto py-4">
             <div className="space-y-2 sm:space-y-3">
-              <div className="text-[#e2933f] font-bold tracking-widest text-xs sm:text-sm animate-bounce">
+              <div className="text-[#e2933f] font-bold tracking-widest text-xs sm:text-sm animate-bounce relative z-20">
                 &gt; VED_PORTFOLIO.EXE READY &lt;
               </div>
-              <div className="w-full h-[70px] sm:h-[110px] md:h-[150px] flex items-center justify-center overflow-hidden">
+              <div className="w-full h-[70px] sm:h-[110px] md:h-[150px] flex items-center justify-center overflow-visible relative z-10">
                 <CursorDrivenParticleTypography 
                   text="VED'S PORTFOLIO" 
                   fontSize={particleFontSize} 
@@ -483,7 +483,7 @@ export default function App() {
                   color="#ffffff"
                 />
               </div>
-              <h2 className="text-[#e2933f] text-sm sm:text-lg md:text-2xl font-bold uppercase tracking-wider mt-1 px-2">
+              <h2 className="text-[#e2933f] text-sm sm:text-lg md:text-2xl font-bold uppercase tracking-wider mt-1 px-2 relative z-20">
                 Computer Science Student | AI & Full Stack Dev
               </h2>
               <p className="text-gray-400 text-xs sm:text-sm uppercase tracking-widest">
