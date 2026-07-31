@@ -283,6 +283,16 @@ export default function App() {
     return window.location.pathname + window.location.hash + window.location.search;
   });
 
+  const [progress, setProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isStarted, setIsStarted] = useState(false);
+  const [isFadingOut, setIsFadingOut] = useState(false);
+  const [activeModal, setActiveModal] = useState(null);
+  const [isMuted, setIsMuted] = useState(true);
+  const [dialogue, setDialogue] = useState(null);
+  const [showDpad, setShowDpad] = useState(false);
+  const [particleFontSize, setParticleFontSize] = useState(100);
+
   useEffect(() => {
     const handleLocationChange = () => {
       setCurrentPath(window.location.pathname + window.location.hash + window.location.search);
@@ -294,27 +304,6 @@ export default function App() {
       window.removeEventListener("hashchange", handleLocationChange);
     };
   }, []);
-
-  if (currentPath.toLowerCase().includes("recruiter")) {
-    return (
-      <RecruitersView
-        onNavigateHome={() => {
-          window.history.pushState({}, "", "/");
-          setCurrentPath("/");
-        }}
-      />
-    );
-  }
-
-  const [progress, setProgress] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isStarted, setIsStarted] = useState(false);
-  const [isFadingOut, setIsFadingOut] = useState(false);
-  const [activeModal, setActiveModal] = useState(null);
-  const [isMuted, setIsMuted] = useState(true);
-  const [dialogue, setDialogue] = useState(null);
-  const [showDpad, setShowDpad] = useState(false);
-  const [particleFontSize, setParticleFontSize] = useState(100);
 
   useEffect(() => {
     // Detect mobile touch devices
@@ -376,6 +365,17 @@ export default function App() {
       window.removeEventListener("proximity-leave", handleProximityLeave);
     };
   }, []);
+
+  if (currentPath.toLowerCase().includes("recruiter")) {
+    return (
+      <RecruitersView
+        onNavigateHome={() => {
+          window.history.pushState({}, "", "/");
+          setCurrentPath("/");
+        }}
+      />
+    );
+  }
 
   const handleStartGame = () => {
     initAudio();
