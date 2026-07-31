@@ -60,15 +60,36 @@ export default class MainScene extends Phaser.Scene {
         this.player.setFixedRotation();
 
         // -------------------------------
-        // CAMERA FOLLOW (Player centered)
+        // CAMERA FOLLOW & CENTERING
         // -------------------------------
         const bgBounds = this.bg.getBounds();
-        this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
-        this.cameras.main.setBounds(bgBounds.x, bgBounds.y, bgBounds.width, bgBounds.height);
 
         const updateZoom = () => {
             const isMobileScreen = window.innerWidth < 768 || this.sys.game.device.input.touch;
-            this.cameras.main.setZoom(isMobileScreen ? 1.3 : 1.15);
+            const zoom = isMobileScreen ? 1.3 : 1.15;
+            this.cameras.main.setZoom(zoom);
+
+            const visibleWidth = this.scale.width / zoom;
+            const visibleHeight = this.scale.height / zoom;
+
+            if (visibleWidth >= WORLD_WIDTH || visibleHeight >= WORLD_HEIGHT) {
+                // Viewport is larger than room bounds (zoomed out or large display)
+                this.cameras.main.removeBounds();
+                if (visibleWidth >= WORLD_WIDTH && visibleHeight >= WORLD_HEIGHT) {
+                    this.cameras.main.stopFollow();
+                    this.cameras.main.centerOn(WORLD_WIDTH / 2, WORLD_HEIGHT / 2);
+                } else {
+                    if (!this.cameras.main._follow) {
+                        this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
+                    }
+                }
+            } else {
+                // Normal view -> Bounded camera following player
+                this.cameras.main.setBounds(bgBounds.x, bgBounds.y, bgBounds.width, bgBounds.height);
+                if (!this.cameras.main._follow) {
+                    this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
+                }
+            }
         };
         updateZoom();
 
