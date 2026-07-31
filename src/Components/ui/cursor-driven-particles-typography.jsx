@@ -100,6 +100,9 @@ export function CursorDrivenParticleTypography({
       const container = containerRef.current;
       if (!container) return;
 
+      const parent = container.parentElement ? container.parentElement.parentElement : container.parentElement;
+      const parentWidth = parent ? parent.clientWidth : container.clientWidth;
+
       containerWidth = container.clientWidth;
       containerHeight = container.clientHeight;
 
@@ -113,17 +116,17 @@ export function CursorDrivenParticleTypography({
       ctx.scale(dpr, dpr);
 
       const computedStyle = window.getComputedStyle(container);
-      const textColor = color || computedStyle.color || "#000000";
+      const textColor = color || computedStyle.color || "#ffffff";
 
       ctx.clearRect(0, 0, containerWidth, containerHeight);
 
-      // Ensure the text fits the original container width dynamically. The edit-undo pixel font characters are roughly 0.45x the font size.
-      const parentWidth = container.parentElement ? container.parentElement.clientWidth : containerWidth;
-      const safeFontScale = 0.45;
-      const maxFontSizeToFit = parentWidth / (text.length * safeFontScale);
-      const effectiveFontSize = Math.min(fontSize, maxFontSizeToFit);
+      // Proportionally scale font size to match standard HTML/CSS text scaling on browser zoom
+      const charWidthRatio = 0.52;
+      const maxFontForParent = parentWidth / (text.length * charWidthRatio);
+      const effectiveFontSize = Math.min(fontSize, maxFontForParent);
+
       ctx.fillStyle = textColor;
-      ctx.font = `${effectiveFontSize}px ${fontFamily}`;
+      ctx.font = `bold ${effectiveFontSize}px ${fontFamily}`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
@@ -138,7 +141,7 @@ export function CursorDrivenParticleTypography({
 
       particles = [];
 
-      const step = Math.max(1, Math.floor(particleDensity * dpr));
+      const step = Math.max(1, Math.round(particleDensity * dpr));
 
       for (let y = 0; y < textCoordinates.height; y += step) {
         for (let x = 0; x < textCoordinates.width; x += step) {
@@ -197,12 +200,14 @@ export function CursorDrivenParticleTypography({
       resizeObserver.observe(containerRef.current);
     }
 
+    window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
       clearTimeout(timeoutId);
       resizeObserver.disconnect();
+      window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseleave", handleMouseLeave);
       cancelAnimationFrame(animationFrameId);
