@@ -464,7 +464,7 @@ export default function App() {
       {/* Start Screen Overlay */}
       {!isLoading && !isStarted && (
         <div 
-          className={`absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-[400] transition-opacity duration-500 ease-in-out p-3 sm:p-4 text-white overflow-y-auto ${
+          className={`absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-[400] transition-opacity duration-500 ease-in-out p-3 sm:p-4 text-white overflow-hidden ${
             isFadingOut ? "opacity-0 pointer-events-none" : "opacity-100"
           }`}
           style={{ fontFamily: "edit-undo" }}
