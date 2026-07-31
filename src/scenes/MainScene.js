@@ -248,6 +248,7 @@ export default class MainScene extends Phaser.Scene {
             this.mobileInput[dir] = active;
         };
         this.onMobileInteract = () => {
+            if (this.inputLocked) return;
             if (this.objects_c.cabinet_s.visible) {
                 window.dispatchEvent(new CustomEvent("open-modal", { detail: "contact" }));
             } else if (this.objects_b.bed_s.visible) {

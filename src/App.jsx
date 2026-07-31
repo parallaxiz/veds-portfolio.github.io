@@ -431,6 +431,11 @@ export default function App() {
     if (now - lastInteractTime.current < 400) return;
     lastInteractTime.current = now;
 
+    if (activeModal !== null) {
+      handleCloseModal();
+      return;
+    }
+
     if (window.portfolioSFX) window.portfolioSFX.playClick();
     if (dialogue) {
       handleDialogueInteraction();

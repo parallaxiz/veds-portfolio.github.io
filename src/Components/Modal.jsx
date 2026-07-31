@@ -455,16 +455,16 @@ export default function Modal({ isOpen, type, onClose }) {
                         window.open(c.link, "_blank");
                       }
                     }}
-                    className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-3 rounded-none flex items-center justify-between cursor-pointer transition transform hover:-translate-y-0.5 hover:bg-[#3e3b66] hover:text-white group text-[#3e3b66] shadow-[2px_2px_0px_0px_#3e3b66]"
+                    className="bg-[#fcf3e3] border-2 border-[#3e3b66] p-2.5 sm:p-3 rounded-none flex items-center justify-between gap-2 cursor-pointer transition transform hover:-translate-y-0.5 hover:bg-[#3e3b66] hover:text-white group text-[#3e3b66] shadow-[2px_2px_0px_0px_#3e3b66] min-w-0"
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{c.icon}</span>
-                      <div className="text-left select-none">
-                        <div className="text-xs md:text-sm text-[#e2933f] group-hover:text-amber-200 font-bold uppercase">{c.label}</div>
-                        <div className="font-semibold text-sm md:text-base group-hover:text-white">{c.value}</div>
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 pr-1">
+                      <span className="text-xl sm:text-2xl shrink-0">{c.icon}</span>
+                      <div className="text-left select-none min-w-0 flex-1">
+                        <div className="text-[10px] sm:text-xs md:text-sm text-[#e2933f] group-hover:text-amber-200 font-bold uppercase">{c.label}</div>
+                        <div className="font-semibold text-[11px] sm:text-xs md:text-base group-hover:text-white break-all">{c.value}</div>
                       </div>
                     </div>
-                    <span className="text-xs border-2 border-[#3e3b66] rounded-none px-2.5 py-1 bg-white text-[#3e3b66] group-hover:bg-[#e2933f] group-hover:text-white group-hover:border-white font-bold transition">
+                    <span className="text-[10px] sm:text-xs border-2 border-[#3e3b66] rounded-none px-2 sm:px-2.5 py-0.5 sm:py-1 bg-white text-[#3e3b66] group-hover:bg-[#e2933f] group-hover:text-white group-hover:border-white font-bold transition shrink-0">
                       {c.action === "copy" ? (copiedText === c.label ? "Copied!" : "Copy") : "Open"}
                     </span>
                   </div>
