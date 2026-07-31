@@ -62,9 +62,9 @@ export default function RecruitersView({ onNavigateHome }) {
   }, []);
 
   return (
-    <div className="w-full h-screen overflow-y-auto bg-[#1a1a2e] text-[#d8eaf4] font-mono relative select-none pb-20">
+    <div className="w-full min-h-screen bg-[#1a1a2e] text-[#d8eaf4] font-mono relative select-none pb-20">
       {/* Interactive Mouse-Following Grid Animation Background */}
-      <div className="fixed inset-0 z-0 opacity-40">
+      <div className="fixed inset-0 z-0 opacity-40 pointer-events-none">
         <GridAnimation spacing={35} strokeLength={12} strokeColor="rgba(61, 189, 189, 0.45)" />
       </div>
 
