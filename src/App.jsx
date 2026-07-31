@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import GameCanvas from "./Components/GameCanvas";
 import Modal from "./Components/Modal";
 import { CursorDrivenParticleTypography } from "./Components/ui/cursor-driven-particles-typography";
@@ -292,6 +292,7 @@ export default function App() {
   const [dialogue, setDialogue] = useState(null);
   const [showDpad, setShowDpad] = useState(false);
   const [particleFontSize, setParticleFontSize] = useState(100);
+  const lastInteractTime = useRef(0);
 
   useEffect(() => {
     const handleLocationChange = () => {
@@ -424,7 +425,12 @@ export default function App() {
     window.dispatchEvent(new CustomEvent("open-modal", { detail: dialogue.object }));
   };
 
-  const handleInteractButton = () => {
+  const handleInteractButton = (e) => {
+    if (e && e.cancelable) e.preventDefault();
+    const now = Date.now();
+    if (now - lastInteractTime.current < 400) return;
+    lastInteractTime.current = now;
+
     if (window.portfolioSFX) window.portfolioSFX.playClick();
     if (dialogue) {
       handleDialogueInteraction();
@@ -620,8 +626,8 @@ export default function App() {
 
           {/* Centered [ E ] Button */}
           <button
-            onTouchStart={(e) => { e.preventDefault(); handleInteractButton(); }}
-            onClick={handleInteractButton}
+            onTouchStart={(e) => handleInteractButton(e)}
+            onClick={(e) => handleInteractButton(e)}
             className={`w-11 h-11 rounded-none flex items-center justify-center cursor-pointer touch-manipulation select-none transition-all duration-150 shadow-md ${
               dialogue
                 ? "bg-[#e2933f] text-white border-2 border-yellow-300 shadow-[0_0_15px_rgba(226,147,63,0.9)] animate-pulse scale-105 font-bold"
