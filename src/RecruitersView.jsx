@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextScramble } from "./Components/ui/text-scramble.jsx";
 import { GridAnimation } from "./Components/ui/mouse-following-line.jsx";
 
