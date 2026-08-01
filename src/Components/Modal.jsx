@@ -220,6 +220,13 @@ function WardrobeSelector() {
 // CORE MODAL CONTAINER
 // ==========================================
 export default function Modal({ isOpen, type, onClose }) {
+  const activeType = {
+    bed: "about",
+    cabinet: "contact",
+    laptop: "projects",
+    bookshelf: "skills"
+  }[type] || type;
+
   const [aboutPage, setAboutPage] = useState(1);
   const [copiedText, setCopiedText] = useState("");
   const [projectsTab, setProjectsTab] = useState("archive"); // 'archive' | 'game'
@@ -254,9 +261,9 @@ export default function Modal({ isOpen, type, onClose }) {
     setAboutPage(1);
     setProjectsTab("archive");
     setCabinetTab("contact");
-  }, [isOpen, type]);
+  }, [isOpen, activeType]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !activeType) return null;
 
   const copyToClipboard = async (text, label) => {
     try {
@@ -279,7 +286,7 @@ export default function Modal({ isOpen, type, onClose }) {
   };
 
   const renderContent = () => {
-    switch (type) {
+    switch (activeType) {
       case "about":
         return (
           <div className="flex flex-col h-full justify-between">
@@ -517,15 +524,10 @@ export default function Modal({ isOpen, type, onClose }) {
     }
   };
 
-  if (!isOpen || !type) return null;
-
   // Full-screen VedOS for projects — rendered outside normal modal frame
-  if (type === "projects") {
+  if (activeType === "projects") {
     return <VedOS onClose={onClose} />;
   }
-
-  const content = renderContent();
-  if (!content) return null;
 
   return (
     <div 
@@ -553,7 +555,7 @@ export default function Modal({ isOpen, type, onClose }) {
         </div>
 
         <div className="flex-grow overflow-y-auto pr-1">
-          {content}
+          {renderContent()}
         </div>
       </div>
     </div>

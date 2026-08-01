@@ -282,6 +282,8 @@ function DownloadCVButton() {
     <a
       href="/assets/Ved_Madurwar_cv_ver2.pdf"
       download="Ved_Madurwar_CV.pdf"
+      target="_blank"
+      rel="noopener noreferrer"
       className="fixed top-3 right-3 sm:top-4 sm:right-4 z-[10000] bg-[#e2933f] hover:bg-[#c87e2a] text-white border-2 border-white font-bold py-1.5 px-3 sm:py-2 sm:px-4 rounded-none text-xs sm:text-sm shadow-[3px_3px_0px_0px_#161426] cursor-pointer active:translate-y-0.5 transition font-mono flex items-center gap-1.5 select-none pointer-events-auto"
       style={{ fontFamily: "'edit-undo', monospace" }}
       title="Download CV (PDF)"
@@ -353,10 +355,21 @@ export default function App() {
       setIsLoading(false);
     };
 
+    const modalTypeMap = {
+      bed: "about",
+      cabinet: "contact",
+      laptop: "projects",
+      bookshelf: "skills"
+    };
+
     const handleOpenModal = (e) => {
-      setActiveModal(e.detail || null);
+      const rawType = e.detail || null;
+      const modalType = rawType ? (modalTypeMap[rawType] || rawType) : null;
+      setActiveModal(modalType);
       setDialogue(null); // Hide dialogue when modal opens
-      portfolioSFX.playPopupOpen();
+      if (modalType && window.portfolioSFX) {
+        portfolioSFX.playPopupOpen();
+      }
     };
 
     const handleProximityEnter = (e) => {
@@ -440,7 +453,14 @@ export default function App() {
   const handleDialogueInteraction = () => {
     if (!dialogue) return;
     portfolioSFX.playClick();
-    window.dispatchEvent(new CustomEvent("open-modal", { detail: dialogue.object }));
+    const modalTypeMap = {
+      bed: "about",
+      cabinet: "contact",
+      laptop: "projects",
+      bookshelf: "skills"
+    };
+    const target = modalTypeMap[dialogue.object] || dialogue.object;
+    window.dispatchEvent(new CustomEvent("open-modal", { detail: target }));
   };
 
   const handleInteractButton = (e) => {

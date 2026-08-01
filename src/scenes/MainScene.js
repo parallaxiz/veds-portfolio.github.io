@@ -264,13 +264,13 @@ export default class MainScene extends Phaser.Scene {
         };
         this.onMobileInteract = () => {
             if (this.inputLocked) return;
-            if (this.objects_c.cabinet_s.visible) {
+            if (this.objects_c.cabinet_s.visible || this.lastActiveObject === "cabinet") {
                 window.dispatchEvent(new CustomEvent("open-modal", { detail: "contact" }));
-            } else if (this.objects_b.bed_s.visible) {
+            } else if (this.objects_b.bed_s.visible || this.lastActiveObject === "bed") {
                 window.dispatchEvent(new CustomEvent("open-modal", { detail: "about" }));
-            } else if (this.objects_l.laptop_s.visible) {
+            } else if (this.objects_l.laptop_s.visible || this.lastActiveObject === "laptop") {
                 window.dispatchEvent(new CustomEvent("open-modal", { detail: "projects" }));
-            } else if (this.objects_bs.bookshelf_s.visible) {
+            } else if (this.objects_bs.bookshelf_s.visible || this.lastActiveObject === "bookshelf") {
                 window.dispatchEvent(new CustomEvent("open-modal", { detail: "skills" }));
             }
         };
@@ -412,21 +412,26 @@ export default class MainScene extends Phaser.Scene {
             if (activeObject) {
                 let text = "";
                 let name = "";
+                let modalTarget = "about";
                 if (activeObject === "bed") {
                     name = "Cozy Bed";
                     text = "   My bed. Awards for hackathons and coding achievements were celebrated right here. Press E or Space to view About Me.";
+                    modalTarget = "about";
                 } else if (activeObject === "cabinet") {
                     name = "Side Table with Drawers";
                     text = "   A side table with drawers holding useful items. Press E or Space to examine the table.";
+                    modalTarget = "contact";
                 } else if (activeObject === "laptop") {
                     name = "Developer PC Rig";
                     text = "   Workstation rig where physics‑aware AI pipelines and SAT‑MethaneNet were compiled. Press E or Space to view Projects or Snake.";
+                    modalTarget = "projects";
                 } else if (activeObject === "bookshelf") {
                     name = "Study Library";
                     text = "   A collection of AI research papers, WebDev documentation, and CS books. Press E or Space to view Skills.";
+                    modalTarget = "skills";
                 }
                 window.dispatchEvent(new CustomEvent("proximity-enter", {
-                    detail: { text, name, object: activeObject }
+                    detail: { text, name, object: modalTarget }
                 }));
             } else {
                 window.dispatchEvent(new CustomEvent("proximity-leave"));
@@ -437,13 +442,13 @@ export default class MainScene extends Phaser.Scene {
         // INTERACT VIA "E" OR "SPACE" KEY
         // -------------------------------
         if (Phaser.Input.Keyboard.JustDown(this.keys.interactKey) || Phaser.Input.Keyboard.JustDown(this.keys.spaceKey)) {
-            if (this.objects_c.cabinet_s.visible) {
+            if (this.objects_c.cabinet_s.visible || this.lastActiveObject === "cabinet") {
                 window.dispatchEvent(new CustomEvent("open-modal", { detail: "contact" }));
-            } else if (this.objects_b.bed_s.visible) {
+            } else if (this.objects_b.bed_s.visible || this.lastActiveObject === "bed") {
                 window.dispatchEvent(new CustomEvent("open-modal", { detail: "about" }));
-            } else if (this.objects_l.laptop_s.visible) {
+            } else if (this.objects_l.laptop_s.visible || this.lastActiveObject === "laptop") {
                 window.dispatchEvent(new CustomEvent("open-modal", { detail: "projects" }));
-            } else if (this.objects_bs.bookshelf_s.visible) {
+            } else if (this.objects_bs.bookshelf_s.visible || this.lastActiveObject === "bookshelf") {
                 window.dispatchEvent(new CustomEvent("open-modal", { detail: "skills" }));
             }
         }
