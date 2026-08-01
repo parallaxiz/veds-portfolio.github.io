@@ -517,10 +517,15 @@ export default function Modal({ isOpen, type, onClose }) {
     }
   };
 
+  if (!isOpen || !type) return null;
+
   // Full-screen VedOS for projects — rendered outside normal modal frame
   if (type === "projects") {
     return <VedOS onClose={onClose} />;
   }
+
+  const content = renderContent();
+  if (!content) return null;
 
   return (
     <div 
@@ -548,7 +553,7 @@ export default function Modal({ isOpen, type, onClose }) {
         </div>
 
         <div className="flex-grow overflow-y-auto pr-1">
-          {renderContent()}
+          {content}
         </div>
       </div>
     </div>
